@@ -1,0 +1,32 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "facture",
+            "otherEntityName": "facture",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateReglement",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "montantReglement",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160622183207",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "reglement",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

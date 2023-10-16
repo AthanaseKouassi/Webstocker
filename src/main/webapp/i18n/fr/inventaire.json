@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "inventaire" : {
+            "home": {
+                "title": "Inventaires",
+                "createLabel": "Créer un nouveau Inventaire",
+                "createOrEditLabel": "Créer ou éditer un Inventaire",
+                "search": "Recherche pour Inventaire"
+            },
+            "created": "Un nouveau Inventaire a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Inventaire avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Inventaire avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Inventaire {{ id }} ?"
+            },
+            "detail": {
+                "title": "Inventaire"
+            },
+            "dateInventaire": "Date Inventaire",
+            "stockFinalTheorique": "Stock Final Theorique",
+            "stockReel": "Stock Reel",
+            "produit": "Produit",
+            "magasin": "Magasin"
+        }
+    }
+}

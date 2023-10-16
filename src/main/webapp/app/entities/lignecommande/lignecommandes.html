@@ -1,0 +1,83 @@
+<div>
+    <h2 translate="webstockerApp.lignecommande.home.title">Lignecommandes</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="lignecommande.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs"  translate="webstockerApp.lignecommande.home.createLabel">
+                        Create new Lignecommande
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'webstockerApp.lignecommande.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="webstockerApp.lignecommande.dateFabrication">DateFabrication</span></th>
+                    <th><span translate="webstockerApp.lignecommande.quantiteLigneCommande">QuantiteLigneCommande</span></th>
+                    <th><span translate="webstockerApp.lignecommande.commande">commande</span></th>
+                    <th><span translate="webstockerApp.lignecommande.produit">produit</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="lignecommande in vm.lignecommandes track by lignecommande.id">
+                    <td><a ui-sref="lignecommande-detail({id:lignecommande.id})">{{lignecommande.id}}</a></td>
+                        <td>{{lignecommande.dateFabrication | date:'mediumDate'}}</td>
+                    <td>{{lignecommande.quantiteLigneCommande}}</td>
+                    <td>
+                        <a ui-sref="commande-detail({id:lignecommande.commande.id})">{{lignecommande.commande.numeroCommande}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="produit-detail({id:lignecommande.produit.id})">{{lignecommande.produit.nomProduit}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="lignecommande-detail({id:lignecommande.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="lignecommande.edit({id:lignecommande.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="lignecommande.delete({id:lignecommande.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

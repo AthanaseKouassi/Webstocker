@@ -1,0 +1,35 @@
+{
+    "webstockerApp": {
+        "bonDeSortie" : {
+            "home": {
+                "title": "Bon De Sorties",
+                "createLabel": "Bon De Sortie erstellen",
+                "createOrEditLabel": "Bon De Sortie erstellen oder bearbeiten",
+                "search": "Suche nach Bon De Sortie"
+            },
+            "created": "Bon De Sortie erstellt mit ID {{ param }}",
+            "updated": "Bon De Sortie aktualisiert mit ID {{ param }}",
+            "deleted": "Bon De Sortie gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Bon De Sortie {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Bon De Sortie"
+            },
+            "numero": "Numero",
+            "daateCreation": "Daate Creation",
+            "typeSortie": "Type Sortie",
+            "typeVente": "Type Vente",
+            "printStatus": "Print Status",
+            "numeroFactureNormalise": "Numero Facture Normalise",
+            "statusTranfert": "Status Tranfert",
+            "dateReception": "Date Reception",
+            "dateReceptionTransfert": "Date Reception Transfert",
+            "magasin": "Magasin",
+            "destination": "Destination",
+            "demandeur": "Demandeur",
+            "client": "Client",
+            "emetteur": "Emetteur"
+        }
+    }
+}

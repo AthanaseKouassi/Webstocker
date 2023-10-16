@@ -1,0 +1,80 @@
+
+<div>
+    <h2><span data-translate="webstockerApp.bonDeSortie.detail.title">Bon De Sortie</span> {{vm.bonDeSortie.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row jh-entity-details">
+        <dt><span data-translate="webstockerApp.bonDeSortie.numero">Numero</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.numero}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.daateCreation">Daate Creation</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.daateCreation | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.typeSortie">Type Sortie</span></dt>
+        <dd>
+            <span data-translate="{{'webstockerApp.TypeSortie.' + vm.bonDeSortie.typeSortie}}">{{vm.bonDeSortie.typeSortie}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.typeVente">Type Vente</span></dt>
+        <dd>
+            <span data-translate="{{'webstockerApp.TypeVente.' + vm.bonDeSortie.typeVente}}">{{vm.bonDeSortie.typeVente}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.printStatus">Print Status</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.printStatus}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.numeroFactureNormalise">Numero Facture Normalise</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.numeroFactureNormalise}}</span>
+        </dd>
+<<<<<<< HEAD
+        <dt><span data-translate="webstockerApp.bonDeSortie.statusTranfert">Status Tranfert</span></dt>
+        <dd>
+            <span data-translate="{{'webstockerApp.StatusTransfert.' + vm.bonDeSortie.statusTranfert}}">{{vm.bonDeSortie.statusTranfert}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.dateReception">Date Reception</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.dateReception | date:'mediumDate'}}</span>
+=======
+        <dt><span data-translate="webstockerApp.bonDeSortie.dateReceptionTransfert">Date Reception Transfert</span></dt>
+        <dd>
+            <span>{{vm.bonDeSortie.dateReceptionTransfert | date:'mediumDate'}}</span>
+>>>>>>> upstream/master
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.magasin">Magasin</span></dt>
+        <dd>
+            <a ui-sref="magasin-detail({id:vm.bonDeSortie.magasin.id})">{{vm.bonDeSortie.magasin.id}}</a>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.destination">Destination</span></dt>
+        <dd>
+            <a ui-sref="magasin-detail({id:vm.bonDeSortie.destination.id})">{{vm.bonDeSortie.destination.id}}</a>
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.demandeur">Demandeur</span></dt>
+        <dd>
+            {{vm.bonDeSortie.demandeur.lastName}}
+        </dd>
+        <dt><span data-translate="webstockerApp.bonDeSortie.client">Client</span></dt>
+        <dd>
+            <a ui-sref="client-detail({id:vm.bonDeSortie.client.id})">{{vm.bonDeSortie.client.nomClient}}</a>
+        </dd>
+<<<<<<< HEAD
+        <dt><span data-translate="webstockerApp.bonDeSortie.emetteur">Emetteur</span></dt>
+        <dd>
+            {{vm.bonDeSortie.emetteur.login}}
+        </dd>
+=======
+>>>>>>> upstream/master
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="bon-de-sortie-detail.edit({id:vm.bonDeSortie.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

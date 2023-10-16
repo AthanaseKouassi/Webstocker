@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+   <changeSet author="komi (generated)" id="1467506930963-1">
+      <createTable tableName="bon_de_sortie">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="bon_de_sortiePK"/>
+         </column>
+         <column name="daate_creation" type="date">
+            <constraints nullable="false"/>
+         </column>
+         <column name="numero" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="type_sortie" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="type_vente" type="VARCHAR(255)"/>
+         <column name="client_id" type="BIGINT"/>
+         <column name="demandeur_id" type="BIGINT"/>
+         <column name="destination_id" type="BIGINT"/>
+         <column name="magasin_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-2">
+      <createTable tableName="cellule">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="cellulePK"/>
+         </column>
+         <column name="nom" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="responsable_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-3">
+      <createTable tableName="fabricant_produit">
+         <column name="fabricants_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="produits_id" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-4">
+      <createTable tableName="ligne_bon_de_sortie">
+         <column autoIncrement="true" name="id" type="BIGINT">
+            <constraints primaryKey="true" primaryKeyName="ligne_bon_de_sortiePK"/>
+         </column>
+         <column name="prix_vente" type="BIGINT"/>
+         <column name="quantite" type="BIGINT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="bon_de_sortie_id" type="BIGINT"/>
+         <column name="produit_id" type="BIGINT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-5">
+      <addColumn tableName="facture">
+         <column name="bon_de_sortie_id" type="bigint"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-6">
+      <addColumn tableName="conditionnement">
+         <column name="capacite_carton" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-7">
+      <addColumn tableName="conditionnement">
+         <column name="capacite_cartouche" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-8">
+      <addColumn tableName="conditionnement">
+         <column name="capacite_etui" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-9">
+      <addColumn tableName="livraison">
+         <column name="frais_assurance_locale" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-10">
+      <addColumn tableName="livraison">
+         <column name="frais_manutention" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-11">
+      <addColumn tableName="livraison">
+         <column name="frais_test" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-12">
+      <addColumn tableName="livraison">
+         <column name="frais_transit" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-13">
+      <addColumn tableName="ligneprixproduit">
+         <column name="lot_id" type="bigint"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-14">
+      <addColumn tableName="livraison">
+         <column name="numero_livraison" type="varchar(255)">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-15">
+      <addColumn tableName="prix">
+         <column name="prix_gp" type="double precision"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-16">
+      <addColumn tableName="prix">
+         <column name="prix_promo" type="integer"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-17">
+      <addColumn tableName="prix">
+         <column name="prix_sg" type="double precision"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-18">
+      <addColumn tableName="commande">
+         <column name="statut" type="varchar(255)"/>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-19">
+      <addColumn tableName="commande">
+         <column name="valeur_commande" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-20">
+      <addColumn tableName="livraison">
+         <column name="valeur_livraison" type="bigint">
+            <constraints nullable="false"/>
+         </column>
+      </addColumn>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-21">
+      <addPrimaryKey columnNames="fabricants_id, produits_id" tableName="fabricant_produit"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-22">
+      <addUniqueConstraint columnNames="client_id"
+                           constraintName="UC_BON_DE_SORTIECLIENT_ID_COL"
+                           tableName="bon_de_sortie"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-23">
+      <addUniqueConstraint columnNames="demandeur_id"
+                           constraintName="UC_BON_DE_SORTIEDEMANDEUR_ID_COL"
+                           tableName="bon_de_sortie"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-24">
+      <addUniqueConstraint columnNames="bon_de_sortie_id"
+                           constraintName="UC_FACTUREBON_DE_SORTIE_ID_COL"
+                           tableName="facture"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-25">
+      <addForeignKeyConstraint baseColumnNames="produit_id"
+                               baseTableName="ligne_bon_de_sortie"
+                               constraintName="FK_299e5b5lbnu3u4232jjt2j6vf"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="produit"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-26">
+      <addForeignKeyConstraint baseColumnNames="client_id"
+                               baseTableName="bon_de_sortie"
+                               constraintName="FK_53k28uxeep5khlpgbpw0s7b3o"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="client"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-27">
+      <addForeignKeyConstraint baseColumnNames="fabricants_id"
+                               baseTableName="fabricant_produit"
+                               constraintName="FK_59x6ygu6tcqil43rdt5efq4y5"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="fabricant"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-28">
+      <addForeignKeyConstraint baseColumnNames="responsable_id"
+                               baseTableName="cellule"
+                               constraintName="FK_5fg5jl5yf3keugbmxtc0d2byf"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-29">
+      <addForeignKeyConstraint baseColumnNames="demandeur_id"
+                               baseTableName="bon_de_sortie"
+                               constraintName="FK_eqaawtq7iguy6nfsmkca9a7op"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="jhi_user"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-30">
+      <addForeignKeyConstraint baseColumnNames="bon_de_sortie_id"
+                               baseTableName="facture"
+                               constraintName="FK_ha6h3xg0j1tcyp60ka6ufgsm"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="bon_de_sortie"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-31">
+      <addForeignKeyConstraint baseColumnNames="destination_id"
+                               baseTableName="bon_de_sortie"
+                               constraintName="FK_og1j5unxnm53a4r0i2d44vl74"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="magasin"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-32">
+      <addForeignKeyConstraint baseColumnNames="magasin_id"
+                               baseTableName="bon_de_sortie"
+                               constraintName="FK_onkfq1kq52ohs8uv5y556a6ys"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="magasin"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-33">
+      <addForeignKeyConstraint baseColumnNames="bon_de_sortie_id"
+                               baseTableName="ligne_bon_de_sortie"
+                               constraintName="FK_oqu5kb96afwimnscog2vrxiep"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="bon_de_sortie"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-34">
+      <addForeignKeyConstraint baseColumnNames="produits_id"
+                               baseTableName="fabricant_produit"
+                               constraintName="FK_rhtyf04wgoi30eq9ic6p1fv40"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="produit"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-35">
+      <addForeignKeyConstraint baseColumnNames="lot_id"
+                               baseTableName="ligneprixproduit"
+                               constraintName="FK_tg79t1wsehn71mtcf2q9b122d"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               referencedColumnNames="id"
+                               referencedTableName="lot"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-36">
+      <dropForeignKeyConstraint baseTableName="fabricant" constraintName="fk_fabricant_produit_id"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-37">
+      <dropForeignKeyConstraint baseTableName="ligneprixproduit"
+                                constraintName="fk_ligneprixproduit_produit_id"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-38">
+      <dropColumn columnName="produit_id" tableName="fabricant"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-39">
+      <dropColumn columnName="produit_id" tableName="ligneprixproduit"/>
+   </changeSet>
+   <changeSet author="komi (generated)" id="1467506930963-40">
+      <dropNotNullConstraint columnDataType="varchar(100)"
+                             columnName="email"
+                             tableName="jhi_user"/>
+   </changeSet>
+</databaseChangeLog>

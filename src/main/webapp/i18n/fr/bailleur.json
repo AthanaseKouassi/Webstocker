@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "bailleur" : {
+            "home": {
+                "title": "Bailleurs",
+                "createLabel": "Créer un nouveau Bailleur",
+                "createOrEditLabel": "Créer ou éditer un Bailleur",
+                "search": "Recherche pour Bailleur"
+            },
+            "created": "Un nouveau Bailleur a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Bailleur avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Bailleur avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Bailleur {{ id }} ?"
+            },
+            "detail": {
+                "title": "Bailleur"
+            },
+            "nomBailleur": "NomBailleur",
+            "commande": "Commande"
+        }
+    }
+}

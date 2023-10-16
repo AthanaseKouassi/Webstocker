@@ -1,0 +1,21 @@
+{
+    "webstockerApp": {
+        "ligneprixproduit" : {
+            "home": {
+                "title": "Ligneprixproduits",
+                "createLabel": "Ligneprixproduit erstellen",
+                "createOrEditLabel": "Ligneprixproduit erstellen oder bearbeiten",
+                "search": "Suche nach Ligneprixproduit"
+            },
+            "created": "Ligneprixproduit erstellt mit ID {{ param }}",
+            "updated": "Ligneprixproduit aktualisiert mit ID {{ param }}",
+            "deleted": "Ligneprixproduit gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Ligneprixproduit {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Ligneprixproduit"
+            }
+        }
+    }
+}

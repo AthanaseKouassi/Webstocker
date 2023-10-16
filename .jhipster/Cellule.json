@@ -1,0 +1,30 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "responsable",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "mission",
+            "otherEntityName": "mission",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "cellule"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nom",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160627173002",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "cellule",
+    "pagination": "pagination"
+}

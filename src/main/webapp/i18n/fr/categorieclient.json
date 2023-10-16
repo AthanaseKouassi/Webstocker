@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "categorieclient" : {
+            "home": {
+                "title": "Categorieclients",
+                "createLabel": "Créer un nouveau Categorieclient",
+                "createOrEditLabel": "Créer ou éditer un Categorieclient",
+                "search": "Recherche pour Categorieclient"
+            },
+            "created": "Un nouveau Categorieclient a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Categorieclient avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Categorieclient avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Categorieclient {{ id }} ?"
+            },
+            "detail": {
+                "title": "Categorieclient"
+            },
+            "libelleCategorieclient": "LibelleCategorieclient",
+            "client": "Client",
+            "prix": "Prix"
+        }
+    }
+}

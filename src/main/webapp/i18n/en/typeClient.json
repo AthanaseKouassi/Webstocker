@@ -1,0 +1,9 @@
+{
+    "webstockerApp": {
+        "TypeClient" : {
+            "null": "",
+            "ORDINAIRE": "ORDINAIRE",
+            "POINT_DE_VENTE": "POINT_DE_VENTE"
+        }
+    }
+}

@@ -1,0 +1,48 @@
+
+<div>
+    <h2><span translate="webstockerApp.mission.detail.title">Mission</span> {{vm.mission.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.mission.libelle">Libelle</dt></dt>
+        <dd>
+            <span>{{vm.mission.libelle}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.dateDebut">DateDebut</dt></dt>
+        <dd>
+            <span>{{vm.mission.dateDebut | date:'mediumDate'}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.dateFin">DateFin</dt></dt>
+        <dd>
+            <span>{{vm.mission.dateFin | date:'mediumDate'}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.objectifGeneral">ObjectifGeneral</dt></dt>
+        <dd>
+            <span>{{vm.mission.objectifGeneral}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.objectifSpecifique">ObjectifSpecifique</dt></dt>
+        <dd>
+            <span>{{vm.mission.objectifSpecifique}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.localite">localite</span></dt>
+        <dd>
+            <a ui-sref="localite-detail({id:vm.mission.localite.id})">{{vm.mission.localite.ville}}</a>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.mission.cellule">cellule</span></dt>
+        <dd>
+            <a ui-sref="cellule-detail({id:vm.mission.cellule.id})">{{vm.mission.cellule.nom}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

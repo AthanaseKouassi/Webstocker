@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "activite" : {
+            "home": {
+                "title": "Activites",
+                "createLabel": "Create a new Activite",
+                "createOrEditLabel": "Create or edit a Activite",
+                "search": "Search for Activite"
+            },
+            "created": "A new Activite is created with identifier {{ param }}",
+            "updated": "A Activite is updated with identifier {{ param }}",
+            "deleted": "A Activite is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Activite {{ id }}?"
+            },
+            "detail": {
+                "title": "Activite"
+            },
+            "nomActivite": "NomActivite",
+            "descriptionActivite": "DescriptionActivite",
+            "resultatAttendu": "ResultatAttendu",
+            "ligneMissionActivite": "LigneMissionActivite",
+            "typeActivite": "TypeActivite"
+        }
+    }
+}

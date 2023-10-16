@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "typeActivite" : {
+            "home": {
+                "title": "TypeActivites",
+                "createLabel": "Créer un nouveau TypeActivite",
+                "createOrEditLabel": "Créer ou éditer un TypeActivite",
+                "search": "Recherche pour TypeActivite"
+            },
+            "created": "Un nouveau TypeActivite a été créé avec l'identifiant {{ param }}",
+            "updated": "Le TypeActivite avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le TypeActivite avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le TypeActivite {{ id }} ?"
+            },
+            "detail": {
+                "title": "TypeActivite"
+            },
+            "libelle": "Libelle",
+            "activite": "Activite"
+        }
+    }
+}

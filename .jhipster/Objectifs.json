@@ -1,0 +1,34 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityRelationshipName": "nomProduit",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "periode",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "quantiteAttendue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "quantiteObtenu",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "taux",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160623170552",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "objectifs",
+    "pagination": "no"
+}

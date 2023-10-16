@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "inventaire" : {
+            "home": {
+                "title": "Inventaires",
+                "createLabel": "Create a new Inventaire",
+                "createOrEditLabel": "Create or edit a Inventaire",
+                "search": "Search for Inventaire"
+            },
+            "created": "A new Inventaire is created with identifier {{ param }}",
+            "updated": "A Inventaire is updated with identifier {{ param }}",
+            "deleted": "A Inventaire is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Inventaire {{ id }}?"
+            },
+            "detail": {
+                "title": "Inventaire"
+            },
+            "dateInventaire": "Date Inventaire",
+            "stockFinalTheorique": "Stock Final Theorique",
+            "stockReel": "Stock Reel",
+            "produit": "Produit",
+            "magasin": "Magasin"
+        }
+    }
+}

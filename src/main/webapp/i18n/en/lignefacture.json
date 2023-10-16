@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "lignefacture" : {
+            "home": {
+                "title": "Lignefactures",
+                "createLabel": "Create a new Lignefacture",
+                "createOrEditLabel": "Create or edit a Lignefacture",
+                "search": "Search for Lignefacture"
+            },
+            "created": "A new Lignefacture is created with identifier {{ param }}",
+            "updated": "A Lignefacture is updated with identifier {{ param }}",
+            "deleted": "A Lignefacture is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Lignefacture {{ id }}?"
+            },
+            "detail": {
+                "title": "Lignefacture"
+            },
+            "quantiteFacture": "QuantiteFacture",
+            "lot": "Lot",
+            "facture": "Facture"
+        }
+    }
+}

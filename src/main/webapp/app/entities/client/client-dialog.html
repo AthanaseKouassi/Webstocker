@@ -1,0 +1,75 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myClientLabel" data-translate="webstockerApp.client.home.createOrEditLabel">Create or edit a Client</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.client.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.client.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.client.nomClient" for="field_nomClient">Nom Client</label>
+            <input type="text" class="form-control" name="nomClient" id="field_nomClient"
+                    ng-model="vm.client.nomClient"
+                    required/>
+            <div ng-show="editForm.nomClient.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.nomClient.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.client.telephoneClient" for="field_telephoneClient">Telephone Client</label>
+            <input type="text" class="form-control" name="telephoneClient" id="field_telephoneClient"
+                    ng-model="vm.client.telephoneClient"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.client.boitepostale" for="field_boitepostale">Boitepostale</label>
+            <input type="text" class="form-control" name="boitepostale" id="field_boitepostale"
+                    ng-model="vm.client.boitepostale"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.client.localiteClient" for="field_localiteClient">Localite Client</label>
+            <input type="text" class="form-control" name="localiteClient" id="field_localiteClient"
+                    ng-model="vm.client.localiteClient"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.client.typeClient" for="field_typeClient">Type Client</label>
+            <select class="form-control" name="typeClient" ng-model="vm.client.typeClient" id="field_typeClient">
+                <option value="ORDINAIRE" data-translate="webstockerApp.TypeClient.ORDINAIRE">ORDINAIRE</option>
+                <option value="POINT_DE_VENTE" data-translate="webstockerApp.TypeClient.POINT_DE_VENTE">POINT_DE_VENTE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label data-translate="webstockerApp.client.localite" for="field_localite">Localite</label>
+            <select class="form-control" id="field_localite" name="localite" ng-model="vm.client.localite" ng-options="localite as localite.ville for localite in vm.localites track by localite.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.client.categorieclient" for="field_categorieclient">Categorieclient</label>
+            <select class="form-control" id="field_categorieclient" name="categorieclient" ng-model="vm.client.categorieclient" ng-options="categorieclient as categorieclient.libelleCategorieclient for categorieclient in vm.categorieclients track by categorieclient.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

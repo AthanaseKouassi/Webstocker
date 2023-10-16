@@ -1,0 +1,38 @@
+
+<div>
+    <h2><span translate="webstockerApp.objectifs.detail.title">Objectifs</span> {{vm.objectifs.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.objectifs.periode">Periode</dt></dt>
+        <dd>
+            <span>{{vm.objectifs.periode | date:'mediumDate'}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.objectifs.quantiteAttendue">QuantiteAttendue</dt></dt>
+        <dd>
+            <span>{{vm.objectifs.quantiteAttendue}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.objectifs.quantiteObtenu">QuantiteObtenu</dt></dt>
+        <dd>
+            <span>{{vm.objectifs.quantiteObtenu}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.objectifs.taux">Taux</dt></dt>
+        <dd>
+            <span>{{vm.objectifs.taux}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.objectifs.produit">produit</span></dt>
+        <dd>
+            <a ui-sref="produit-detail({id:vm.objectifs.produit.id})">{{vm.objectifs.produit.id}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

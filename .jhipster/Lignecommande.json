@@ -1,0 +1,37 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "commande",
+            "otherEntityName": "commande",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "numeroCommande"
+        },
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateFabrication",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantiteLigneCommande",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160430103932",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "lignecommande",
+    "pagination": "no"
+}

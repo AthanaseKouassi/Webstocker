@@ -1,0 +1,121 @@
+<div>
+    <h2 data-translate="webstockerApp.bonDeSortie.home.title">Bon De Sorties</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="bon-de-sortie.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs-down"  data-translate="webstockerApp.bonDeSortie.home.createLabel">
+                        Create new Bon De Sortie
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'webstockerApp.bonDeSortie.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="numero"><span data-translate="webstockerApp.bonDeSortie.numero">Numero</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="daateCreation"><span data-translate="webstockerApp.bonDeSortie.daateCreation">Daate Creation</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="typeSortie"><span data-translate="webstockerApp.bonDeSortie.typeSortie">Type Sortie</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="typeVente"><span data-translate="webstockerApp.bonDeSortie.typeVente">Type Vente</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="printStatus"><span data-translate="webstockerApp.bonDeSortie.printStatus">Print Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="numeroFactureNormalise"><span data-translate="webstockerApp.bonDeSortie.numeroFactureNormalise">Numero Facture Normalise</span> <span class="glyphicon glyphicon-sort"></span></th>
+
+                    <th jh-sort-by="statusTranfert"><span data-translate="webstockerApp.bonDeSortie.statusTranfert">Status Tranfert</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="dateReception"><span data-translate="webstockerApp.bonDeSortie.dateReception">Date Reception</span> <span class="glyphicon glyphicon-sort"></span></th>
+
+                    <th jh-sort-by="dateReceptionTransfert"><span data-translate="webstockerApp.bonDeSortie.dateReceptionTransfert">Date Reception Transfert</span> <span class="glyphicon glyphicon-sort"></span></th>
+
+                    <th jh-sort-by="magasin.id"><span data-translate="webstockerApp.bonDeSortie.magasin">Magasin</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="destination.id"><span data-translate="webstockerApp.bonDeSortie.destination">Destination</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="demandeur.lastName"><span data-translate="webstockerApp.bonDeSortie.demandeur">Demandeur</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="client.nomClient"><span data-translate="webstockerApp.bonDeSortie.client">Client</span> <span class="glyphicon glyphicon-sort"></span></th>
+
+                    <th jh-sort-by="emetteur.login"><span data-translate="webstockerApp.bonDeSortie.emetteur">Emetteur</span> <span class="glyphicon glyphicon-sort"></span></th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="bonDeSortie in vm.bonDeSorties track by bonDeSortie.id">
+                    <td><a ui-sref="bon-de-sortie-detail({id:bonDeSortie.id})">{{bonDeSortie.id}}</a></td>
+                    <td>{{bonDeSortie.numero}}</td>
+                        <td>{{bonDeSortie.daateCreation | date:'mediumDate'}}</td>
+                    <td data-translate="{{'webstockerApp.TypeSortie.' + bonDeSortie.typeSortie}}">{{bonDeSortie.typeSortie}}</td>
+                    <td data-translate="{{'webstockerApp.TypeVente.' + bonDeSortie.typeVente}}">{{bonDeSortie.typeVente}}</td>
+                    <td>{{bonDeSortie.printStatus}}</td>
+                    <td>{{bonDeSortie.numeroFactureNormalise}}</td>
+
+                    <td data-translate="{{'webstockerApp.StatusTransfert.' + bonDeSortie.statusTranfert}}">{{bonDeSortie.statusTranfert}}</td>
+                        <td>{{bonDeSortie.dateReception | date:'mediumDate'}}</td>
+
+                        <td>{{bonDeSortie.dateReceptionTransfert | date:'mediumDate'}}</td>
+
+                    <td>
+                        <a ui-sref="magasin-detail({id:bonDeSortie.magasin.id})">{{bonDeSortie.magasin.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="magasin-detail({id:bonDeSortie.destination.id})">{{bonDeSortie.destination.id}}</a>
+                    </td>
+                    <td>
+                        {{bonDeSortie.demandeur.lastName}}
+                    </td>
+                    <td>
+                        <a ui-sref="client-detail({id:bonDeSortie.client.id})">{{bonDeSortie.client.nomClient}}</a>
+                    </td>
+                    <td>
+                        {{bonDeSortie.emetteur.login}}
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="bon-de-sortie-detail({id:bonDeSortie.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="bon-de-sortie.edit({id:bonDeSortie.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="bon-de-sortie.delete({id:bonDeSortie.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+        <uib-pagination class="pagination-sm" total-items="vm.totalItems" items-per-page="vm.itemsPerPage" ng-model="vm.page" ng-change="vm.transition()"></uib-pagination>
+    </div>
+</div>

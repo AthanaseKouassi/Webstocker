@@ -1,0 +1,47 @@
+
+<div>
+    <h2><span data-translate="webstockerApp.client.detail.title">Client</span> {{vm.client.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row jh-entity-details">
+        <dt><span data-translate="webstockerApp.client.nomClient">Nom Client</span></dt>
+        <dd>
+            <span>{{vm.client.nomClient}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.telephoneClient">Telephone Client</span></dt>
+        <dd>
+            <span>{{vm.client.telephoneClient}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.boitepostale">Boitepostale</span></dt>
+        <dd>
+            <span>{{vm.client.boitepostale}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.localiteClient">Localite Client</span></dt>
+        <dd>
+            <span>{{vm.client.localiteClient}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.typeClient">Type Client</span></dt>
+        <dd>
+            <span data-translate="{{'webstockerApp.TypeClient.' + vm.client.typeClient}}">{{vm.client.typeClient}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.localite">Localite</span></dt>
+        <dd>
+            <a ui-sref="localite-detail({id:vm.client.localite.id})">{{vm.client.localite.ville}}</a>
+        </dd>
+        <dt><span data-translate="webstockerApp.client.categorieclient">Categorieclient</span></dt>
+        <dd>
+            <a ui-sref="categorieclient-detail({id:vm.client.categorieclient.id})">{{vm.client.categorieclient.libelleCategorieclient}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="client-detail.edit({id:vm.client.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

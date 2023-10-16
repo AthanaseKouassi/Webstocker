@@ -1,0 +1,10 @@
+{
+    "webstockerApp": {
+        "StatutCommande" : {
+            "null": "",
+            "EN_COURS": "EN_COURS",
+            "PARTIELLEMENT_LIVREE": "PARTIELLEMENT_LIVREE",
+            "LIVREE": "LIVREE"
+        }
+    }
+}

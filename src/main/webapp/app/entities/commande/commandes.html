@@ -1,0 +1,93 @@
+<div>
+    <h2 translate="webstockerApp.commande.home.title">Commandes</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="commande.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs"  translate="webstockerApp.commande.home.createLabel">
+                        Create new Commande
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'webstockerApp.commande.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="webstockerApp.commande.dateCommande">DateCommande</span></th>
+                    <th><span translate="webstockerApp.commande.numeroCommande">NumeroCommande</span></th>
+                    <th><span translate="webstockerApp.commande.quantiteCommande">QuantiteCommande</span></th>
+                    <th><span translate="webstockerApp.commande.valeurCommande">ValeurCommande</span></th>
+                    <th><span translate="webstockerApp.commande.statut">Statut</span></th>
+                    <th><span translate="webstockerApp.commande.bailleur">bailleur</span></th>
+                    <th><span translate="webstockerApp.commande.fabricant">fabricant</span></th>
+                    <th><span translate="webstockerApp.commande.produit">produit</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="commande in vm.commandes track by commande.id">
+                    <td><a ui-sref="commande-detail({id:commande.id})">{{commande.id}}</a></td>
+                        <td>{{commande.dateCommande | date:'mediumDate'}}</td>
+                    <td>{{commande.numeroCommande}}</td>
+                    <td>{{commande.quantiteCommande}}</td>
+                    <td>{{commande.valeurCommande}}</td>
+                    <td translate="{{'webstockerApp.StatutCommande.' + commande.statut}}">{{commande.statut}}</td>
+                    <td>
+                        <a ui-sref="bailleur-detail({id:commande.bailleur.id})">{{commande.bailleur.nomBailleur}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="fabricant-detail({id:commande.fabricant.id})">{{commande.fabricant.nomFabricant}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="produit-detail({id:commande.produit.id})">{{commande.produit.nomProduit}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="commande-detail({id:commande.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="commande.edit({id:commande.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="commande.delete({id:commande.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

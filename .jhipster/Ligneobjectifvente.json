@@ -1,0 +1,27 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "objectifs",
+            "otherEntityName": "objectifs",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "quantiteObjectif",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20160623171105",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "ligneobjectifvente",
+    "pagination": "no"
+}

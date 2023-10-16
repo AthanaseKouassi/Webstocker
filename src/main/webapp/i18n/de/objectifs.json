@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "objectifs" : {
+            "home": {
+                "title": "Objectifs",
+                "createLabel": "Objectifs erstellen",
+                "createOrEditLabel": "Objectifs erstellen oder bearbeiten",
+                "search": "Suche nach Objectifs"
+            },
+            "created": "Objectifs erstellt mit ID {{ param }}",
+            "updated": "Objectifs aktualisiert mit ID {{ param }}",
+            "deleted": "Objectifs gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Objectifs {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Objectifs"
+            },
+            "periode": "Periode",
+            "quantiteAttendue": "QuantiteAttendue",
+            "quantiteObtenu": "QuantiteObtenu",
+            "taux": "Taux",
+            "produit": "Produit"
+        }
+    }
+}

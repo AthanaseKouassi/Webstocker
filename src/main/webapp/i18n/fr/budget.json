@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "budget" : {
+            "home": {
+                "title": "Budgets",
+                "createLabel": "Créer un nouveau Budget",
+                "createOrEditLabel": "Créer ou éditer un Budget",
+                "search": "Recherche pour Budget"
+            },
+            "created": "Un nouveau Budget a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Budget avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Budget avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Budget {{ id }} ?"
+            },
+            "detail": {
+                "title": "Budget"
+            },
+            "montantBudget": "MontantBudget",
+            "ligneBudget": "LigneBudget"
+        }
+    }
+}

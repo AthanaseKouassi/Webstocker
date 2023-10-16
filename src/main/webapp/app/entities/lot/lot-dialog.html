@@ -1,0 +1,114 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myLotLabel" translate="webstockerApp.lot.home.createOrEditLabel">Create or edit a Lot</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.lot.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.numeroLot" for="field_numeroLot">NumeroLot</label>
+            <input type="number" class="form-control" name="numeroLot" id="field_numeroLot"
+                    ng-model="vm.lot.numeroLot"
+                    required />
+            <div ng-show="editForm.numeroLot.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.numeroLot.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.numeroLot.$error.number" translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.dateFabrication" for="field_dateFabrication">DateFabrication</label>
+                <div class="input-group">
+                    <input id="field_dateFabrication" type="text" class="form-control" name="dateFabrication" uib-datepicker-popup="{{dateformat}}" ng-model="vm.lot.dateFabrication" is-open="vm.datePickerOpenStatus.dateFabrication"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateFabrication')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dateFabrication.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dateFabrication.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.datePeremption" for="field_datePeremption">DatePeremption</label>
+                <div class="input-group">
+                    <input id="field_datePeremption" type="text" class="form-control" name="datePeremption" uib-datepicker-popup="{{dateformat}}" ng-model="vm.lot.datePeremption" is-open="vm.datePickerOpenStatus.datePeremption"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('datePeremption')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.datePeremption.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.datePeremption.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.descriptionLot" for="field_descriptionLot">DescriptionLot</label>
+            <input type="text" class="form-control" name="descriptionLot" id="field_descriptionLot"
+                    ng-model="vm.lot.descriptionLot"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.quantiteLot" for="field_quantiteLot">QuantiteLot</label>
+            <input type="number" class="form-control" name="quantiteLot" id="field_quantiteLot"
+                    ng-model="vm.lot.quantiteLot"
+                    required />
+            <div ng-show="editForm.quantiteLot.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.quantiteLot.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.quantiteLot.$error.number" translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.quantiteCartonLot" for="field_quantiteCartonLot">QuantiteCartonLot</label>
+            <input type="number" class="form-control" name="quantiteCartonLot" id="field_quantiteCartonLot"
+                    ng-model="vm.lot.quantiteCartonLot"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.lot.quantiteSortie" for="field_quantiteSortie">QuantiteSortie</label>
+            <input type="number" class="form-control" name="quantiteSortie" id="field_quantiteSortie"
+                    ng-model="vm.lot.quantiteSortie"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label translate="webstockerApp.lot.produit" for="field_produit">produit</label>
+            <select class="form-control" id="field_produit" name="produit" ng-model="vm.lot.produit" ng-options="produit as produit.nomProduit for produit in vm.produits track by produit.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

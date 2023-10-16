@@ -1,0 +1,24 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "activite",
+            "otherEntityName": "activite",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "typeActivite"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "libelle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160724162151",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "type_activite",
+    "pagination": "no"
+}

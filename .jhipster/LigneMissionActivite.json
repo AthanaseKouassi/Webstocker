@@ -1,0 +1,31 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "activite",
+            "otherEntityName": "activite",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "mission",
+            "otherEntityName": "mission",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "resultatObtenu",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateResultat",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20160724173446",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "ligne_mission_activite",
+    "pagination": "pager"
+}

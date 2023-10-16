@@ -1,0 +1,39 @@
+
+<div>
+    <h2><span data-translate="webstockerApp.inventaire.detail.title">Inventaire</span> {{vm.inventaire.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row jh-entity-details">
+        <dt><span data-translate="webstockerApp.inventaire.dateInventaire">Date Inventaire</span></dt>
+        <dd>
+            <span>{{vm.inventaire.dateInventaire | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.inventaire.stockFinalTheorique">Stock Final Theorique</span></dt>
+        <dd>
+            <span>{{vm.inventaire.stockFinalTheorique}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.inventaire.stockReel">Stock Reel</span></dt>
+        <dd>
+            <span>{{vm.inventaire.stockReel}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.inventaire.produit">Produit</span></dt>
+        <dd>
+            <a ui-sref="produit-detail({id:vm.inventaire.produit.id})">{{vm.inventaire.produit.nomProduit}}</a>
+        </dd>
+        <dt><span data-translate="webstockerApp.inventaire.magasin">Magasin</span></dt>
+        <dd>
+            <a ui-sref="magasin-detail({id:vm.inventaire.magasin.id})">{{vm.inventaire.magasin.nomMagasin}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="inventaire-detail.edit({id:vm.inventaire.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

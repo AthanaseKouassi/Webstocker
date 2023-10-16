@@ -1,0 +1,30 @@
+{
+    "webstockerApp": {
+        "lot" : {
+            "home": {
+                "title": "Lots",
+                "createLabel": "Créer un nouveau Lot",
+                "createOrEditLabel": "Créer ou éditer un Lot",
+                "search": "Recherche pour Lot"
+            },
+            "created": "Un nouveau Lot a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Lot avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Lot avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Lot {{ id }} ?"
+            },
+            "detail": {
+                "title": "Lot"
+            },
+            "numeroLot": "NumeroLot",
+            "dateFabrication": "DateFabrication",
+            "datePeremption": "DatePeremption",
+            "descriptionLot": "DescriptionLot",
+            "quantiteLot": "QuantiteLot",
+            "quantiteCartonLot": "QuantiteCartonLot",
+            "quantiteSortie": "QuantiteSortie",
+            "produit": "Produit",
+            "lignelivraison": "Lignelivraison"
+        }
+    }
+}

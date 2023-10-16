@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "ligneobjectifvente" : {
+            "home": {
+                "title": "Ligneobjectifventes",
+                "createLabel": "Créer un nouveau Ligneobjectifvente",
+                "createOrEditLabel": "Créer ou éditer un Ligneobjectifvente",
+                "search": "Recherche pour Ligneobjectifvente"
+            },
+            "created": "Un nouveau Ligneobjectifvente a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Ligneobjectifvente avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Ligneobjectifvente avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Ligneobjectifvente {{ id }} ?"
+            },
+            "detail": {
+                "title": "Ligneobjectifvente"
+            },
+            "quantiteObjectif": "QuantiteObjectif",
+            "objectifs": "Objectifs",
+            "produit": "Produit"
+        }
+    }
+}

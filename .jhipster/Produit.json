@@ -1,0 +1,65 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "categorie",
+            "otherEntityName": "categorie",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomCategorie"
+        },
+        {
+            "relationshipName": "objectifs",
+            "otherEntityName": "objectifs",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "produit"
+        },
+        {
+            "relationshipName": "lignecommande",
+            "otherEntityName": "lignecommande",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "produit"
+        },
+        {
+            "relationshipName": "conditionnement",
+            "otherEntityName": "conditionnement",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelle"
+        },
+        {
+            "relationshipName": "lot",
+            "otherEntityName": "lot",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "produit"
+        },
+        {
+            "relationshipName": "fabricant",
+            "otherEntityName": "fabricant",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "produit"
+        },
+        {
+            "relationshipName": "prix",
+            "otherEntityName": "prix",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "produit"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomProduit",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descriptionProduit",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160429122434",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "produit",
+    "pagination": "no"
+}

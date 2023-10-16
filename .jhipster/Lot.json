@@ -1,0 +1,63 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        },
+        {
+            "relationshipName": "lignelivraison",
+            "otherEntityName": "lignelivraison",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "lot"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "numeroLot",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "dateFabrication",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "datePeremption",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descriptionLot",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "quantiteLot",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantiteCartonLot",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "quantiteSortie",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20160501115908",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "lot",
+    "pagination": "no"
+}

@@ -1,0 +1,21 @@
+{
+    "webstockerApp": {
+        "auteur" : {
+            "home": {
+                "title": "Auteurs",
+                "createLabel": "Create a new Auteur",
+                "createOrEditLabel": "Create or edit a Auteur",
+                "search": "Search for Auteur"
+            },
+            "created": "A new Auteur is created with identifier {{ param }}",
+            "updated": "A Auteur is updated with identifier {{ param }}",
+            "deleted": "A Auteur is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Auteur {{ id }}?"
+            },
+            "detail": {
+                "title": "Auteur"
+            }
+        }
+    }
+}

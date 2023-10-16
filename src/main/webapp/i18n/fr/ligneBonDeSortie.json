@@ -1,0 +1,27 @@
+{
+    "webstockerApp": {
+        "ligneBonDeSortie" : {
+            "home": {
+                "title": "LigneBonDeSorties",
+                "createLabel": "Créer un nouveau Ligne Bon De Sortie",
+                "createOrEditLabel": "Créer ou éditer un Ligne Bon De Sortie",
+                "search": "Recherche pour Ligne Bon De Sortie"
+            },
+            "created": "Un nouveau Ligne Bon De Sortie a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Ligne Bon De Sortie avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Ligne Bon De Sortie avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Ligne Bon De Sortie {{ id }} ?"
+            },
+            "detail": {
+                "title": "Ligne Bon De Sortie"
+            },
+            "quantite": "Quantite",
+            "prixVente": "Prix Vente",
+            "prixDeVente": "Prix De Vente",
+            "produit": "Produit",
+            "bonDeSortie": "Bon De Sortie",
+            "lot": "Lot"
+        }
+    }
+}

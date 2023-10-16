@@ -1,0 +1,73 @@
+
+<div>
+    <h2><span translate="webstockerApp.livraison.detail.title">Livraison</span> {{vm.livraison.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.livraison.dateLivraison">Date Livraison</span></dt>
+        <dd>
+            <span>{{vm.livraison.dateLivraison | date:'mediumDate'}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.descriptionLivraison">Description Livraison</span></dt>
+        <dd>
+            <span>{{vm.livraison.descriptionLivraison}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.numeroLivraison">Numero Livraison</span></dt>
+        <dd>
+            <span>{{vm.livraison.numeroLivraison}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.valeurLivraison">Valeur Livraison</span></dt>
+        <dd>
+            <span>{{vm.livraison.valeurLivraison}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.fraisTest">Frais Test</span></dt>
+        <dd>
+            <span>{{vm.livraison.fraisTest}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.fraisTransit">Frais Transit</span></dt>
+        <dd>
+            <span>{{vm.livraison.fraisTransit}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.fraisAssuranceLocale">Frais Assurance Locale</span></dt>
+        <dd>
+            <span>{{vm.livraison.fraisAssuranceLocale}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.fraisManutention">Frais Manutention</span></dt>
+        <dd>
+            <span>{{vm.livraison.fraisManutention}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.valeurLivraisonDevise">Valeur Livraison Devise</span></dt>
+        <dd>
+            <span>{{vm.livraison.valeurLivraisonDevise}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.devise">Devise</span></dt>
+        <dd>
+            <span>{{vm.livraison.devise}}</span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.magasin">Magasin</span></dt>
+        <dd>
+            <a ui-sref="magasin-detail({id:vm.livraison.magasin.id})">{{vm.livraison.magasin.nomMagasin}}</a>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.livraison.commande">Commande</span></dt>
+        <dd>
+            <a ui-sref="commande-detail({id:vm.livraison.commande.id})">{{vm.livraison.commande.numeroCommande}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

@@ -1,0 +1,35 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "commande",
+            "otherEntityName": "commande",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "fabricant"
+        },
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "nomProduit",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomFabricant",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "paysFabricant",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160429134300",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "fabricant",
+    "pagination": "no"
+}

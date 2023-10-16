@@ -1,0 +1,32 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "client",
+            "otherEntityName": "client",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "categorieclient"
+        },
+        {
+            "relationshipName": "prix",
+            "otherEntityName": "prix",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "categorieclient"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "libelleCategorieclient",
+            "fieldType": "String",
+            "fieldName": "libelleCategorieClient",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160622174621",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "categorieclient",
+    "pagination": "no"
+}

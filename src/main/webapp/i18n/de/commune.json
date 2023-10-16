@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "commune" : {
+            "home": {
+                "title": "Communes",
+                "createLabel": "Commune erstellen",
+                "createOrEditLabel": "Commune erstellen oder bearbeiten",
+                "search": "Suche nach Commune"
+            },
+            "created": "Commune erstellt mit ID {{ param }}",
+            "updated": "Commune aktualisiert mit ID {{ param }}",
+            "deleted": "Commune gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Commune {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Commune"
+            },
+            "libelle": "Libelle",
+            "ville": "Ville"
+        }
+    }
+}

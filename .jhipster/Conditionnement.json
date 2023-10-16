@@ -1,0 +1,49 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "conditionnement"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "libelle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descriptionCond",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "capaciteCarton",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "capaciteCartouche",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "capaciteEtui",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160502182838",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "conditionnement",
+    "pagination": "no"
+}

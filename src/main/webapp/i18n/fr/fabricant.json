@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "fabricant" : {
+            "home": {
+                "title": "Fabricants",
+                "createLabel": "Créer un nouveau Fabricant",
+                "createOrEditLabel": "Créer ou éditer un Fabricant",
+                "search": "Recherche pour Fabricant"
+            },
+            "created": "Un nouveau Fabricant a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Fabricant avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Fabricant avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Fabricant {{ id }} ?"
+            },
+            "detail": {
+                "title": "Fabricant"
+            },
+            "nomFabricant": "NomFabricant",
+            "paysFabricant": "PaysFabricant",
+            "commande": "Commande",
+            "produit": "Produit"
+        }
+    }
+}

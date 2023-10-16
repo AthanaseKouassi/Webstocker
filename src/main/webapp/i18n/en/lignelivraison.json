@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "lignelivraison" : {
+            "home": {
+                "title": "Lignelivraisons",
+                "createLabel": "Create a new Lignelivraison",
+                "createOrEditLabel": "Create or edit a Lignelivraison",
+                "search": "Search for Lignelivraison"
+            },
+            "created": "A new Lignelivraison is created with identifier {{ param }}",
+            "updated": "A Lignelivraison is updated with identifier {{ param }}",
+            "deleted": "A Lignelivraison is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Lignelivraison {{ id }}?"
+            },
+            "detail": {
+                "title": "Lignelivraison"
+            },
+            "quantiteLotLivre": "QuantiteLotLivre",
+            "quantiteCartonLot": "QuantiteCartonLot",
+            "lot": "Lot",
+            "livraison": "Livraison"
+        }
+    }
+}

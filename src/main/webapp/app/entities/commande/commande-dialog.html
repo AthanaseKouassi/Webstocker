@@ -1,0 +1,102 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myCommandeLabel" translate="webstockerApp.commande.home.createOrEditLabel">Create or edit a Commande</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.commande.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.commande.dateCommande" for="field_dateCommande">DateCommande</label>
+                <div class="input-group">
+                    <input id="field_dateCommande" type="text" class="form-control" name="dateCommande" uib-datepicker-popup="{{dateformat}}" ng-model="vm.commande.dateCommande" is-open="vm.datePickerOpenStatus.dateCommande"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateCommande')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dateCommande.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dateCommande.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.commande.numeroCommande" for="field_numeroCommande">NumeroCommande</label>
+            <input type="text" class="form-control" name="numeroCommande" id="field_numeroCommande"
+                    ng-model="vm.commande.numeroCommande"
+                    required />
+            <div ng-show="editForm.numeroCommande.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.numeroCommande.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.commande.quantiteCommande" for="field_quantiteCommande">QuantiteCommande</label>
+            <input type="number" class="form-control" name="quantiteCommande" id="field_quantiteCommande"
+                    ng-model="vm.commande.quantiteCommande"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.commande.valeurCommande" for="field_valeurCommande">ValeurCommande</label>
+            <input type="number" class="form-control" name="valeurCommande" id="field_valeurCommande"
+                    ng-model="vm.commande.valeurCommande"
+                    required />
+            <div ng-show="editForm.valeurCommande.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.valeurCommande.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.valeurCommande.$error.number" translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.commande.statut" for="field_statut">Statut</label>
+            <select class="form-control" name="statut" ng-model="vm.commande.statut" id="field_statut">
+                <option value="EN_COURS" translate="webstockerApp.StatutCommande.EN_COURS">EN_COURS</option>
+                <option value="PARTIELLEMENT_LIVREE" translate="webstockerApp.StatutCommande.PARTIELLEMENT_LIVREE">PARTIELLEMENT_LIVREE</option>
+                <option value="LIVREE" translate="webstockerApp.StatutCommande.LIVREE">LIVREE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label translate="webstockerApp.commande.bailleur" for="field_bailleur">bailleur</label>
+            <select class="form-control" id="field_bailleur" name="bailleur" ng-model="vm.commande.bailleur" ng-options="bailleur as bailleur.nomBailleur for bailleur in vm.bailleurs track by bailleur.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label translate="webstockerApp.commande.fabricant" for="field_fabricant">fabricant</label>
+            <select class="form-control" id="field_fabricant" name="fabricant" ng-model="vm.commande.fabricant" ng-options="fabricant as fabricant.nomFabricant for fabricant in vm.fabricants track by fabricant.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label translate="webstockerApp.commande.produit" for="field_produit">produit</label>
+            <select class="form-control" id="field_produit" name="produit" ng-model="vm.commande.produit" ng-options="produit as produit.nomProduit for produit in vm.produits track by produit.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

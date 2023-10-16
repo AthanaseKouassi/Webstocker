@@ -1,0 +1,39 @@
+
+<div>
+    <h2><span data-translate="webstockerApp.prix.detail.title">Prix</span> {{vm.prix.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row jh-entity-details">
+        <dt><span data-translate="webstockerApp.prix.dateFixation">Date Fixation</span></dt>
+        <dd>
+            <span>{{vm.prix.dateFixation | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.prix.actif">Actif</span></dt>
+        <dd>
+            <span>{{vm.prix.actif}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.prix.prixUnitaire">Prix Unitaire</span></dt>
+        <dd>
+            <span>{{vm.prix.prixUnitaire}}</span>
+        </dd>
+        <dt><span data-translate="webstockerApp.prix.produit">Produit</span></dt>
+        <dd>
+            <a ui-sref="produit-detail({id:vm.prix.produit.id})">{{vm.prix.produit.nomProduit}}</a>
+        </dd>
+        <dt><span data-translate="webstockerApp.prix.categorieclient">Categorieclient</span></dt>
+        <dd>
+            <a ui-sref="categorieclient-detail({id:vm.prix.categorieclient.id})">{{vm.prix.categorieclient.libelleCategorieclient}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="prix-detail.edit({id:vm.prix.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,0 +1,30 @@
+{
+    "webstockerApp": {
+        "produit" : {
+            "home": {
+                "title": "Produits",
+                "createLabel": "Create a new Produit",
+                "createOrEditLabel": "Create or edit a Produit",
+                "search": "Search for Produit"
+            },
+            "created": "A new Produit is created with identifier {{ param }}",
+            "updated": "A Produit is updated with identifier {{ param }}",
+            "deleted": "A Produit is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Produit {{ id }}?"
+            },
+            "detail": {
+                "title": "Produit"
+            },
+            "nomProduit": "NomProduit",
+            "descriptionProduit": "DescriptionProduit",
+            "categorie": "Categorie",
+            "objectifs": "Objectifs",
+            "lignecommande": "Lignecommande",
+            "conditionnement": "Conditionnement",
+            "lot": "Lot",
+            "fabricant": "Fabricant",
+            "prix": "Prix"
+        }
+    }
+}

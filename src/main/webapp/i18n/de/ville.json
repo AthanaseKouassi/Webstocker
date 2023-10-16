@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "ville" : {
+            "home": {
+                "title": "Villes",
+                "createLabel": "Ville erstellen",
+                "createOrEditLabel": "Ville erstellen oder bearbeiten",
+                "search": "Suche nach Ville"
+            },
+            "created": "Ville erstellt mit ID {{ param }}",
+            "updated": "Ville aktualisiert mit ID {{ param }}",
+            "deleted": "Ville gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Ville {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Ville"
+            },
+            "libelle": "Libelle",
+            "region": "Region"
+        }
+    }
+}

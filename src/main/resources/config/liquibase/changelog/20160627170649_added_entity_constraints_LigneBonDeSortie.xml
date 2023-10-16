@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity LigneBonDeSortie.
+    -->
+    <changeSet id="20160627170649-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="produit_id"
+                                 baseTableName="ligne_bon_de_sortie"
+                                 constraintName="fk_ligne_bon_de_sortie_produit_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="produit"/>
+
+        <addForeignKeyConstraint baseColumnNames="bon_de_sortie_id"
+                                 baseTableName="ligne_bon_de_sortie"
+                                 constraintName="fk_ligne_bon_de_sortie_bon_de_sortie_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bon_de_sortie"/>
+
+        <addForeignKeyConstraint baseColumnNames="lot_id"
+                                 baseTableName="ligne_bon_de_sortie"
+                                 constraintName="fk_ligne_bon_de_sortie_lot_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lot"/>
+
+    </changeSet>
+</databaseChangeLog>

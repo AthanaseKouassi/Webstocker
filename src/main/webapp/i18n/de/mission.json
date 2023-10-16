@@ -1,0 +1,30 @@
+{
+    "webstockerApp": {
+        "mission" : {
+            "home": {
+                "title": "Missions",
+                "createLabel": "Mission erstellen",
+                "createOrEditLabel": "Mission erstellen oder bearbeiten",
+                "search": "Suche nach Mission"
+            },
+            "created": "Mission erstellt mit ID {{ param }}",
+            "updated": "Mission aktualisiert mit ID {{ param }}",
+            "deleted": "Mission gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Mission {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Mission"
+            },
+            "libelle": "Libelle",
+            "dateDebut": "DateDebut",
+            "dateFin": "DateFin",
+            "objectifGeneral": "ObjectifGeneral",
+            "objectifSpecifique": "ObjectifSpecifique",
+            "ligneMissionActivite": "LigneMissionActivite",
+            "ligneBudget": "LigneBudget",
+            "localite": "Localite",
+            "cellule": "Cellule"
+        }
+    }
+}

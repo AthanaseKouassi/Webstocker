@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "lignecommande" : {
+            "home": {
+                "title": "Lignecommandes",
+                "createLabel": "Créer un nouveau Lignecommande",
+                "createOrEditLabel": "Créer ou éditer un Lignecommande",
+                "search": "Recherche pour Lignecommande"
+            },
+            "created": "Un nouveau Lignecommande a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Lignecommande avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Lignecommande avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Lignecommande {{ id }} ?"
+            },
+            "detail": {
+                "title": "Lignecommande"
+            },
+            "dateFabrication": "DateFabrication",
+            "quantiteLigneCommande": "QuantiteLigneCommande",
+            "commande": "Commande",
+            "produit": "Produit"
+        }
+    }
+}

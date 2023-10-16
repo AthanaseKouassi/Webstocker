@@ -1,0 +1,28 @@
+{
+    "webstockerApp": {
+        "facture" : {
+            "home": {
+                "title": "Factures",
+                "createLabel": "Facture erstellen",
+                "createOrEditLabel": "Facture erstellen oder bearbeiten",
+                "search": "Suche nach Facture"
+            },
+            "created": "Facture erstellt mit ID {{ param }}",
+            "updated": "Facture aktualisiert mit ID {{ param }}",
+            "deleted": "Facture gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Facture {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Facture"
+            },
+            "dateFacture": "DateFacture",
+            "valeurRemise": "ValeurRemise",
+            "delaiPaiement": "DelaiPaiement",
+            "dateLimitePaiement": "DateLimitePaiement",
+            "client": "Client",
+            "reglement": "Reglement",
+            "bonDeSortie": "BonDeSortie"
+        }
+    }
+}

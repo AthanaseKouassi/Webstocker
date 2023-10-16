@@ -1,0 +1,99 @@
+<div>
+    <h2 translate="webstockerApp.livraison.home.title">Livraisons</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="livraison.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs"  translate="webstockerApp.livraison.home.createLabel">
+                        Create new Livraison
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'webstockerApp.livraison.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="webstockerApp.livraison.dateLivraison">Date Livraison</span></th>
+                    <th><span translate="webstockerApp.livraison.descriptionLivraison">Description Livraison</span></th>
+                    <th><span translate="webstockerApp.livraison.numeroLivraison">Numero Livraison</span></th>
+                    <th><span translate="webstockerApp.livraison.valeurLivraison">Valeur Livraison</span></th>
+                    <th><span translate="webstockerApp.livraison.fraisTest">Frais Test</span></th>
+                    <th><span translate="webstockerApp.livraison.fraisTransit">Frais Transit</span></th>
+                    <th><span translate="webstockerApp.livraison.fraisAssuranceLocale">Frais Assurance Locale</span></th>
+                    <th><span translate="webstockerApp.livraison.fraisManutention">Frais Manutention</span></th>
+                    <th><span translate="webstockerApp.livraison.valeurLivraisonDevise">Valeur Livraison Devise</span></th>
+                    <th><span translate="webstockerApp.livraison.devise">Devise</span></th>
+                    <th><span translate="webstockerApp.livraison.magasin">Magasin</span></th>
+                    <th><span translate="webstockerApp.livraison.commande">Commande</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="livraison in vm.livraisons track by livraison.id">
+                    <td><a ui-sref="livraison-detail({id:livraison.id})">{{livraison.id}}</a></td>
+                        <td>{{livraison.dateLivraison | date:'mediumDate'}}</td>
+                    <td>{{livraison.descriptionLivraison}}</td>
+                    <td>{{livraison.numeroLivraison}}</td>
+                    <td>{{livraison.valeurLivraison}}</td>
+                    <td>{{livraison.fraisTest}}</td>
+                    <td>{{livraison.fraisTransit}}</td>
+                    <td>{{livraison.fraisAssuranceLocale}}</td>
+                    <td>{{livraison.fraisManutention}}</td>
+                    <td>{{livraison.valeurLivraisonDevise}}</td>
+                    <td>{{livraison.devise}}</td>
+                    <td>
+                        <a ui-sref="magasin-detail({id:livraison.magasin.id})">{{livraison.magasin.nomMagasin}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="commande-detail({id:livraison.commande.id})">{{livraison.commande.numeroCommande}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="livraison-detail({id:livraison.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="livraison.edit({id:livraison.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="livraison.delete({id:livraison.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

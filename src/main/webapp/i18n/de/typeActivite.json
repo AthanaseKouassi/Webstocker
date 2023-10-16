@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "typeActivite" : {
+            "home": {
+                "title": "TypeActivites",
+                "createLabel": "TypeActivite erstellen",
+                "createOrEditLabel": "TypeActivite erstellen oder bearbeiten",
+                "search": "Suche nach TypeActivite"
+            },
+            "created": "TypeActivite erstellt mit ID {{ param }}",
+            "updated": "TypeActivite aktualisiert mit ID {{ param }}",
+            "deleted": "TypeActivite gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll TypeActivite {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "TypeActivite"
+            },
+            "libelle": "Libelle",
+            "activite": "Activite"
+        }
+    }
+}

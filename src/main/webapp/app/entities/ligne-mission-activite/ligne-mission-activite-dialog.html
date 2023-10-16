@@ -1,0 +1,54 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myLigneMissionActiviteLabel" translate="webstockerApp.ligneMissionActivite.home.createOrEditLabel">Create or edit a LigneMissionActivite</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.ligneMissionActivite.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.ligneMissionActivite.resultatObtenu" for="field_resultatObtenu">ResultatObtenu</label>
+            <input type="text" class="form-control" name="resultatObtenu" id="field_resultatObtenu"
+                    ng-model="vm.ligneMissionActivite.resultatObtenu"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.ligneMissionActivite.dateResultat" for="field_dateResultat">DateResultat</label>
+                <div class="input-group">
+                    <input id="field_dateResultat" type="text" class="form-control" name="dateResultat" uib-datepicker-popup="{{dateformat}}" ng-model="vm.ligneMissionActivite.dateResultat" is-open="vm.datePickerOpenStatus.dateResultat"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateResultat')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+
+        <div class="form-group">
+            <label translate="webstockerApp.ligneMissionActivite.activite" for="field_activite">activite</label>
+            <select class="form-control" id="field_activite" name="activite" ng-model="vm.ligneMissionActivite.activite" ng-options="activite as activite.id for activite in vm.activites track by activite.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label translate="webstockerApp.ligneMissionActivite.mission" for="field_mission">mission</label>
+            <select class="form-control" id="field_mission" name="mission" ng-model="vm.ligneMissionActivite.mission" ng-options="mission as mission.id for mission in vm.missions track by mission.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

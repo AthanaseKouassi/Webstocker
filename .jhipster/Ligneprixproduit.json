@@ -1,0 +1,9 @@
+{
+    "relationships": [],
+    "fields": [],
+    "changelogDate": "20160613144131",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "ligneprixproduit",
+    "pagination": "no"
+}

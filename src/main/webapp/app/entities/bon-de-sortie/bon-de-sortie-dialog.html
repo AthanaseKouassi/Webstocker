@@ -1,0 +1,143 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myBonDeSortieLabel" data-translate="webstockerApp.bonDeSortie.home.createOrEditLabel">Create or edit a Bon De Sortie</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.bonDeSortie.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.bonDeSortie.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.numero" for="field_numero">Numero</label>
+            <input type="text" class="form-control" name="numero" id="field_numero"
+                    ng-model="vm.bonDeSortie.numero"
+                    required/>
+            <div ng-show="editForm.numero.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.numero.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.daateCreation" for="field_daateCreation">Daate Creation</label>
+                <div class="input-group">
+                    <input id="field_daateCreation" type="text" class="form-control" name="daateCreation" uib-datepicker-popup="{{dateformat}}" ng-model="vm.bonDeSortie.daateCreation" is-open="vm.datePickerOpenStatus.daateCreation"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('daateCreation')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.daateCreation.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.daateCreation.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.typeSortie" for="field_typeSortie">Type Sortie</label>
+            <select class="form-control" name="typeSortie" ng-model="vm.bonDeSortie.typeSortie" id="field_typeSortie" required>
+                <option value="TRANSFERT" data-translate="webstockerApp.TypeSortie.TRANSFERT">TRANSFERT</option>
+                <option value="VENTE" data-translate="webstockerApp.TypeSortie.VENTE">VENTE</option>
+                <option value="PROMOTION" data-translate="webstockerApp.TypeSortie.PROMOTION">PROMOTION</option>
+            </select>
+            <div ng-show="editForm.typeSortie.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.typeSortie.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.typeVente" for="field_typeVente">Type Vente</label>
+            <select class="form-control" name="typeVente" ng-model="vm.bonDeSortie.typeVente" id="field_typeVente">
+                <option value="CASH" data-translate="webstockerApp.TypeVente.CASH">CASH</option>
+                <option value="CREDIT" data-translate="webstockerApp.TypeVente.CREDIT">CREDIT</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.printStatus" for="field_printStatus">Print Status</label>
+            <input type="checkbox" class="form-control" name="printStatus" id="field_printStatus"
+                    ng-model="vm.bonDeSortie.printStatus"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.numeroFactureNormalise" for="field_numeroFactureNormalise">Numero Facture Normalise</label>
+            <input type="text" class="form-control" name="numeroFactureNormalise" id="field_numeroFactureNormalise"
+                    ng-model="vm.bonDeSortie.numeroFactureNormalise"
+                    />
+        </div>
+        <div class="form-group">
+
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.statusTranfert" for="field_statusTranfert">Status Tranfert</label>
+            <select class="form-control" name="statusTranfert" ng-model="vm.bonDeSortie.statusTranfert" id="field_statusTranfert">
+                <option value="RECU" data-translate="webstockerApp.StatusTransfert.RECU">RECU</option>
+                <option value="ENCOURS" data-translate="webstockerApp.StatusTransfert.ENCOURS">ENCOURS</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.dateReception" for="field_dateReception">Date Reception</label>
+                <div class="input-group">
+                    <input id="field_dateReception" type="text" class="form-control" name="dateReception" uib-datepicker-popup="{{dateformat}}" ng-model="vm.bonDeSortie.dateReception" is-open="vm.datePickerOpenStatus.dateReception"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateReception')"><i class="glyphicon glyphicon-calendar"></i></button>
+
+            <label class="control-label" data-translate="webstockerApp.bonDeSortie.dateReceptionTransfert" for="field_dateReceptionTransfert">Date Reception Transfert</label>
+                <div class="input-group">
+                    <input id="field_dateReceptionTransfert" type="text" class="form-control" name="dateReceptionTransfert" uib-datepicker-popup="{{dateformat}}" ng-model="vm.bonDeSortie.dateReceptionTransfert" is-open="vm.datePickerOpenStatus.dateReceptionTransfert"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateReceptionTransfert')"><i class="glyphicon glyphicon-calendar"></i></button>
+
+                    </span>
+                </div>
+        </div>
+
+        <div class="form-group">
+            <label data-translate="webstockerApp.bonDeSortie.magasin" for="field_magasin">Magasin</label>
+            <select class="form-control" id="field_magasin" name="magasin" ng-model="vm.bonDeSortie.magasin" ng-options="magasin as magasin.id for magasin in vm.magasins track by magasin.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.bonDeSortie.destination" for="field_destination">Destination</label>
+            <select class="form-control" id="field_destination" name="destination" ng-model="vm.bonDeSortie.destination" ng-options="magasin as magasin.id for magasin in vm.magasins track by magasin.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.bonDeSortie.demandeur" for="field_demandeur">Demandeur</label>
+            <select class="form-control" id="field_demandeur" name="demandeur" ng-model="vm.bonDeSortie.demandeur" ng-options="user as user.lastName for user in vm.users track by user.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.bonDeSortie.client" for="field_client">Client</label>
+            <select class="form-control" id="field_client" name="client" ng-model="vm.bonDeSortie.client" ng-options="client as client.nomClient for client in vm.clients track by client.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.bonDeSortie.emetteur" for="field_emetteur">Emetteur</label>
+            <select class="form-control" id="field_emetteur" name="emetteur" ng-model="vm.bonDeSortie.emetteur" ng-options="user as user.login for user in vm.users track by user.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

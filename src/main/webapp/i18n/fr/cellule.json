@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "cellule" : {
+            "home": {
+                "title": "Cellules",
+                "createLabel": "Créer un nouveau Cellule",
+                "createOrEditLabel": "Créer ou éditer un Cellule",
+                "search": "Recherche pour Cellule"
+            },
+            "created": "Un nouveau Cellule a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Cellule avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Cellule avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Cellule {{ id }} ?"
+            },
+            "detail": {
+                "title": "Cellule"
+            },
+            "nom": "Nom",
+            "responsable": "Responsable",
+            "mission": "Mission"
+        }
+    }
+}

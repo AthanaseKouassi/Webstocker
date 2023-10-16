@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "categorieclient" : {
+            "home": {
+                "title": "Categorieclients",
+                "createLabel": "Categorieclient erstellen",
+                "createOrEditLabel": "Categorieclient erstellen oder bearbeiten",
+                "search": "Suche nach Categorieclient"
+            },
+            "created": "Categorieclient erstellt mit ID {{ param }}",
+            "updated": "Categorieclient aktualisiert mit ID {{ param }}",
+            "deleted": "Categorieclient gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Categorieclient {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Categorieclient"
+            },
+            "libelleCategorieclient": "LibelleCategorieclient",
+            "client": "Client",
+            "prix": "Prix"
+        }
+    }
+}

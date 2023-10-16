@@ -1,0 +1,91 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "magasin",
+            "otherEntityName": "magasin",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "destination",
+            "otherEntityName": "magasin",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "demandeur",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "lastName"
+        },
+        {
+            "relationshipName": "client",
+            "otherEntityName": "client",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomClient"
+        },
+        {
+            "relationshipName": "emetteur",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "bonDeSortie"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "numero",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "daateCreation",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "typeSortie",
+            "fieldType": "TypeSortie",
+            "fieldValues": "TRANSFERT,VENTE,PROMOTION",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "typeVente",
+            "fieldType": "TypeVente",
+            "fieldValues": "CASH,CREDIT"
+        },
+        {
+            "fieldName": "printStatus",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "numeroFactureNormalise",
+            "fieldType": "String"
+        },
+        {
+<<<<<<< HEAD
+            "fieldName": "statusTranfert",
+            "fieldType": "StatusTransfert",
+            "fieldValues": "RECU,ENCOURS"
+        },
+        {
+            "fieldName": "dateReception",
+=======
+            "fieldName": "dateReceptionTransfert",
+>>>>>>> upstream/master
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20160627170321",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "bon_de_sortie",
+    "pagination": "pagination"
+}

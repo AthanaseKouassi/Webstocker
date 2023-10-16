@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "objectifs" : {
+            "home": {
+                "title": "Objectifs",
+                "createLabel": "Create a new Objectifs",
+                "createOrEditLabel": "Create or edit a Objectifs",
+                "search": "Search for Objectifs"
+            },
+            "created": "A new Objectifs is created with identifier {{ param }}",
+            "updated": "A Objectifs is updated with identifier {{ param }}",
+            "deleted": "A Objectifs is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Objectifs {{ id }}?"
+            },
+            "detail": {
+                "title": "Objectifs"
+            },
+            "periode": "Periode",
+            "quantiteAttendue": "QuantiteAttendue",
+            "quantiteObtenu": "QuantiteObtenu",
+            "taux": "Taux",
+            "produit": "Produit"
+        }
+    }
+}

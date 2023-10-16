@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "cellule" : {
+            "home": {
+                "title": "Cellules",
+                "createLabel": "Create a new Cellule",
+                "createOrEditLabel": "Create or edit a Cellule",
+                "search": "Search for Cellule"
+            },
+            "created": "A new Cellule is created with identifier {{ param }}",
+            "updated": "A Cellule is updated with identifier {{ param }}",
+            "deleted": "A Cellule is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Cellule {{ id }}?"
+            },
+            "detail": {
+                "title": "Cellule"
+            },
+            "nom": "Nom",
+            "responsable": "Responsable",
+            "mission": "Mission"
+        }
+    }
+}

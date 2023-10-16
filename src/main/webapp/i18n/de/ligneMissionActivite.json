@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "ligneMissionActivite" : {
+            "home": {
+                "title": "LigneMissionActivites",
+                "createLabel": "LigneMissionActivite erstellen",
+                "createOrEditLabel": "LigneMissionActivite erstellen oder bearbeiten",
+                "search": "Suche nach LigneMissionActivite"
+            },
+            "created": "LigneMissionActivite erstellt mit ID {{ param }}",
+            "updated": "LigneMissionActivite aktualisiert mit ID {{ param }}",
+            "deleted": "LigneMissionActivite gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll LigneMissionActivite {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "LigneMissionActivite"
+            },
+            "resultatObtenu": "ResultatObtenu",
+            "dateResultat": "DateResultat",
+            "activite": "Activite",
+            "mission": "Mission"
+        }
+    }
+}

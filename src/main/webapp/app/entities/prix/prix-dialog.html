@@ -1,0 +1,82 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myPrixLabel" data-translate="webstockerApp.prix.home.createOrEditLabel">Create or edit a Prix</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.prix.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.prix.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.prix.dateFixation" for="field_dateFixation">Date Fixation</label>
+                <div class="input-group">
+                    <input id="field_dateFixation" type="text" class="form-control" name="dateFixation" uib-datepicker-popup="{{dateformat}}" ng-model="vm.prix.dateFixation" is-open="vm.datePickerOpenStatus.dateFixation"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateFixation')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dateFixation.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dateFixation.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.prix.actif" for="field_actif">Actif</label>
+            <input type="checkbox" class="form-control" name="actif" id="field_actif"
+                    ng-model="vm.prix.actif"
+                    />
+            <div ng-show="editForm.actif.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.actif.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="webstockerApp.prix.prixUnitaire" for="field_prixUnitaire">Prix Unitaire</label>
+            <input type="number" class="form-control" name="prixUnitaire" id="field_prixUnitaire"
+                    ng-model="vm.prix.prixUnitaire"
+                    required/>
+            <div ng-show="editForm.prixUnitaire.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.prixUnitaire.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.prixUnitaire.$error.number" data-translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label data-translate="webstockerApp.prix.produit" for="field_produit">Produit</label>
+            <select class="form-control" id="field_produit" name="produit" ng-model="vm.prix.produit" ng-options="produit as produit.nomProduit for produit in vm.produits track by produit.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label data-translate="webstockerApp.prix.categorieclient" for="field_categorieclient">Categorieclient</label>
+            <select class="form-control" id="field_categorieclient" name="categorieclient" ng-model="vm.prix.categorieclient" ng-options="categorieclient as categorieclient.libelleCategorieclient for categorieclient in vm.categorieclients track by categorieclient.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

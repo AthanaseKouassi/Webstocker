@@ -1,0 +1,41 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "ligneMissionActivite",
+            "otherEntityName": "ligneMissionActivite",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "activite"
+        },
+        {
+            "relationshipName": "typeActivite",
+            "otherEntityName": "typeActivite",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelle"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomActivite",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descriptionActivite",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "resultatAttendu",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160724162717",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "activite",
+    "pagination": "pager"
+}

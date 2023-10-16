@@ -1,0 +1,30 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "localite",
+            "otherEntityName": "localite",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "ville"
+        },
+        {
+            "relationshipName": "livraison",
+            "otherEntityName": "livraison",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "magasin"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomMagasin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160430101319",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "magasin",
+    "pagination": "no"
+}

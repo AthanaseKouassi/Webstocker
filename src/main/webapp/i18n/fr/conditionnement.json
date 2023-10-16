@@ -1,0 +1,27 @@
+{
+    "webstockerApp": {
+        "conditionnement" : {
+            "home": {
+                "title": "Conditionnements",
+                "createLabel": "Créer un nouveau Conditionnement",
+                "createOrEditLabel": "Créer ou éditer un Conditionnement",
+                "search": "Recherche pour Conditionnement"
+            },
+            "created": "Un nouveau Conditionnement a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Conditionnement avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Conditionnement avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Conditionnement {{ id }} ?"
+            },
+            "detail": {
+                "title": "Conditionnement"
+            },
+            "libelle": "Libelle",
+            "descriptionCond": "DescriptionCond",
+            "capaciteCarton": "CapaciteCarton",
+            "capaciteCartouche": "CapaciteCartouche",
+            "capaciteEtui": "CapaciteEtui",
+            "produit": "Produit"
+        }
+    }
+}

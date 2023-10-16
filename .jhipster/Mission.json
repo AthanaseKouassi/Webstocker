@@ -1,0 +1,67 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "ligneMissionActivite",
+            "otherEntityName": "ligneMissionActivite",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "mission"
+        },
+        {
+            "relationshipName": "ligneBudget",
+            "otherEntityName": "ligneBudget",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "mission"
+        },
+        {
+            "relationshipName": "localite",
+            "otherEntityName": "localite",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "ville"
+        },
+        {
+            "relationshipName": "cellule",
+            "otherEntityName": "cellule",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nom"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "libelle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "dateDebut",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "dateFin",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "objectifGeneral",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "objectifSpecifique",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160724163941",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "mission",
+    "pagination": "pager"
+}

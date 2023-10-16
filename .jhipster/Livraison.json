@@ -1,0 +1,90 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "magasin",
+            "otherEntityName": "magasin",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomMagasin"
+        },
+        {
+            "relationshipName": "commande",
+            "otherEntityName": "commande",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "numeroCommande"
+        },
+        {
+            "relationshipName": "lignelivraison",
+            "otherEntityName": "lignelivraison",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "livraison"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateLivraison",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descriptionLivraison",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "numeroLivraison",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valeurLivraison",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fraisTest",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fraisTransit",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fraisAssuranceLocale",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fraisManutention",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valeurLivraisonDevise",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "devise",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160430102450",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "livraison",
+    "pagination": "no"
+}

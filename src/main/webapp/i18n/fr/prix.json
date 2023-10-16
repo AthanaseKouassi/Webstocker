@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "prix" : {
+            "home": {
+                "title": "Prixes",
+                "createLabel": "Créer un nouveau Prix",
+                "createOrEditLabel": "Créer ou éditer un Prix",
+                "search": "Recherche pour Prix"
+            },
+            "created": "Un nouveau Prix a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Prix avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Prix avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Prix {{ id }} ?"
+            },
+            "detail": {
+                "title": "Prix"
+            },
+            "dateFixation": "Date Fixation",
+            "actif": "Actif",
+            "prixUnitaire": "Prix Unitaire",
+            "produit": "Produit",
+            "categorieclient": "Categorieclient"
+        }
+    }
+}

@@ -1,0 +1,83 @@
+<div>
+    <h2 translate="webstockerApp.objectifs.home.title">Objectifs</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="objectifs.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="hidden-xs"  translate="webstockerApp.objectifs.home.createLabel">
+                        Create new Objectifs
+                    </span>
+                </button>
+            </div>
+            <div class="col-xs-8 no-padding-right">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group pull-right" >
+                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'webstockerApp.objectifs.home.search' | translate }}">
+                        <span  class="input-group-btn width-min" >
+                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
+                            <button class="btn btn-info" ng-click="vm.clear()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="webstockerApp.objectifs.periode">Periode</span></th>
+                    <th><span translate="webstockerApp.objectifs.quantiteAttendue">QuantiteAttendue</span></th>
+                    <th><span translate="webstockerApp.objectifs.quantiteObtenu">QuantiteObtenu</span></th>
+                    <th><span translate="webstockerApp.objectifs.taux">Taux</span></th>
+                    <th><span translate="webstockerApp.objectifs.produit">produit</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="objectifs in vm.objectifs track by objectifs.id">
+                    <td><a ui-sref="objectifs-detail({id:objectifs.id})">{{objectifs.id}}</a></td>
+                        <td>{{objectifs.periode | date:'mediumDate'}}</td>
+                    <td>{{objectifs.quantiteAttendue}}</td>
+                    <td>{{objectifs.quantiteObtenu}}</td>
+                    <td>{{objectifs.taux}}</td>
+                    <td>
+                        <a ui-sref="produit-detail({id:objectifs.produit.id})">{{objectifs.produit.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="objectifs-detail({id:objectifs.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="objectifs.edit({id:objectifs.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="objectifs.delete({id:objectifs.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

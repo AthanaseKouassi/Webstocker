@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--
+        Added the constraints for entity Inventaire.
+    -->
+    <changeSet id="20170620125408-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="produit_id"
+                                 baseTableName="inventaire"
+                                 constraintName="fk_inventaire_produit_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="produit"/>
+
+        <addForeignKeyConstraint baseColumnNames="magasin_id"
+                                 baseTableName="inventaire"
+                                 constraintName="fk_inventaire_magasin_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="magasin"/>
+
+    </changeSet>
+</databaseChangeLog>

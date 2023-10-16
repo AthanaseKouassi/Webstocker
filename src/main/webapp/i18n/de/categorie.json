@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "categorie" : {
+            "home": {
+                "title": "Categories",
+                "createLabel": "Categorie erstellen",
+                "createOrEditLabel": "Categorie erstellen oder bearbeiten",
+                "search": "Suche nach Categorie"
+            },
+            "created": "Categorie erstellt mit ID {{ param }}",
+            "updated": "Categorie aktualisiert mit ID {{ param }}",
+            "deleted": "Categorie gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Categorie {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Categorie"
+            },
+            "nomCategorie": "NomCategorie",
+            "produit": "Produit"
+        }
+    }
+}

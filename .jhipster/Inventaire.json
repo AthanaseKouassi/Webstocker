@@ -1,0 +1,36 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        },
+        {
+            "relationshipName": "magasin",
+            "otherEntityName": "magasin",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomMagasin"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateInventaire",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "stockFinalTheorique",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "stockReel",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20170620125408",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "inventaire",
+    "pagination": "pager"
+}

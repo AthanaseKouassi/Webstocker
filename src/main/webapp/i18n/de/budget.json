@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "budget" : {
+            "home": {
+                "title": "Budgets",
+                "createLabel": "Budget erstellen",
+                "createOrEditLabel": "Budget erstellen oder bearbeiten",
+                "search": "Suche nach Budget"
+            },
+            "created": "Budget erstellt mit ID {{ param }}",
+            "updated": "Budget aktualisiert mit ID {{ param }}",
+            "deleted": "Budget gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Budget {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Budget"
+            },
+            "montantBudget": "MontantBudget",
+            "ligneBudget": "LigneBudget"
+        }
+    }
+}

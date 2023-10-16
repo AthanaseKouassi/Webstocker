@@ -1,0 +1,53 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "facture",
+            "otherEntityName": "facture",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "client"
+        },
+        {
+            "relationshipName": "localite",
+            "otherEntityName": "localite",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "ville"
+        },
+        {
+            "relationshipName": "categorieclient",
+            "otherEntityName": "categorieclient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelleCategorieclient"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomClient",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "telephoneClient",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "boitepostale",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "localiteClient",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "typeClient",
+            "fieldType": "TypeClient",
+            "fieldValues": "ORDINAIRE,POINT_DE_VENTE"
+        }
+    ],
+    "changelogDate": "20160622175224",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "client",
+    "pagination": "no"
+}

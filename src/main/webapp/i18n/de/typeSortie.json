@@ -1,0 +1,10 @@
+{
+    "webstockerApp": {
+        "TypeSortie" : {
+            "null": "",
+            "TRANSFERT": "TRANSFERT",
+            "VENTE": "VENTE",
+            "PROMOTION": "PROMOTION"
+        }
+    }
+}

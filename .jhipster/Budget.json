@@ -1,0 +1,22 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "ligneBudget",
+            "otherEntityName": "ligneBudget",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "budget"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "montantBudget",
+            "fieldType": "Long",
+            "fieldValidateRules": []
+        }
+    ],
+    "changelogDate": "20160724161605",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "budget",
+    "pagination": "no"
+}

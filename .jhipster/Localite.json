@@ -1,0 +1,42 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "magasin",
+            "otherEntityName": "magasin",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "localite"
+        },
+        {
+            "relationshipName": "client",
+            "otherEntityName": "client",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "localite"
+        },
+        {
+            "relationshipName": "mission",
+            "otherEntityName": "mission",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "localite"
+        },
+        {
+            "relationshipName": "communes",
+            "otherEntityName": "commune",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelle"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nom",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160429174408",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "localite",
+    "pagination": "no"
+}

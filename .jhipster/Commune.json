@@ -1,0 +1,24 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "ville",
+            "otherEntityName": "ville",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelle"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "libelle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160823093936",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "commune",
+    "pagination": "pagination"
+}

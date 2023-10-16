@@ -1,0 +1,31 @@
+{
+    "webstockerApp": {
+        "commande" : {
+            "home": {
+                "title": "Commandes",
+                "createLabel": "Créer un nouveau Commande",
+                "createOrEditLabel": "Créer ou éditer un Commande",
+                "search": "Recherche pour Commande"
+            },
+            "created": "Un nouveau Commande a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Commande avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Commande avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Commande {{ id }} ?"
+            },
+            "detail": {
+                "title": "Commande"
+            },
+            "dateCommande": "DateCommande",
+            "numeroCommande": "NumeroCommande",
+            "quantiteCommande": "QuantiteCommande",
+            "valeurCommande": "ValeurCommande",
+            "statut": "Statut",
+            "livraison": "Livraison",
+            "lignecommande": "Lignecommande",
+            "bailleur": "Bailleur",
+            "fabricant": "Fabricant",
+            "produit": "Produit"
+        }
+    }
+}

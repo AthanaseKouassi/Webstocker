@@ -1,0 +1,24 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "commande",
+            "otherEntityName": "commande",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "bailleur"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomBailleur",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160429174017",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "bailleur",
+    "pagination": "no"
+}

@@ -1,0 +1,33 @@
+
+<div>
+    <h2><span translate="webstockerApp.ligneBudget.detail.title">LigneBudget</span> {{vm.ligneBudget.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.ligneBudget.libelleLigneBudget">LibelleLigneBudget</dt></dt>
+        <dd>
+            <span>{{vm.ligneBudget.libelleLigneBudget}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.ligneBudget.montantLigneBudget">MontantLigneBudget</dt></dt>
+        <dd>
+            <span>{{vm.ligneBudget.montantLigneBudget}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.ligneBudget.budget">budget</span></dt>
+        <dd>
+            <a ui-sref="budget-detail({id:vm.ligneBudget.budget.id})">{{vm.ligneBudget.budget.id}}</a>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.ligneBudget.mission">mission</span></dt>
+        <dd>
+            <a ui-sref="mission-detail({id:vm.ligneBudget.mission.id})">{{vm.ligneBudget.mission.id}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

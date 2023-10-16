@@ -1,0 +1,30 @@
+{
+    "webstockerApp": {
+        "lot" : {
+            "home": {
+                "title": "Lots",
+                "createLabel": "Lot erstellen",
+                "createOrEditLabel": "Lot erstellen oder bearbeiten",
+                "search": "Suche nach Lot"
+            },
+            "created": "Lot erstellt mit ID {{ param }}",
+            "updated": "Lot aktualisiert mit ID {{ param }}",
+            "deleted": "Lot gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Lot {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Lot"
+            },
+            "numeroLot": "NumeroLot",
+            "dateFabrication": "DateFabrication",
+            "datePeremption": "DatePeremption",
+            "descriptionLot": "DescriptionLot",
+            "quantiteLot": "QuantiteLot",
+            "quantiteCartonLot": "QuantiteCartonLot",
+            "quantiteSortie": "QuantiteSortie",
+            "produit": "Produit",
+            "lignelivraison": "Lignelivraison"
+        }
+    }
+}

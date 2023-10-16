@@ -1,0 +1,51 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        },
+        {
+            "relationshipName": "bonDeSortie",
+            "otherEntityName": "bonDeSortie",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "lot",
+            "otherEntityName": "lot",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "quantite",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "prixVente",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "prixDeVente",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160627170649",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "ligne_bon_de_sortie",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

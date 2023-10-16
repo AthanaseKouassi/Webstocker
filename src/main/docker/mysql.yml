@@ -1,0 +1,14 @@
+version: '2'
+services:
+    webstocker-mysql:
+        container_name: webstocker-mysql
+        image: mysql:5.7.11
+        # volumes:
+        #     - ~/volumes/jhipster/webstocker/mysql/:/var/lib/mysql/
+        environment:
+            - MYSQL_USER=root
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_DATABASE=webstocker
+        ports:
+            - 3306:3306
+        command: mysqld --lower_case_table_names=1

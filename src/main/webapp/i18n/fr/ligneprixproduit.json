@@ -1,0 +1,21 @@
+{
+    "webstockerApp": {
+        "ligneprixproduit" : {
+            "home": {
+                "title": "Ligneprixproduits",
+                "createLabel": "Créer un nouveau Ligneprixproduit",
+                "createOrEditLabel": "Créer ou éditer un Ligneprixproduit",
+                "search": "Recherche pour Ligneprixproduit"
+            },
+            "created": "Un nouveau Ligneprixproduit a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Ligneprixproduit avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Ligneprixproduit avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Ligneprixproduit {{ id }} ?"
+            },
+            "detail": {
+                "title": "Ligneprixproduit"
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "webstockerApp": {
+        "categorieclient" : {
+            "home": {
+                "title": "Categorieclients",
+                "createLabel": "Create a new Categorieclient",
+                "createOrEditLabel": "Create or edit a Categorieclient",
+                "search": "Search for Categorieclient"
+            },
+            "created": "A new Categorieclient is created with identifier {{ param }}",
+            "updated": "A Categorieclient is updated with identifier {{ param }}",
+            "deleted": "A Categorieclient is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Categorieclient {{ id }}?"
+            },
+            "detail": {
+                "title": "Categorieclient"
+            },
+            "libelleCategorieclient": "LibelleCategorieclient",
+            "client": "Client",
+            "prix": "Prix"
+        }
+    }
+}

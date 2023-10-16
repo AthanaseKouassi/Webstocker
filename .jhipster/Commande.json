@@ -1,0 +1,71 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "livraison",
+            "otherEntityName": "livraison",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "commande"
+        },
+        {
+            "relationshipName": "lignecommande",
+            "otherEntityName": "lignecommande",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "commande"
+        },
+        {
+            "relationshipName": "bailleur",
+            "otherEntityName": "bailleur",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomBailleur"
+        },
+        {
+            "relationshipName": "fabricant",
+            "otherEntityName": "fabricant",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomFabricant"
+        },
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateCommande",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "numeroCommande",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantiteCommande",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "valeurCommande",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "statut",
+            "fieldType": "StatutCommande",
+            "fieldValues": "EN_COURS,PARTIELLEMENT_LIVREE,LIVREE"
+        }
+    ],
+    "changelogDate": "20160430103249",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "commande",
+    "pagination": "no"
+}

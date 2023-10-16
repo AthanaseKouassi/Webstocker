@@ -1,0 +1,35 @@
+package com.webstocker.repository;
+
+import com.webstocker.domain.User;
+
+import java.time.ZonedDateTime;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Spring Data JPA repository for the User entity.
+ */
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findOneByActivationKey(String activationKey);
+
+    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
+
+    Optional<User> findOneByResetKey(String resetKey);
+
+    Optional<User> findOneByEmail(String email);
+
+    Optional<User> findOneByLogin(String login);
+
+    Optional<User> findOneById(Long userId);
+
+    @Override
+    void delete(User t);
+    
+    @Query(value = "SELECT * FROM jhi_user WHERE first_name NOT IN ('User', 'Administrator', 'System', 'Anonymous','Superadmin')ORDER BY last_name asc", nativeQuery = true)
+    List<User> findAllUserAimas();
+
+}

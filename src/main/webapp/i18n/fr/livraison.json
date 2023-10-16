@@ -1,0 +1,34 @@
+{
+    "webstockerApp": {
+        "livraison" : {
+            "home": {
+                "title": "Livraisons",
+                "createLabel": "Créer un nouveau Livraison",
+                "createOrEditLabel": "Créer ou éditer un Livraison",
+                "search": "Recherche pour Livraison"
+            },
+            "created": "Un nouveau Livraison a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Livraison avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Livraison avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Livraison {{ id }} ?"
+            },
+            "detail": {
+                "title": "Livraison"
+            },
+            "dateLivraison": "Date Livraison",
+            "descriptionLivraison": "Description Livraison",
+            "numeroLivraison": "Numero Livraison",
+            "valeurLivraison": "Valeur Livraison",
+            "fraisTest": "Frais Test",
+            "fraisTransit": "Frais Transit",
+            "fraisAssuranceLocale": "Frais Assurance Locale",
+            "fraisManutention": "Frais Manutention",
+            "valeurLivraisonDevise": "Valeur Livraison Devise",
+            "devise": "Devise",
+            "magasin": "Magasin",
+            "commande": "Commande",
+            "lignelivraison": "Lignelivraison"
+        }
+    }
+}

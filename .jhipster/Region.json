@@ -1,0 +1,17 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "libelle",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160823093531",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "region",
+    "pagination": "pagination"
+}

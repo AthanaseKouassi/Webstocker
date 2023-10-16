@@ -1,0 +1,24 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "categorie"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nomCategorie",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160429132527",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "categorie",
+    "pagination": "no"
+}

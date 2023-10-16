@@ -1,0 +1,50 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "client",
+            "otherEntityName": "client",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomClient"
+        },
+        {
+            "relationshipName": "reglement",
+            "otherEntityName": "reglement",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "facture"
+        },
+        {
+            "relationshipName": "bonDeSortie",
+            "otherEntityName": "bonDeSortie",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "facture"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateFacture",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valeurRemise",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "delaiPaiement",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "dateLimitePaiement",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20160622180603",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "facture",
+    "pagination": "no"
+}

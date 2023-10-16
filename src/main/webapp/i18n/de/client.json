@@ -1,0 +1,29 @@
+{
+    "webstockerApp": {
+        "client" : {
+            "home": {
+                "title": "Clients",
+                "createLabel": "Client erstellen",
+                "createOrEditLabel": "Client erstellen oder bearbeiten",
+                "search": "Suche nach Client"
+            },
+            "created": "Client erstellt mit ID {{ param }}",
+            "updated": "Client aktualisiert mit ID {{ param }}",
+            "deleted": "Client gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Client {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Client"
+            },
+            "nomClient": "Nom Client",
+            "telephoneClient": "Telephone Client",
+            "boitepostale": "Boitepostale",
+            "localiteClient": "Localite Client",
+            "typeClient": "Type Client",
+            "facture": "Facture",
+            "localite": "Localite",
+            "categorieclient": "Categorieclient"
+        }
+    }
+}

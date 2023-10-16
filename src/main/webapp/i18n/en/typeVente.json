@@ -1,0 +1,9 @@
+{
+    "webstockerApp": {
+        "TypeVente" : {
+            "null": "",
+            "CASH": "CASH",
+            "CREDIT": "CREDIT"
+        }
+    }
+}

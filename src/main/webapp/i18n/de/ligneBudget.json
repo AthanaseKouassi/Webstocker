@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "ligneBudget" : {
+            "home": {
+                "title": "LigneBudgets",
+                "createLabel": "LigneBudget erstellen",
+                "createOrEditLabel": "LigneBudget erstellen oder bearbeiten",
+                "search": "Suche nach LigneBudget"
+            },
+            "created": "LigneBudget erstellt mit ID {{ param }}",
+            "updated": "LigneBudget aktualisiert mit ID {{ param }}",
+            "deleted": "LigneBudget gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll LigneBudget {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "LigneBudget"
+            },
+            "libelleLigneBudget": "LibelleLigneBudget",
+            "montantLigneBudget": "MontantLigneBudget",
+            "budget": "Budget",
+            "mission": "Mission"
+        }
+    }
+}

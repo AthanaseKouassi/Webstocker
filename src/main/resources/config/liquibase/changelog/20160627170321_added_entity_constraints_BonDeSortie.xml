@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--
+        Added the constraints for entity BonDeSortie.
+    -->
+    <changeSet id="20160627170321-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="magasin_id"
+                                 baseTableName="bon_de_sortie"
+                                 constraintName="fk_bon_de_sortie_magasin_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="magasin"/>
+
+        <addForeignKeyConstraint baseColumnNames="destination_id"
+                                 baseTableName="bon_de_sortie"
+                                 constraintName="fk_bon_de_sortie_destination_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="magasin"/>
+
+        <addForeignKeyConstraint baseColumnNames="demandeur_id"
+                                 baseTableName="bon_de_sortie"
+                                 constraintName="fk_bon_de_sortie_demandeur_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="client_id"
+                                 baseTableName="bon_de_sortie"
+                                 constraintName="fk_bon_de_sortie_client_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="client"/>
+
+        <addForeignKeyConstraint baseColumnNames="emetteur_id"
+                                 baseTableName="bon_de_sortie"
+                                 constraintName="fk_bon_de_sortie_emetteur_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+    </changeSet>
+</databaseChangeLog>

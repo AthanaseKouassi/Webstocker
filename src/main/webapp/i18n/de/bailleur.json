@@ -1,0 +1,23 @@
+{
+    "webstockerApp": {
+        "bailleur" : {
+            "home": {
+                "title": "Bailleurs",
+                "createLabel": "Bailleur erstellen",
+                "createOrEditLabel": "Bailleur erstellen oder bearbeiten",
+                "search": "Suche nach Bailleur"
+            },
+            "created": "Bailleur erstellt mit ID {{ param }}",
+            "updated": "Bailleur aktualisiert mit ID {{ param }}",
+            "deleted": "Bailleur gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Bailleur {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Bailleur"
+            },
+            "nomBailleur": "NomBailleur",
+            "commande": "Commande"
+        }
+    }
+}

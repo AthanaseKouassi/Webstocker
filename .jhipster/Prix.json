@@ -1,0 +1,44 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "produit",
+            "otherEntityName": "produit",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "nomProduit"
+        },
+        {
+            "relationshipName": "categorieclient",
+            "otherEntityName": "categorieclient",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "libelleCategorieclient"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateFixation",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "actif",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "prixUnitaire",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160609114345",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "prix",
+    "pagination": "no"
+}

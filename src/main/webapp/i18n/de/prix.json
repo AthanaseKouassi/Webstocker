@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "prix" : {
+            "home": {
+                "title": "Prixes",
+                "createLabel": "Prix erstellen",
+                "createOrEditLabel": "Prix erstellen oder bearbeiten",
+                "search": "Suche nach Prix"
+            },
+            "created": "Prix erstellt mit ID {{ param }}",
+            "updated": "Prix aktualisiert mit ID {{ param }}",
+            "deleted": "Prix gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Prix {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Prix"
+            },
+            "dateFixation": "Date Fixation",
+            "actif": "Actif",
+            "prixUnitaire": "Prix Unitaire",
+            "produit": "Produit",
+            "categorieclient": "Categorieclient"
+        }
+    }
+}

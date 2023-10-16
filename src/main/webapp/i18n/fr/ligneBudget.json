@@ -1,0 +1,25 @@
+{
+    "webstockerApp": {
+        "ligneBudget" : {
+            "home": {
+                "title": "LigneBudgets",
+                "createLabel": "Créer un nouveau LigneBudget",
+                "createOrEditLabel": "Créer ou éditer un LigneBudget",
+                "search": "Recherche pour LigneBudget"
+            },
+            "created": "Un nouveau LigneBudget a été créé avec l'identifiant {{ param }}",
+            "updated": "Le LigneBudget avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le LigneBudget avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le LigneBudget {{ id }} ?"
+            },
+            "detail": {
+                "title": "LigneBudget"
+            },
+            "libelleLigneBudget": "LibelleLigneBudget",
+            "montantLigneBudget": "MontantLigneBudget",
+            "budget": "Budget",
+            "mission": "Mission"
+        }
+    }
+}

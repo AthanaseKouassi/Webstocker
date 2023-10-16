@@ -1,0 +1,27 @@
+{
+    "webstockerApp": {
+        "conditionnement" : {
+            "home": {
+                "title": "Conditionnements",
+                "createLabel": "Conditionnement erstellen",
+                "createOrEditLabel": "Conditionnement erstellen oder bearbeiten",
+                "search": "Suche nach Conditionnement"
+            },
+            "created": "Conditionnement erstellt mit ID {{ param }}",
+            "updated": "Conditionnement aktualisiert mit ID {{ param }}",
+            "deleted": "Conditionnement gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Conditionnement {{ id }} wirklich dauerhaft gejöscht werden?"
+            },
+            "detail": {
+                "title": "Conditionnement"
+            },
+            "libelle": "Libelle",
+            "descriptionCond": "DescriptionCond",
+            "capaciteCarton": "CapaciteCarton",
+            "capaciteCartouche": "CapaciteCartouche",
+            "capaciteEtui": "CapaciteEtui",
+            "produit": "Produit"
+        }
+    }
+}

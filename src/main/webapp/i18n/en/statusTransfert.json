@@ -1,0 +1,9 @@
+{
+    "webstockerApp": {
+        "StatusTransfert" : {
+            "null": "",
+            "RECU": "RECU",
+            "ENCOURS": "ENCOURS"
+        }
+    }
+}

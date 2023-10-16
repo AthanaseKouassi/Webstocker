@@ -1,0 +1,30 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "lot",
+            "otherEntityName": "lot",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "numeroLot"
+        },
+        {
+            "relationshipName": "facture",
+            "otherEntityName": "facture",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "quantiteFacture",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160622184515",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "lignefacture",
+    "pagination": "no"
+}

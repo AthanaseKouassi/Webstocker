@@ -1,0 +1,27 @@
+{
+    "webstockerApp": {
+        "ligneBonDeSortie" : {
+            "home": {
+                "title": "Ligne Bon De Sorties",
+                "createLabel": "Ligne Bon De Sortie erstellen",
+                "createOrEditLabel": "Ligne Bon De Sortie erstellen oder bearbeiten",
+                "search": "Suche nach Ligne Bon De Sortie"
+            },
+            "created": "Ligne Bon De Sortie erstellt mit ID {{ param }}",
+            "updated": "Ligne Bon De Sortie aktualisiert mit ID {{ param }}",
+            "deleted": "Ligne Bon De Sortie gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Ligne Bon De Sortie {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Ligne Bon De Sortie"
+            },
+            "quantite": "Quantite",
+            "prixVente": "Prix Vente",
+            "prixDeVente": "Prix De Vente",
+            "produit": "Produit",
+            "bonDeSortie": "Bon De Sortie",
+            "lot": "Lot"
+        }
+    }
+}

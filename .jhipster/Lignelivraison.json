@@ -1,0 +1,34 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "lot",
+            "otherEntityName": "lot",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "numeroLot"
+        },
+        {
+            "relationshipName": "livraison",
+            "otherEntityName": "livraison",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "quantiteLotLivre",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantiteCartonLot",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20160622172903",
+    "dto": "no",
+    "service": "serviceImpl",
+    "entityTableName": "lignelivraison",
+    "pagination": "no"
+}

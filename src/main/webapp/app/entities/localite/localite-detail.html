@@ -1,0 +1,28 @@
+
+<div>
+    <h2><span translate="webstockerApp.localite.detail.title">Localite</span> {{vm.localite.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.localite.nom">Nom</dt></dt>
+        <dd>
+            <span>{{vm.localite.nom}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.localite.ville">Ville</dt></dt>
+        <dd>
+            <span>{{vm.localite.ville}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.localite.communes">communes</span></dt>
+        <dd>
+            <a ui-sref="commune-detail({id:vm.localite.communes.id})">{{vm.localite.communes.libelle}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

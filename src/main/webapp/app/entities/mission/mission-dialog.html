@@ -1,0 +1,100 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myMissionLabel" translate="webstockerApp.mission.home.createOrEditLabel">Create or edit a Mission</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.mission.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.mission.libelle" for="field_libelle">Libelle</label>
+            <input type="text" class="form-control" name="libelle" id="field_libelle"
+                    ng-model="vm.mission.libelle"
+                    required />
+            <div ng-show="editForm.libelle.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.libelle.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.mission.dateDebut" for="field_dateDebut">DateDebut</label>
+                <div class="input-group">
+                    <input id="field_dateDebut" type="text" class="form-control" name="dateDebut" uib-datepicker-popup="{{dateformat}}" ng-model="vm.mission.dateDebut" is-open="vm.datePickerOpenStatus.dateDebut"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateDebut')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dateDebut.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dateDebut.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.mission.dateFin" for="field_dateFin">DateFin</label>
+                <div class="input-group">
+                    <input id="field_dateFin" type="text" class="form-control" name="dateFin" uib-datepicker-popup="{{dateformat}}" ng-model="vm.mission.dateFin" is-open="vm.datePickerOpenStatus.dateFin"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dateFin')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dateFin.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dateFin.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.mission.objectifGeneral" for="field_objectifGeneral">ObjectifGeneral</label>
+            <input type="text" class="form-control" name="objectifGeneral" id="field_objectifGeneral"
+                    ng-model="vm.mission.objectifGeneral"
+                    required />
+            <div ng-show="editForm.objectifGeneral.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.objectifGeneral.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="webstockerApp.mission.objectifSpecifique" for="field_objectifSpecifique">ObjectifSpecifique</label>
+            <input type="text" class="form-control" name="objectifSpecifique" id="field_objectifSpecifique"
+                    ng-model="vm.mission.objectifSpecifique"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label translate="webstockerApp.mission.localite" for="field_localite">localite</label>
+            <select class="form-control" id="field_localite" name="localite" ng-model="vm.mission.localite" ng-options="localite as localite.ville for localite in vm.localites track by localite.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label translate="webstockerApp.mission.cellule" for="field_cellule">cellule</label>
+            <select class="form-control" id="field_cellule" name="cellule" ng-model="vm.mission.cellule" ng-options="cellule as cellule.nom for cellule in vm.cellules track by cellule.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

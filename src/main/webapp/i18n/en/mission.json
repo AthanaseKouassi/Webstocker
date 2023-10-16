@@ -1,0 +1,30 @@
+{
+    "webstockerApp": {
+        "mission" : {
+            "home": {
+                "title": "Missions",
+                "createLabel": "Create a new Mission",
+                "createOrEditLabel": "Create or edit a Mission",
+                "search": "Search for Mission"
+            },
+            "created": "A new Mission is created with identifier {{ param }}",
+            "updated": "A Mission is updated with identifier {{ param }}",
+            "deleted": "A Mission is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Mission {{ id }}?"
+            },
+            "detail": {
+                "title": "Mission"
+            },
+            "libelle": "Libelle",
+            "dateDebut": "DateDebut",
+            "dateFin": "DateFin",
+            "objectifGeneral": "ObjectifGeneral",
+            "objectifSpecifique": "ObjectifSpecifique",
+            "ligneMissionActivite": "LigneMissionActivite",
+            "ligneBudget": "LigneBudget",
+            "localite": "Localite",
+            "cellule": "Cellule"
+        }
+    }
+}

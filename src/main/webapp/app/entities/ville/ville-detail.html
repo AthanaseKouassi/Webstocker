@@ -1,0 +1,23 @@
+
+<div>
+    <h2><span translate="webstockerApp.ville.detail.title">Ville</span> {{vm.ville.id}}</h2>
+    <hr>
+    <dl class="dl-horizontal">
+        <dt><span translate="webstockerApp.ville.libelle">Libelle</dt></dt>
+        <dd>
+            <span>{{vm.ville.libelle}}<span>
+        </dd>
+        <hr>
+        <dt><span translate="webstockerApp.ville.region">region</span></dt>
+        <dd>
+            <a ui-sref="region-detail({id:vm.ville.region.id})">{{vm.ville.region.libelle}}</a>
+        </dd>
+        <hr>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

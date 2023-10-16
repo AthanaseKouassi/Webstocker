@@ -1,0 +1,26 @@
+{
+    "webstockerApp": {
+        "localite" : {
+            "home": {
+                "title": "Localites",
+                "createLabel": "Create a new Localite",
+                "createOrEditLabel": "Create or edit a Localite",
+                "search": "Search for Localite"
+            },
+            "created": "A new Localite is created with identifier {{ param }}",
+            "updated": "A Localite is updated with identifier {{ param }}",
+            "deleted": "A Localite is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Localite {{ id }}?"
+            },
+            "detail": {
+                "title": "Localite"
+            },
+            "nom": "Nom",
+            "magasin": "Magasin",
+            "client": "Client",
+            "mission": "Mission",
+            "communes": "Communes"
+        }
+    }
+}

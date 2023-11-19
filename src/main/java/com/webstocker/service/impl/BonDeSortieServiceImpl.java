@@ -57,7 +57,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     @Inject
     private LotRepository lotRepository;
-    
+
     @Inject
     private LigneBonDeSortieRepository ligneBonDeSortieRepository;
 
@@ -83,9 +83,9 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         Set<LigneBonDeSortie> ligneBonDeSorties = bonDeSortie.getLigneBonDeSorties();
         for (LigneBonDeSortie ligneBonDeSortie : ligneBonDeSorties) {
             ilot = ligneBonDeSortie.getLot().getId();
-//            if()
+
             Lot lot = ligneBonDeSortie.getLot();
-            lot.setQuantiteSortie(ligneBonDeSortie.getQuantite());            
+            lot.setQuantiteSortie(ligneBonDeSortie.getQuantite());
             lotRepository.save(lot);
         }
 
@@ -135,7 +135,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
                 LocalDate datePaiement = dateFacture.plusDays(delaiPaiement.longValue());
                 facture.setDateLimitePaiement(datePaiement);
             }
-            
+
             facture.setClient(result.getClient());
             log.debug("Request to save Facture : {}", facture);
             Facture save = factureRepository.save(facture);
@@ -247,9 +247,9 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         return page;
     }
     /**
-     * 
+     *
      * Retourne tous les bon de sortie de promotion
-     * @return 
+     * @return
      */
     @Override
     public List<BonDeSortie> listeBonDeSortiePromotion() {

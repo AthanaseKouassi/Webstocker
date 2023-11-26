@@ -59,7 +59,7 @@ public class BonDeSortie implements Serializable {
 
     @Column(name = "date_reception")
     private LocalDate dateReceptionTransfert;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status_tranfert")
     private StatusTransfert statusTranfert;
@@ -151,7 +151,7 @@ public class BonDeSortie implements Serializable {
     public void setStatusTranfert(StatusTransfert statusTranfert) {
         this.statusTranfert = statusTranfert;
     }
-    
+
     public LocalDate getDateReceptionTransfert() {
         return dateReceptionTransfert;
     }
@@ -250,9 +250,9 @@ public class BonDeSortie implements Serializable {
                 + ", printStatus='" + printStatus + "'"
                 + ", numeroFactureNormalise='" + numeroFactureNormalise + "'"
                 + ", statusTranfert='" + statusTranfert + "'"
-                +", dateReceptionTransfert='" + dateReceptionTransfert + "'" 
+                +", dateReceptionTransfert='" + dateReceptionTransfert + "'"
                 + '}';
-        
+
     }
 
 }

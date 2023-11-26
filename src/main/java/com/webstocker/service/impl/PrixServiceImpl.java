@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -110,35 +111,32 @@ public class PrixServiceImpl implements PrixService{
     @Override
     public BigDecimal findPrixClientParProduit(Client client, Produit produit) {
         log.debug("Request to search Prixes for client {}", client);
-        Prix prix = prixRepository.findByProduitAndCategorieclient(produit, client.getCategorieclient());
-        if (prix.getPrixUnitaire()== null){
-            System.out.println("Le prix ne peut être null");
-        }else{
-            prix.getPrixUnitaire();
-        }
-        return prix.getPrixUnitaire();
+
+        return Optional.ofNullable(prixRepository.findByProduitAndCategorieclient(produit, client.getCategorieclient()))
+            .orElseGet(() -> {
+                log.warn("Le prix pour le produit {} et le client {} est null. \n" +
+                    "Fixer le prix unitaire à zéro.", produit.getId(), client.getId());
+                Prix prix1 = new Prix();
+                prix1.setPrixUnitaire(BigDecimal.ZERO);
+                return prix1;
+            }).getPrixUnitaire();
+
     }
-    
+
     @Override
     public BigDecimal findPrixClientParProduitValide(Client client, Produit produit) {
+
         log.debug("Request to search Prixes for client {}", client);
-//        Prix prix = prixRepository.findByProduitAndCategorieclient(produit, client.getCategorieclient());
-        Prix prix = prixRepository.findByProduitAndCategorieclientAndActif(produit, client.getCategorieclient(),true);
-      
-        try{
-        if (prix.getPrixUnitaire() == null){
-            System.out.println("Le prix ne peut être null"); 
-            /**
-             * Cette ligne permet de fixer le prix unitaire à en cas ou la valeur est null
-             */
-            prix.setPrixUnitaire(BigDecimal.ZERO);
-        }else{
-            prix.getPrixUnitaire();
-        }     
-        }catch(NullPointerException ex){
-            ex.printStackTrace();
-//            ex.getMessage();
-        }
-        return prix.getPrixUnitaire();
+
+        // Utilisation d'Optional pour éviter les NullPointerException
+        return Optional.ofNullable(prixRepository.findByProduitAndCategorieclientAndActif(produit, client.getCategorieclient(), true))
+            .orElseGet(() -> {
+                log.warn("Le prix ne peut être null. Fixer le prix unitaire à zéro.");
+                Prix prix1 = new Prix();
+                 prix1.setPrixUnitaire(BigDecimal.ZERO);
+                 return prix1;
+            }).getPrixUnitaire();
+
+
     }
 }

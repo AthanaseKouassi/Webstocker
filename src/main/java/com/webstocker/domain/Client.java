@@ -163,15 +163,5 @@ public class Client implements Serializable {
             '}';
     }
 
-//    @Override
-//    public String toString() {
-//        return "Client{" +
-//            "id=" + id +
-//            ", nomClient='" + nomClient + "'" +
-//            ", telephoneClient='" + telephoneClient + "'" +
-//            ", boitepostale='" + boitepostale + "'" +
-////            ", localiteClient='" + localiteClient + "'" +
-//            ", typeClient='" + typeClient + "'" +
-//            '}';
-//    }
+
 }

@@ -201,10 +201,12 @@ public class BonDeSortieResource {
      */
     @RequestMapping(value = "/venteClient",
             method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE,
+    consumes = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<BonDeSortie> createVenteClient(@Valid @RequestBody BonDeSortieDTO bonDeSortieDTO) throws URISyntaxException {
-        log.debug("REST request to save BonDeSortie : {}", bonDeSortieDTO);
+        //log.debug("REST request to save BonDeSortie : {}", bonDeSortieDTO.toString());
+        log .info("\nTESSTTTTT LE BON DE SORTIE :: ",bonDeSortieDTO.toString());
         if (bonDeSortieDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("venteClient", "idexists", "A new venteClient cannot already have an ID")).body(null);
         }
@@ -294,7 +296,7 @@ public class BonDeSortieResource {
 
         bonDeSortie.setTypeSortie(TypeSortie.TRANSFERT);
         bonDeSortie.setStatusTranfert(StatusTransfert.ENCOURS);
-        
+
         BonDeSortie result = bonDeSortieService.save(bonDeSortie);
         return ResponseEntity.created(new URI("/api/transfertProduit/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("transfertProduit", result.getId().toString()))
@@ -322,8 +324,8 @@ public class BonDeSortieResource {
             return createTransfertProduit(bonDeSortieDTO);
         }
 //        BonDeSortie result = bonDeSortieService.save(bonDeSortie);
-        
-        
+
+
 
         BonDeSortie bonDeSortie = bonDeSortieDTO.createBonDeSortie();
         List<LigneBonDeSortie> ligneBonDeSorties = bonDeSortieDTO.getLigneBonDeSorties();
@@ -338,9 +340,9 @@ public class BonDeSortieResource {
         }
 
         bonDeSortie.setTypeSortie(TypeSortie.TRANSFERT);
-        
+
         System.out.println("LE STATUS DU TRANSFERT "+bonDeSortie.getStatusTranfert());
-        
+
         BonDeSortie result = bonDeSortieService.save(bonDeSortie);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("bonDeSortie", bonDeSortie.getId().toString()))
@@ -527,10 +529,10 @@ public class BonDeSortieResource {
         log.debug("REST request to BonDeSortie promotion");
         return bonDeSortieService.listeBonDeSortiePromotion(new PageRequest(page, size));
     }
-    
+
     /**
      * retourne tous les bon de sortie promotion
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/tout-bon-de-sortie-promotion",
             method = RequestMethod.GET,
@@ -556,7 +558,7 @@ public class BonDeSortieResource {
         log.debug("REST request to BonDeSortie vente");
         return bonDeSortieService.listeBonDeSortieTransfert(new PageRequest(page, size));
     }
-    
+
     @RequestMapping(value = "/bon-de-sortie-perte",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -589,11 +591,11 @@ public class BonDeSortieResource {
     }
 
     /**
-     * 
+     *
      * @param numeroBon
      * @param page
      * @param size
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/bon-de-sortie-transfert/trouver-par-numero",
             method = RequestMethod.GET,
@@ -605,13 +607,13 @@ public class BonDeSortieResource {
         String numero = (numeroBon != null && !"undefined".equals(numeroBon) && !numeroBon.trim().isEmpty()) ? numeroBon : null;
         return bonDeSortieService.retrouverBonDeSortieTRansfertParNumero(numero, new PageRequest(page, size));
     }
-    
+
     /**
-     * 
+     *
      * @param numeroBon
      * @param page
      * @param size
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/bon-de-sortie-perte/trouver-par-numero",
             method = RequestMethod.GET,
@@ -623,12 +625,12 @@ public class BonDeSortieResource {
         String numero = (numeroBon != null && !"undefined".equals(numeroBon) && !numeroBon.trim().isEmpty()) ? numeroBon : null;
         return bonDeSortieService.retrouverBonDeSortiePerteParNumero(numero, new PageRequest(page, size));
     }
-    
+
     /**
-     * 
+     *
      * @param page
      * @param size
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/bon-de-sortie-transfert/transfert-encours",
             method = RequestMethod.GET,

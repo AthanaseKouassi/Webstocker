@@ -128,8 +128,8 @@ public class StockOperationsResource {
 
         return new ResponseEntity<>(stockPrixDTO, null, HttpStatus.OK);
     }
-    
-    
+
+
     /**
      *
      * @param idClient

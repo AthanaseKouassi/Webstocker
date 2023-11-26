@@ -57,7 +57,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     @Inject
     private LotRepository lotRepository;
-    
+
     @Inject
     private LigneBonDeSortieRepository ligneBonDeSortieRepository;
 
@@ -76,18 +76,17 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     @Override
     public BonDeSortie saveVente(BonDeSortie bonDeSortie, Integer delaiPaiement, Long remise, LocalDate dateFacture) {
-        log.debug("Request to save BonDeSortie : {}", bonDeSortie);
-        Long ilot=0L;
-        Long ilot2=0L;
-        int nb =0;
+
+
+        log.debug("Demande d'enregistrement du BonDeSortie : {}", bonDeSortie);
+
         Set<LigneBonDeSortie> ligneBonDeSorties = bonDeSortie.getLigneBonDeSorties();
-        for (LigneBonDeSortie ligneBonDeSortie : ligneBonDeSorties) {
-            ilot = ligneBonDeSortie.getLot().getId();
-//            if()
+
+        ligneBonDeSorties.forEach(ligneBonDeSortie -> {
             Lot lot = ligneBonDeSortie.getLot();
-            lot.setQuantiteSortie(ligneBonDeSortie.getQuantite());            
+            lot.setQuantiteSortie(ligneBonDeSortie.getQuantite());
             lotRepository.save(lot);
-        }
+        });
 
         BonDeSortie result = bonDeSortieRepository.save(bonDeSortie);
         bonDeSortieSearchRepository.save(result);
@@ -95,53 +94,16 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         Facture fact = factureRepository.findByBonDeSortie(result);
 
         if (fact != null) {
-            factureRepository.delete(fact.getId());
-            factureSearchRepository.delete(fact.getId());
-
-            if (factureRepository.exists(fact.getId())) {
-                System.out.println("Cette Facture : id " + fact + " existe deja");
-            } else {
-                Facture facture = new Facture();
-                facture.setBonDeSortie(result);
-                if (remise == null) {
-                    remise = 0L;
-                }
-                facture.setValeurRemise(remise.intValue());
-                System.out.println("LA REMISE " + remise);
-                facture.setDateFacture(dateFacture);
-
-                if (bonDeSortie.getTypeVente().equals(TypeVente.CREDIT)) {
-                    LocalDate datePaiement = dateFacture.plusDays(delaiPaiement.longValue());
-                    facture.setDateLimitePaiement(datePaiement);
-                }
-
-                facture.setClient(result.getClient());
-                log.debug("Request to save Facture : {}", facture);
-                Facture save = factureRepository.save(facture);
-                factureSearchRepository.save(save);
-            }
-        } else {
-
-            Facture facture = new Facture();
-            facture.setBonDeSortie(result);
-            if (remise == null) {
-                remise = 0L;
-            }
-            facture.setValeurRemise(remise.intValue());
-            System.out.println("LA REMISE " + remise);
-            facture.setDateFacture(dateFacture);
-
-            if (bonDeSortie.getTypeVente().equals(TypeVente.CREDIT)) {
-                LocalDate datePaiement = dateFacture.plusDays(delaiPaiement.longValue());
-                facture.setDateLimitePaiement(datePaiement);
-            }
-            
-            facture.setClient(result.getClient());
-            log.debug("Request to save Facture : {}", facture);
-            Facture save = factureRepository.save(facture);
-            factureSearchRepository.save(save);
+            deleteFacture(fact);
         }
+
+        Facture facture = createFacture(result, remise, dateFacture, delaiPaiement);
+        factureRepository.save(facture);
+        factureSearchRepository.save(facture);
+
         return result;
+
+
     }
 
     /**
@@ -247,9 +209,9 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         return page;
     }
     /**
-     * 
+     *
      * Retourne tous les bon de sortie de promotion
-     * @return 
+     * @return
      */
     @Override
     public List<BonDeSortie> listeBonDeSortiePromotion() {
@@ -343,5 +305,44 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     public Page<BonDeSortie> transfertEncours( Pageable pageable) {
         return bonDeSortieRepository.findByStatusTranfertOrderByDaateCreation(StatusTransfert.ENCOURS, pageable);
     }
+    //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
+    //********************** REFACTORISATION ************
 
+
+    /**
+     * méthode supprimer une facture
+     * @param facture
+     */
+    private void deleteFacture(Facture facture) {
+        factureRepository.delete(facture.getId());
+       // factureSearchRepository.delete(facture.getId());
+
+        if (factureRepository.exists(facture.getId())) {
+            log.warn("La Facture avec l'ID {} existe déjà.", facture.getId());
+        }
+    }
+
+    /**
+     * méthode créer une facture
+     * @param result
+     * @param remise
+     * @param dateFacture
+     * @param delaiPaiement
+     * @return
+     */
+    private Facture createFacture(BonDeSortie result, Long remise, LocalDate dateFacture, Integer delaiPaiement) {
+        Facture facture = new Facture();
+        facture.setBonDeSortie(result);
+        facture.setValeurRemise(remise != null ? remise.intValue() : 0);
+        facture.setDateFacture(dateFacture);
+
+        if (TypeVente.CREDIT.equals(result.getTypeVente())) {
+            LocalDate datePaiement = dateFacture.plusDays(delaiPaiement);
+            facture.setDateLimitePaiement(datePaiement);
+        }
+
+        facture.setClient(result.getClient());
+        log.debug("Facture ID: {} créé ", facture);
+        return facture;
+    }
 }

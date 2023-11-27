@@ -205,8 +205,8 @@ public class BonDeSortieResource {
     consumes = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<BonDeSortie> createVenteClient(@Valid @RequestBody BonDeSortieDTO bonDeSortieDTO) throws URISyntaxException {
-        //log.debug("REST request to save BonDeSortie : {}", bonDeSortieDTO.toString());
-        log .info("\nTESSTTTTT LE BON DE SORTIE :: ",bonDeSortieDTO.toString());
+        log.debug("REST request to save BonDeSortie : {}", bonDeSortieDTO.toString());
+
         if (bonDeSortieDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("venteClient", "idexists", "A new venteClient cannot already have an ID")).body(null);
         }

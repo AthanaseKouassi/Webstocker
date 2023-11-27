@@ -14,38 +14,23 @@ import java.util.List;
 public class BonDeSortieDTO {
 
     private Long id;
-
     private Long remise;
-
     private String numero;
-
     private String numeroFactureNormalise;
-
     private LocalDate daateCreation;
-
     private TypeSortie typeSortie;
-
     private TypeVente typeVente;
-
     private User demandeur;
-
     private Client client;
-
     private Integer delaiPaiement;
-
     private Magasin magasin;
-
     private Magasin destination;
-   
     private LocalDate dateFacture;
-   
     private LocalDate dateReceptionTransfert;
-    
     private StatusTransfert statusTranfert;
-    
     private User emetteur;
-
     List<LigneBonDeSortie> ligneBonDeSorties;
+
 
     public BonDeSortieDTO() {
     }
@@ -83,7 +68,7 @@ public class BonDeSortieDTO {
     public void setDateFacture(LocalDate dateFacture) {
         this.dateFacture = dateFacture;
     }
-    
+
     public List<LigneBonDeSortie> getLigneBonDeSorties() {
         return ligneBonDeSorties;
     }
@@ -211,6 +196,6 @@ public class BonDeSortieDTO {
     public void setEmetteur(User emetteur) {
         this.emetteur = emetteur;
     }
-    
-    
+
+
 }

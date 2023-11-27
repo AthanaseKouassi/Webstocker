@@ -116,8 +116,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public Page<BonDeSortie> findAll(Pageable pageable) {
         log.debug("Request to get all BonDeSorties");
-        Page<BonDeSortie> result = bonDeSortieRepository.findAll(pageable);
-        return result;
+        return bonDeSortieRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -136,8 +135,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Transactional(readOnly = true)
     public BonDeSortie findOne(Long id) {
         log.debug("Request to get BonDeSortie : {}", id);
-        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(id);
-        return bonDeSortie;
+        return bonDeSortieRepository.findOne(id);
     }
 
     /**
@@ -179,8 +177,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public Page<BonDeSortie> findBonByNumero(String numero, Pageable pageable) {
         log.debug("Request to get all BonDeSorties");
-        Page<BonDeSortie> page = bonDeSortieRepository.findBonByNumber(numero, pageable);
-        return page;
+        return bonDeSortieRepository.findBonByNumber(numero, pageable);
     }
 
     @Override

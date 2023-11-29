@@ -35,7 +35,12 @@ public class Reglement implements Serializable {
     private Long montantReglement;
 
     @ManyToOne
+    @JoinColumn(name = "facture_id")
     private Facture facture;
+
+    @ManyToOne
+    @JoinColumn(name = "produit_id")
+    private Produit produit;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -100,5 +105,5 @@ public class Reglement implements Serializable {
             "}";
     }
 
-   
+
 }

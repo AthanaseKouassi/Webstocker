@@ -48,9 +48,9 @@ public class FactureResource {
 
     @Inject
     private ReglementService reglementService;
-    
-    
-    
+
+
+
     /**
      * POST  /factures : Create a new facture.
      *
@@ -151,8 +151,7 @@ public class FactureResource {
             List<Reglement> reglements = reglementService.findByFacture(facture);
 //            BigDecimal montantPaye=BigDecimal.ZERO;
             Long montantPaye = 0L;
-            for (Reglement reglement :
-                reglements) {
+            for (Reglement reglement : reglements) {
 //                montantPaye=montantPaye.add(reglement.getMontantReglement());
                 montantPaye += reglement.getMontantReglement();
             }
@@ -165,7 +164,7 @@ public class FactureResource {
         }
 
         return factureDTOs;
- 
+
     }
 
 
@@ -260,7 +259,6 @@ public class FactureResource {
         LocalDate date1 = (dateDebut!=null && !"undefined".equals(dateDebut) && !dateDebut.trim().isEmpty())?LocalDate.parse(dateDebut):null;
         LocalDate date2 = (dateFin!=null && !"undefined".equals(dateFin) && !dateFin.trim().isEmpty())?LocalDate.parse(dateFin):null;
 
-        //return null;
         return factureService.findFactureByDate(date1, date2);
     }
 
@@ -292,7 +290,7 @@ public class FactureResource {
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
-   
+
+
 
 }

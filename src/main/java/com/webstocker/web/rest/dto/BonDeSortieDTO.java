@@ -13,44 +13,29 @@ import java.util.List;
  */
 public class BonDeSortieDTO {
 
-    private Long id;
-
-    private Long remise;
-
-    private String numero;
-
-    private String numeroFactureNormalise;
-
-    private LocalDate daateCreation;
-
-    private TypeSortie typeSortie;
-
-    private TypeVente typeVente;
-
-    private User demandeur;
-
-    private Client client;
-
-    private Integer delaiPaiement;
-
-    private Magasin magasin;
-
-    private Magasin destination;
-   
-    private LocalDate dateFacture;
-   
-    private LocalDate dateReceptionTransfert;
-    
-    private StatusTransfert statusTranfert;
-    
-    private User emetteur;
-
     List<LigneBonDeSortie> ligneBonDeSorties;
+    private Long id;
+    private Long remise;
+    private String numero;
+    private String numeroFactureNormalise;
+    private LocalDate daateCreation;
+    private TypeSortie typeSortie;
+    private TypeVente typeVente;
+    private User demandeur;
+    private Client client;
+    private Integer delaiPaiement;
+    private Magasin magasin;
+    private Magasin destination;
+    private LocalDate dateFacture;
+    private LocalDate dateReceptionTransfert;
+    private StatusTransfert statusTranfert;
+    private User emetteur;
+    private LocalDate dateReglement;
 
     public BonDeSortieDTO() {
     }
 
-    public BonDeSortie createBonDeSortieVente(){
+    public BonDeSortie createBonDeSortieVente() {
         BonDeSortie bonDeSortie = new BonDeSortie();
         bonDeSortie.setId(getId());
         bonDeSortie.setClient(getClient());
@@ -65,7 +50,7 @@ public class BonDeSortieDTO {
         return bonDeSortie;
     }
 
-    public BonDeSortie createBonDeSortie(){
+    public BonDeSortie createBonDeSortie() {
         BonDeSortie bonDeSortie = createBonDeSortieVente();
 
         bonDeSortie.setMagasin(getMagasin());
@@ -83,7 +68,7 @@ public class BonDeSortieDTO {
     public void setDateFacture(LocalDate dateFacture) {
         this.dateFacture = dateFacture;
     }
-    
+
     public List<LigneBonDeSortie> getLigneBonDeSorties() {
         return ligneBonDeSorties;
     }
@@ -211,6 +196,15 @@ public class BonDeSortieDTO {
     public void setEmetteur(User emetteur) {
         this.emetteur = emetteur;
     }
-    
-    
+
+
+    public LocalDate getDateReglement() {
+        return dateReglement;
+    }
+
+    public void setDateReglement(LocalDate dateReglement) {
+        this.dateReglement = dateReglement;
+    }
+
+
 }

@@ -3,10 +3,10 @@ package com.webstocker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Reglement;
 import com.webstocker.service.ReglementService;
+import com.webstocker.web.rest.dto.BonDeSortieDTO;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Reglement.
@@ -149,6 +145,16 @@ public class ReglementResource {
     public List<Reglement> searchReglements(@RequestParam String query) {
         log.debug("REST request to search Reglements for query {}", query);
         return reglementService.search(query);
+    }
+
+    @RequestMapping(value = "/reglement-facture",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Void> reglerFacture(@RequestBody BonDeSortieDTO bonDeSortieDTO) {
+        // reglementService.reglementFacture();
+        //  return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert()).build();
+        return null;
     }
 
 }

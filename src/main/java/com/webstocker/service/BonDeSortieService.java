@@ -1,11 +1,11 @@
 package com.webstocker.service;
 
 import com.webstocker.domain.BonDeSortie;
-import com.webstocker.domain.enumeration.StatusTransfert;
-import java.time.LocalDate;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Service Interface for managing BonDeSortie.
@@ -27,7 +27,8 @@ public interface BonDeSortieService {
      * @param remise
      * @return the persisted entity
      */
-    BonDeSortie saveVente(BonDeSortie bonDeSortie, Integer delaiPaiement, Long remise, LocalDate dateFacture);
+    BonDeSortie saveVente(BonDeSortie bonDeSortie, Integer delaiPaiement, Long remise
+        , LocalDate dateFacture, LocalDate dateReglement);
 
     /**
      * save a bonDeSortie and create a factureZero
@@ -80,6 +81,7 @@ public interface BonDeSortieService {
     Page<BonDeSortie> listeBonDeSortieVente(Pageable pageable);
 
     Page<BonDeSortie> listeBonDeSortiePromotion(Pageable pageable);
+
     List<BonDeSortie> listeBonDeSortiePromotion();
 
     Page<BonDeSortie> listeBonDeSortieTransfert(Pageable pageable);
@@ -94,6 +96,6 @@ public interface BonDeSortieService {
 
     Page<BonDeSortie> retrouverBonDeSortiePerteParNumero(String numero, Pageable pageable);
 
-    Page<BonDeSortie> transfertEncours( Pageable pageable);
+    Page<BonDeSortie> transfertEncours(Pageable pageable);
 
 }

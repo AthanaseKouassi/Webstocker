@@ -1,27 +1,22 @@
 package com.webstocker.service.impl;
 
-import com.webstocker.domain.Facture;
-import com.webstocker.domain.LigneBonDeSortie;
-import com.webstocker.domain.Lot;
-import com.webstocker.domain.enumeration.TypeVente;
-import com.webstocker.repository.FactureRepository;
-import com.webstocker.repository.LotRepository;
-import com.webstocker.repository.search.FactureSearchRepository;
-import com.webstocker.service.BonDeSortieService;
-import com.webstocker.domain.BonDeSortie;
-import com.webstocker.domain.Magasin;
+import com.webstocker.domain.*;
 import com.webstocker.domain.enumeration.StatusTransfert;
 import com.webstocker.domain.enumeration.TypeSortie;
-import com.webstocker.repository.BonDeSortieRepository;
-import com.webstocker.repository.LigneBonDeSortieRepository;
-import com.webstocker.repository.MagasinRepository;
+import com.webstocker.domain.enumeration.TypeVente;
+import com.webstocker.repository.*;
 import com.webstocker.repository.search.BonDeSortieSearchRepository;
+import com.webstocker.repository.search.FactureSearchRepository;
+import com.webstocker.service.BonDeSortieService;
+import com.webstocker.service.ReglementService;
+import com.webstocker.utilitaires.WebstockerConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -29,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing BonDeSortie.
@@ -57,9 +52,10 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     @Inject
     private LotRepository lotRepository;
-
     @Inject
     private LigneBonDeSortieRepository ligneBonDeSortieRepository;
+    @Autowired
+    private ReglementService reglementService;
 
     /**
      * Save a bonDeSortie.
@@ -75,8 +71,8 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     }
 
     @Override
-    public BonDeSortie saveVente(BonDeSortie bonDeSortie, Integer delaiPaiement, Long remise, LocalDate dateFacture) {
-
+    public BonDeSortie saveVente(BonDeSortie bonDeSortie, Integer delaiPaiement, Long remise, LocalDate dateFacture
+        , LocalDate dateReglement) {
 
         log.debug("Demande d'enregistrement du BonDeSortie : {}", bonDeSortie);
 
@@ -100,6 +96,8 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         Facture facture = createFacture(result, remise, dateFacture, delaiPaiement);
         factureRepository.save(facture);
         factureSearchRepository.save(facture);
+        reglementService.reglementFacture(facture, dateReglement.format(
+            DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
 
         return result;
 
@@ -116,8 +114,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public Page<BonDeSortie> findAll(Pageable pageable) {
         log.debug("Request to get all BonDeSorties");
-        Page<BonDeSortie> result = bonDeSortieRepository.findAll(pageable);
-        return result;
+        return bonDeSortieRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -136,8 +133,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Transactional(readOnly = true)
     public BonDeSortie findOne(Long id) {
         log.debug("Request to get BonDeSortie : {}", id);
-        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(id);
-        return bonDeSortie;
+        return bonDeSortieRepository.findOne(id);
     }
 
     /**
@@ -179,8 +175,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public Page<BonDeSortie> findBonByNumero(String numero, Pageable pageable) {
         log.debug("Request to get all BonDeSorties");
-        Page<BonDeSortie> page = bonDeSortieRepository.findBonByNumber(numero, pageable);
-        return page;
+        return bonDeSortieRepository.findBonByNumber(numero, pageable);
     }
 
     @Override
@@ -208,9 +203,10 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
         return page;
     }
+
     /**
-     *
      * Retourne tous les bon de sortie de promotion
+     *
      * @return
      */
     @Override
@@ -302,7 +298,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     }
 
     @Override
-    public Page<BonDeSortie> transfertEncours( Pageable pageable) {
+    public Page<BonDeSortie> transfertEncours(Pageable pageable) {
         return bonDeSortieRepository.findByStatusTranfertOrderByDaateCreation(StatusTransfert.ENCOURS, pageable);
     }
     //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
@@ -311,11 +307,12 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     /**
      * méthode supprimer une facture
+     *
      * @param facture
      */
     private void deleteFacture(Facture facture) {
         factureRepository.delete(facture.getId());
-       // factureSearchRepository.delete(facture.getId());
+        // factureSearchRepository.delete(facture.getId());
 
         if (factureRepository.exists(facture.getId())) {
             log.warn("La Facture avec l'ID {} existe déjà.", facture.getId());
@@ -324,6 +321,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
     /**
      * méthode créer une facture
+     *
      * @param result
      * @param remise
      * @param dateFacture

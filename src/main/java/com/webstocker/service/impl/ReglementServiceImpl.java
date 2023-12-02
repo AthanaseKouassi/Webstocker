@@ -1,39 +1,53 @@
 package com.webstocker.service.impl;
 
+import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
-import com.webstocker.service.ReglementService;
+import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
+import com.webstocker.repository.BonDeSortieRepository;
+import com.webstocker.repository.FactureRepository;
+import com.webstocker.repository.LigneBonDeSortieRepository;
 import com.webstocker.repository.ReglementRepository;
 import com.webstocker.repository.search.ReglementSearchRepository;
+import com.webstocker.service.ReglementService;
+import com.webstocker.service.util.WebstockerDateFormat;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Reglement.
  */
 @Service
 @Transactional
-public class ReglementServiceImpl implements ReglementService{
+public class ReglementServiceImpl implements ReglementService {
 
     private final Logger log = LoggerFactory.getLogger(ReglementServiceImpl.class);
-
+    @Inject
+    BonDeSortieRepository bonDeSortieRepository;
     @Inject
     private ReglementRepository reglementRepository;
-
+    @Inject
+    private LigneBonDeSortieRepository ligneBonDeSortieRepository;
     @Inject
     private ReglementSearchRepository reglementSearchRepository;
+    @Inject
+    private FactureRepository factureRepository;
+
+    @Autowired
+    private WebstockerDateFormat webstockerDateFormat;
 
     /**
      * Save a reglement.
@@ -52,9 +66,9 @@ public class ReglementServiceImpl implements ReglementService{
     }
 
     /**
-     *  Get all the reglements.
+     * Get all the reglements.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Reglement> findAll() {
@@ -64,10 +78,10 @@ public class ReglementServiceImpl implements ReglementService{
     }
 
     /**
-     *  Get one reglement by id.
+     * Get one reglement by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
     public Reglement findOne(Long id) {
@@ -77,9 +91,9 @@ public class ReglementServiceImpl implements ReglementService{
     }
 
     /**
-     *  Delete the  reglement by id.
+     * Delete the  reglement by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
         log.debug("Request to delete Reglement : {}", id);
@@ -90,8 +104,8 @@ public class ReglementServiceImpl implements ReglementService{
     /**
      * Search for the reglement corresponding to the query.
      *
-     *  @param query the query of the search
-     *  @return the list of entities
+     * @param query the query of the search
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Reglement> search(String query) {
@@ -105,7 +119,7 @@ public class ReglementServiceImpl implements ReglementService{
     public List<Reglement> getTousLesReglementDuMois(String maDate) {
 
         String dateDebut;
-         String dateFin;
+        String dateFin;
 
         PremierEtDernierJourDuMois premierEtDernier = new PremierEtDernierJourDuMois(maDate);
         dateDebut = premierEtDernier.getDateDebutDuMois(maDate);
@@ -122,4 +136,32 @@ public class ReglementServiceImpl implements ReglementService{
     public List<Reglement> findByFacture(Facture facture) {
         return reglementRepository.findByFacture(facture);
     }
+
+    @Override
+    public void reglementFacture(Facture facture, String dateReglement) {
+
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
+
+        if (bonDeSortie != null && "CASH".equals(bonDeSortie.getTypeVente().toString())) {
+            reglementFactureCash(bonDeSortie, facture, dateReglement);
+        }
+
+    }
+
+    // Reglement Cash de la facture
+    private void reglementFactureCash(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
+
+        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+
+        ligneBonDeSorties.forEach(lbs -> {
+            Reglement reglement = new Reglement();
+            reglement.setProduit(lbs.getProduit());
+            reglement.setFacture(facture);
+            reglement.setDateReglement(webstockerDateFormat.convertirStingToLocalDate(dateReglement));
+            reglement.setMontantReglement(lbs.getPrixDeVente());
+
+            reglementRepository.save(reglement);
+        });
+    }
+
 }

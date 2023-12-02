@@ -19,36 +19,38 @@ public interface ReglementService {
     Reglement save(Reglement reglement);
 
     /**
-     *  Get all the reglements.
+     * Get all the reglements.
      *
-     *  @return the list of entities
+     * @return the list of entities
      */
     List<Reglement> findAll();
 
     /**
-     *  Get the "id" reglement.
+     * Get the "id" reglement.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     Reglement findOne(Long id);
 
     /**
-     *  Delete the "id" reglement.
+     * Delete the "id" reglement.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     void delete(Long id);
 
     /**
      * Search for the reglement corresponding to the query.
      *
-     *  @param query the query of the search
-     *  @return the list of entities
+     * @param query the query of the search
+     * @return the list of entities
      */
     List<Reglement> search(String query);
 
     List<Reglement> getTousLesReglementDuMois(String madate);
 
     List<Reglement> findByFacture(Facture facture);
+
+    void reglementFacture(Facture facture, String dateReglement);
 }

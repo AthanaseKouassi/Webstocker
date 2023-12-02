@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class BonDeSortieDTO {
 
+    List<LigneBonDeSortie> ligneBonDeSorties;
     private Long id;
     private Long remise;
     private String numero;
@@ -29,13 +30,12 @@ public class BonDeSortieDTO {
     private LocalDate dateReceptionTransfert;
     private StatusTransfert statusTranfert;
     private User emetteur;
-    List<LigneBonDeSortie> ligneBonDeSorties;
-
+    private LocalDate dateReglement;
 
     public BonDeSortieDTO() {
     }
 
-    public BonDeSortie createBonDeSortieVente(){
+    public BonDeSortie createBonDeSortieVente() {
         BonDeSortie bonDeSortie = new BonDeSortie();
         bonDeSortie.setId(getId());
         bonDeSortie.setClient(getClient());
@@ -50,7 +50,7 @@ public class BonDeSortieDTO {
         return bonDeSortie;
     }
 
-    public BonDeSortie createBonDeSortie(){
+    public BonDeSortie createBonDeSortie() {
         BonDeSortie bonDeSortie = createBonDeSortieVente();
 
         bonDeSortie.setMagasin(getMagasin());
@@ -195,6 +195,15 @@ public class BonDeSortieDTO {
 
     public void setEmetteur(User emetteur) {
         this.emetteur = emetteur;
+    }
+
+
+    public LocalDate getDateReglement() {
+        return dateReglement;
+    }
+
+    public void setDateReglement(LocalDate dateReglement) {
+        this.dateReglement = dateReglement;
     }
 
 

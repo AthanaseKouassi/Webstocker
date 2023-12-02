@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <property name="now" value="now()" dbms="mysql,h2"/>
@@ -22,19 +22,19 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="date_facture" type="date">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
 
             <column name="valeur_remise" type="integer">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
 
             <column name="delai_paiement" type="integer">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
 
             <column name="date_limite_paiement" type="date">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
 
             <column name="client_id" type="bigint"/>
@@ -56,5 +56,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="bon_de_sortie"/>
 
+    </changeSet>
+    <changeSet id="update.20231202" author="athanase">
+        <comment>Add column statut on table facture</comment>
+        <addColumn tableName="facture">
+            <column name="statut" type="varchar(50)"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

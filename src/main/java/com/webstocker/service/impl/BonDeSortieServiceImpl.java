@@ -100,8 +100,6 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
             DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
 
         return result;
-
-
     }
 
     /**

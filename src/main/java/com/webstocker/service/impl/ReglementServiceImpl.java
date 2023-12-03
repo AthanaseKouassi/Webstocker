@@ -4,6 +4,7 @@ import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.BonDeSortieRepository;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.LigneBonDeSortieRepository;
@@ -161,6 +162,7 @@ public class ReglementServiceImpl implements ReglementService {
             reglement.setMontantReglement(lbs.getPrixDeVente());
 
             reglementRepository.save(reglement);
+            factureRepository.updateStatutFacture(facture.getId(), StatutFacture.SOLDE.toString());
         });
     }
 

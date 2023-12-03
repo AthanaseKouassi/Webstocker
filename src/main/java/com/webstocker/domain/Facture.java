@@ -1,17 +1,18 @@
 package com.webstocker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Facture.
@@ -52,6 +53,26 @@ public class Facture implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private BonDeSortie bonDeSortie;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "statut", nullable = false)
+    private StatutFacture statutFacture;
+
+    @Override
+    public String toString() {
+        return "Facture{" +
+            "id=" + id +
+            ", dateFacture=" + dateFacture +
+            ", valeurRemise=" + valeurRemise +
+            ", delaiPaiement=" + delaiPaiement +
+            ", dateLimitePaiement=" + dateLimitePaiement +
+            ", client=" + client +
+            ", reglements=" + reglements +
+            ", bonDeSortie=" + bonDeSortie +
+            ", statutFacture=" + statutFacture +
+            '}';
+    }
 
     public Long getId() {
         return id;
@@ -117,6 +138,14 @@ public class Facture implements Serializable {
         this.bonDeSortie = bonDeSortie;
     }
 
+    public StatutFacture getStatutFacture() {
+        return statutFacture;
+    }
+
+    public void setStatutFacture(StatutFacture statutFacture) {
+        this.statutFacture = statutFacture;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -126,7 +155,7 @@ public class Facture implements Serializable {
             return false;
         }
         Facture facture = (Facture) o;
-        if(facture.id == null || id == null) {
+        if (facture.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, facture.id);
@@ -137,14 +166,4 @@ public class Facture implements Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "Facture{" +
-            "id=" + id +
-            ", dateFacture='" + dateFacture + "'" +
-            ", valeurRemise='" + valeurRemise + "'" +
-            ", delaiPaiement='" + delaiPaiement + "'" +
-            ", dateLimitePaiement='" + dateLimitePaiement + "'" +
-            '}';
-    }
 }

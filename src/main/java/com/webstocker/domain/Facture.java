@@ -56,23 +56,9 @@ public class Facture implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "statut", nullable = false)
+    @Column(name = "statut")
     private StatutFacture statutFacture;
 
-    @Override
-    public String toString() {
-        return "Facture{" +
-            "id=" + id +
-            ", dateFacture=" + dateFacture +
-            ", valeurRemise=" + valeurRemise +
-            ", delaiPaiement=" + delaiPaiement +
-            ", dateLimitePaiement=" + dateLimitePaiement +
-            ", client=" + client +
-            ", reglements=" + reglements +
-            ", bonDeSortie=" + bonDeSortie +
-            ", statutFacture=" + statutFacture +
-            '}';
-    }
 
     public Long getId() {
         return id;

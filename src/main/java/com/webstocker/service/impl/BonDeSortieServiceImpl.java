@@ -4,6 +4,7 @@ import com.webstocker.domain.*;
 import com.webstocker.domain.enumeration.StatusTransfert;
 import com.webstocker.domain.enumeration.TypeSortie;
 import com.webstocker.domain.enumeration.TypeVente;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.*;
 import com.webstocker.repository.search.BonDeSortieSearchRepository;
 import com.webstocker.repository.search.FactureSearchRepository;
@@ -94,6 +95,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         Facture facture = createFacture(result, remise, dateFacture, delaiPaiement);
+
         factureRepository.save(facture);
         factureSearchRepository.save(facture);
         reglementService.reglementFacture(facture, dateReglement.format(
@@ -318,7 +320,8 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         facture.setClient(result.getClient());
-        log.debug("Facture ID: {} créé ", facture);
+        facture.setStatutFacture(StatutFacture.NON_SOLDE);
+        log.debug("Facture ID: {} créé ", facture.getId());
         return facture;
     }
 }

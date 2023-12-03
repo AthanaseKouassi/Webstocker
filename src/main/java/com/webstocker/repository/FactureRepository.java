@@ -14,15 +14,7 @@ import java.util.List;
  * Spring Data JPA repository for the Facture entity.
  */
 public interface FactureRepository extends JpaRepository<Facture, Long> {
-//
-//    @Query("SELECT f.valeurRemise, f.client FROM Facture f WHERE f.reglements IS EMPTY AND f.dateFacture=?1")
-//     List<Facture> findAllCreancesThirthyDaysAgo(LocalDate localDate);
 
-    /**
-     * @param id
-     * @return
-     */
-//    @Query("SELECT f.id,f.dateFacture,b.numero,SUM(l.quantite * l.prixVente)"
     @Query("SELECT f.id,f.dateFacture,b.numero,SUM(l.prixDeVente)"
         + "FROM Facture f "
         + " JOIN  f.client c "
@@ -32,9 +24,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
         + " GROUP BY f.id ")
     List<Facture> findFactureNonReglees(Long id);
 
-
-    //      @Query(" SELECT c.nomClient,f.dateFacture,SUM(l.quantite * l.prixVente),f.id "
-//      @Query(" SELECT c.nomClient,f.dateFacture,(l.quantite * l.prixVente),f.id "
     @Query(" SELECT c.nomClient,f.dateFacture,l.prixDeVente,f.id "
         + " FROM Facture f "
         + " JOIN  f.client c "
@@ -58,8 +47,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
 
     List<Facture> findByDateLimitePaiementBetween(LocalDate dateDebut, LocalDate dateFin);
 
-
-    //      @Query( value = " SELECT facture.id, facture.client_id , client.nom_client, facture.date_facture,(ligne_bon_de_sortie.quantite * ligne_bon_de_sortie.prix_vente) AS montant,facture.date_limite_paiement, "
     @Query(value = " SELECT facture.id, facture.client_id , client.nom_client, facture.date_facture, ligne_bon_de_sortie.prix_de_vente, facture.date_limite_paiement, "
         + " facture.delai_paiement, facture.valeur_remise, facture.bon_de_sortie_id, ligne_bon_de_sortie.quantite, ligne_bon_de_sortie.prix_vente "
         + " FROM facture , client , bon_de_sortie , ligne_bon_de_sortie "
@@ -77,6 +64,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     List<Facture> findByStatutFactureAndDateFactureBetween(String statutfacture, LocalDate debut, LocalDate fin);
 
     @Modifying
-    @Query("UPDATE Facture f SET f.statutFacture = :statutFacture WHERE f.id = :idFacture")
-    void updateStatutFacture(@Param("idFacture") Long idFacture, @Param("statutFacture") String statutFacture);
+    @Query(value = "UPDATE facture  SET statut = ?1 WHERE id = ?2", nativeQuery = true)
+    void updateStatutFacture(String statutFacture, Long idFacture);
 }

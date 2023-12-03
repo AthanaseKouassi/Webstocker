@@ -140,21 +140,17 @@ public class ReglementServiceImpl implements ReglementService {
 
     @Override
     public void reglementFacture(Facture facture, String dateReglement) {
-
         BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
-
         if (bonDeSortie != null && "CASH".equals(bonDeSortie.getTypeVente().toString())) {
             reglementFactureCash(bonDeSortie, facture, dateReglement);
         }
-
     }
 
     // Reglement Cash de la facture
     private void reglementFactureCash(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
 
         List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
-
-        ligneBonDeSorties.forEach(lbs -> {
+        for (LigneBonDeSortie lbs : ligneBonDeSorties) {
             Reglement reglement = new Reglement();
             reglement.setProduit(lbs.getProduit());
             reglement.setFacture(facture);
@@ -162,8 +158,15 @@ public class ReglementServiceImpl implements ReglementService {
             reglement.setMontantReglement(lbs.getPrixDeVente());
 
             reglementRepository.save(reglement);
-            factureRepository.updateStatutFacture(facture.getId(), StatutFacture.SOLDE.toString());
-        });
+            factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
+        }
+    }
+
+    private void reglementFactureCredit(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
+        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+        for (LigneBonDeSortie lbs : ligneBonDeSorties) {
+            Reglement reglement = new Reglement();
+        }
     }
 
 }

@@ -1,18 +1,17 @@
 package com.webstocker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.webstocker.domain.enumeration.TypeClient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
-
-import com.webstocker.domain.enumeration.TypeClient;
+import java.util.Set;
 
 /**
  * A Client.
@@ -147,20 +146,6 @@ public class Client implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Client{" +
-            "id=" + id +
-            ", nomClient='" + nomClient + '\'' +
-            ", telephoneClient='" + telephoneClient + '\'' +
-            ", boitepostale='" + boitepostale + '\'' +
-            ", typeClient=" + typeClient +
-            ", factures=" + factures +
-            ", localite=" + localite +
-            ", categorieclient=" + categorieclient +
-            '}';
     }
 
 

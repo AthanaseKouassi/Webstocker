@@ -98,8 +98,11 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
 
         factureRepository.save(facture);
         factureSearchRepository.save(facture);
-        reglementService.reglementFacture(facture, dateReglement.format(
-            DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
+        if (TypeVente.CASH.equals(result.getTypeVente())) {
+            reglementService.reglementFacture(facture, dateReglement.format(
+                DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
+        }
+
 
         return result;
     }

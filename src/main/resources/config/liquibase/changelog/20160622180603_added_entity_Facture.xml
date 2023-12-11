@@ -63,4 +63,10 @@
             <column name="statut" type="varchar(50)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="update.20231211" author="athanase">
+        <comment>Add column numero on table facture</comment>
+        <addColumn tableName="facture">
+            <column name="numero" type="varchar(25)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -59,6 +59,8 @@ public class Facture implements Serializable {
     @Column(name = "statut")
     private StatutFacture statutFacture;
 
+    @Column(name = "numero")
+    private String numero;
 
     public Long getId() {
         return id;
@@ -130,6 +132,14 @@ public class Facture implements Serializable {
 
     public void setStatutFacture(StatutFacture statutFacture) {
         this.statutFacture = statutFacture;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
     @Override

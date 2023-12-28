@@ -4,6 +4,7 @@ import com.webstocker.domain.*;
 import com.webstocker.domain.enumeration.StatusTransfert;
 import com.webstocker.domain.enumeration.TypeSortie;
 import com.webstocker.domain.enumeration.TypeVente;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.*;
 import com.webstocker.repository.search.BonDeSortieSearchRepository;
 import com.webstocker.repository.search.FactureSearchRepository;
@@ -94,14 +95,16 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         Facture facture = createFacture(result, remise, dateFacture, delaiPaiement);
+
         factureRepository.save(facture);
         factureSearchRepository.save(facture);
-        reglementService.reglementFacture(facture, dateReglement.format(
-            DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
+        if (TypeVente.CASH.equals(result.getTypeVente())) {
+            reglementService.reglementFacture(facture, dateReglement.format(
+                DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
+        }
+
 
         return result;
-
-
     }
 
     /**
@@ -113,14 +116,12 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Transactional(readOnly = true)
     @Override
     public Page<BonDeSortie> findAll(Pageable pageable) {
-        log.debug("Request to get all BonDeSorties");
         return bonDeSortieRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<BonDeSortie> findAll() {
-        log.debug("Request to get all BonDeSorties");
         return bonDeSortieRepository.findAll();
     }
 
@@ -174,7 +175,6 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Transactional(readOnly = true)
     @Override
     public Page<BonDeSortie> findBonByNumero(String numero, Pageable pageable) {
-        log.debug("Request to get all BonDeSorties");
         return bonDeSortieRepository.findBonByNumber(numero, pageable);
     }
 
@@ -193,15 +193,13 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public Page<BonDeSortie> listeBonDeSortieVente(Pageable pageable) {
         TypeSortie typeSortie = TypeSortie.VENTE;
-        Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
-        return page;
+        return bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
     }
 
     @Override
     public Page<BonDeSortie> listeBonDeSortiePromotion(Pageable pageable) {
         TypeSortie typeSortie = TypeSortie.PROMOTION;
-        Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
-        return page;
+        return bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
     }
 
     /**
@@ -212,28 +210,24 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     @Override
     public List<BonDeSortie> listeBonDeSortiePromotion() {
         TypeSortie typeSortie = TypeSortie.PROMOTION;
-        List<BonDeSortie> promotion = bonDeSortieRepository.findByTypeSortie(typeSortie);
-        return promotion;
+        return bonDeSortieRepository.findByTypeSortie(typeSortie);
     }
 
     @Override
     public Page<BonDeSortie> listeBonDeSortieTransfert(Pageable pageable) {
         TypeSortie typeSortie = TypeSortie.TRANSFERT;
-        Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
-        return page;
+        return bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
     }
 
     @Override
     public Page<BonDeSortie> listeBonDeSortiePerte(Pageable pageable) {
         TypeSortie typeSortie = TypeSortie.PERTE;
-        Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
-        return page;
+        return bonDeSortieRepository.findByTypeSortie(typeSortie, pageable);
     }
 
     @Override
     public Page<BonDeSortie> retrouverBonDeSortieVenteParNumero(String numero, Pageable pageable) {
-        Page<BonDeSortie> page = bonDeSortieRepository.findByTypeSortieAndNumeroContaining(TypeSortie.VENTE, numero, pageable);
-        return page;
+        return bonDeSortieRepository.findByTypeSortieAndNumeroContaining(TypeSortie.VENTE, numero, pageable);
     }
 
     @Override
@@ -273,7 +267,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
             factureSearchRepository.delete(fact.getId());
 
             if (factureRepository.exists(fact.getId())) {
-                System.out.println("Cette Facture : id " + fact + " existe deja");
+                log.info("Cette Facture : id {}  existe deja", fact);
             } else {
 
                 /*Reecris la ligne de facture supprimée fact.getId()*/
@@ -303,31 +297,14 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     }
     //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
     //********************** REFACTORISATION ************
-
-
-    /**
-     * méthode supprimer une facture
-     *
-     * @param facture
-     */
+    
     private void deleteFacture(Facture facture) {
         factureRepository.delete(facture.getId());
-        // factureSearchRepository.delete(facture.getId());
-
         if (factureRepository.exists(facture.getId())) {
             log.warn("La Facture avec l'ID {} existe déjà.", facture.getId());
         }
     }
 
-    /**
-     * méthode créer une facture
-     *
-     * @param result
-     * @param remise
-     * @param dateFacture
-     * @param delaiPaiement
-     * @return
-     */
     private Facture createFacture(BonDeSortie result, Long remise, LocalDate dateFacture, Integer delaiPaiement) {
         Facture facture = new Facture();
         facture.setBonDeSortie(result);
@@ -340,7 +317,10 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         facture.setClient(result.getClient());
-        log.debug("Facture ID: {} créé ", facture);
+        facture.setNumero(result.getNumero());
+        facture.setStatutFacture(StatutFacture.NON_SOLDE);
+        log.debug("Facture ID: {} créé ", facture.getId());
         return facture;
     }
+
 }

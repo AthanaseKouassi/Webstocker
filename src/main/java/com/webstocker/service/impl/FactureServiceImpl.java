@@ -141,8 +141,8 @@ public class FactureServiceImpl implements FactureService {
     @Transactional(readOnly = true)
     public Facture findOne(Long id) {
         log.debug("Request to get Facture : {}", id);
-        Facture facture = factureRepository.findOne(id);
-        return facture;
+        return factureRepository.findOne(id);
+
     }
 
     /**
@@ -218,5 +218,13 @@ public class FactureServiceImpl implements FactureService {
         LocalDate fin = LocalDate.parse(dateFin, formatter);
         return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE.toString(), debut, fin);
     }
+
+    public List<Facture> listFactureNonRegleeParPeriode(String dateDebut, String dateFin) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+        LocalDate fin = LocalDate.parse(dateFin, formatter);
+        return factureRepository.findByDateLimitePaiementBetween(debut, fin);
+    }
+
 
 }

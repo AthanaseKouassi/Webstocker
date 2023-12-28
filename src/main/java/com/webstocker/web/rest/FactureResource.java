@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDate;
 
 /**
  * REST controller for managing Facture.
@@ -48,7 +47,6 @@ public class FactureResource {
 
     @Inject
     private ReglementService reglementService;
-
 
 
     /**
@@ -127,14 +125,14 @@ public class FactureResource {
     }
 
     private List<FactureDTO> getall(List<Facture> factures) {
-        List<FactureDTO> factureDTOs=new LinkedList<>();
+        List<FactureDTO> factureDTOs = new LinkedList<>();
         for (Facture facture :
             factures) {
             Long id = facture.getBonDeSortie().getId();
             BonDeSortie bonDeSortie = bonDeSortieService.findOne(id);
             List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieService.findAllByBonDeSortie(bonDeSortie);
 
-            FactureDTO factureDTO=new FactureDTO(facture.getDateFacture(),facture.getId(),facture.getClient());
+            FactureDTO factureDTO = new FactureDTO(facture.getDateFacture(), facture.getId(), facture.getClient());
             factureDTO.setNormalise(facture.getBonDeSortie().getNumeroFactureNormalise());
 
             Long montant = 0L;
@@ -158,7 +156,7 @@ public class FactureResource {
 
             factureDTO.setMontantPaye(montantPaye);
 
-            if (montantPaye.compareTo(montant)!=0) {
+            if (montantPaye.compareTo(montant) != 0) {
                 factureDTOs.add(factureDTO);
             }
         }
@@ -175,7 +173,7 @@ public class FactureResource {
     public List<Facture> getAllCreancesThirtyDayAgo(@RequestParam(required = true) Integer critere) {
         log.debug("REST request to get all Factures");
         LocalDate localDate = LocalDate.now();
-        return factureService.findAllCreancesThirtyDayAgo(localDate,critere);
+        return factureService.findAllCreancesThirtyDayAgo(localDate, critere);
     }
 
     @RequestMapping(value = "/factures-non-reglees",
@@ -253,11 +251,11 @@ public class FactureResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Facture> findFactureByDate(@RequestParam(required=false)String dateDebut,
-            @RequestParam(required=false)String dateFin) {
+    public List<Facture> findFactureByDate(@RequestParam(required = false) String dateDebut,
+                                           @RequestParam(required = false) String dateFin) {
         log.debug("REST request to stat facture");
-        LocalDate date1 = (dateDebut!=null && !"undefined".equals(dateDebut) && !dateDebut.trim().isEmpty())?LocalDate.parse(dateDebut):null;
-        LocalDate date2 = (dateFin!=null && !"undefined".equals(dateFin) && !dateFin.trim().isEmpty())?LocalDate.parse(dateFin):null;
+        LocalDate date1 = (dateDebut != null && !"undefined".equals(dateDebut) && !dateDebut.trim().isEmpty()) ? LocalDate.parse(dateDebut) : null;
+        LocalDate date2 = (dateFin != null && !"undefined".equals(dateFin) && !dateFin.trim().isEmpty()) ? LocalDate.parse(dateFin) : null;
 
         return factureService.findFactureByDate(date1, date2);
     }
@@ -266,8 +264,8 @@ public class FactureResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Facture> getFactureParPeriode(@RequestParam(required=false)String dateDebut,
-            @RequestParam(required=false)String dateFin) {
+    public List<Facture> getFactureParPeriode(@RequestParam(required = false) String dateDebut,
+                                              @RequestParam(required = false) String dateFin) {
         log.debug("REST request to stat facture");
 //        LocalDate date1 = (dateDebut!=null && !"undefined".equals(dateDebut) && !dateDebut.trim().isEmpty())?LocalDate.parse(dateDebut):null;
 //        LocalDate date2 = (dateFin!=null && !"undefined".equals(dateFin) && !dateFin.trim().isEmpty())?LocalDate.parse(dateFin):null;
@@ -276,11 +274,11 @@ public class FactureResource {
         return factureService.getFactureParPeriode(dateDebut, dateFin);
     }
 
-     @RequestMapping(value = "/facture-by-bon-de-sortie/{id}",
+    @RequestMapping(value = "/facture-by-bon-de-sortie/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Facture>factureParBondeSortie(@PathVariable Long id) {
+    public ResponseEntity<Facture> factureParBondeSortie(@PathVariable Long id) {
         log.debug("REST request to facture by id bonDeSortie: ");
         BonDeSortie bonDeSortie = bonDeSortieService.findOne(id);
         Facture facture = factureService.getFactureParBonDeSortie(bonDeSortie);
@@ -291,6 +289,14 @@ public class FactureResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @RequestMapping(value = "/factures-non-solde",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Facture> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
+        log.debug("Factures");
+        return factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin);
+    }
 
 
 }

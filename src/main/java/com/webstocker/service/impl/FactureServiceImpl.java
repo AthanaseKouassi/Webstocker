@@ -216,7 +216,7 @@ public class FactureServiceImpl implements FactureService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
-        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE.toString(), debut, fin);
+        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE, debut, fin);
     }
 
     public List<Facture> listFactureNonRegleeParPeriode(String dateDebut, String dateFin) {

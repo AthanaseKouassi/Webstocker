@@ -297,13 +297,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     }
     //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
     //********************** REFACTORISATION ************
-
-
-    /**
-     * méthode supprimer une facture
-     *
-     * @param facture
-     */
+    
     private void deleteFacture(Facture facture) {
         factureRepository.delete(facture.getId());
         if (factureRepository.exists(facture.getId())) {
@@ -323,8 +317,10 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         facture.setClient(result.getClient());
+        facture.setNumero(result.getNumero());
         facture.setStatutFacture(StatutFacture.NON_SOLDE);
         log.debug("Facture ID: {} créé ", facture.getId());
         return facture;
     }
+
 }

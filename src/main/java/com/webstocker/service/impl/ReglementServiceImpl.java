@@ -162,11 +162,17 @@ public class ReglementServiceImpl implements ReglementService {
         }
     }
 
-    private void reglementFactureCredit(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
-        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
-        for (LigneBonDeSortie lbs : ligneBonDeSorties) {
+    private Reglement reglementFactureCredit(String numeroFacture) {
+        List<Facture> listfacture = factureRepository.findByNumero(numeroFacture);
+
+        for (Facture fact : listfacture) {
+
+
             Reglement reglement = new Reglement();
+
+
         }
+        return null;
     }
 
 }

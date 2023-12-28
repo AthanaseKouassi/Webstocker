@@ -1,26 +1,28 @@
 package com.webstocker.service.impl;
 
 import com.webstocker.domain.BonDeSortie;
-import com.webstocker.service.FactureService;
 import com.webstocker.domain.Facture;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.search.FactureSearchRepository;
+import com.webstocker.service.FactureService;
 import com.webstocker.utilitaires.Constantes;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Facture.
@@ -64,16 +66,15 @@ public class FactureServiceImpl implements FactureService {
         List<Facture> result = factureRepository.findAll();
         return result;
     }
-    
+
     @Transactional(readOnly = true)
     @Override
-    public List<Facture> findFactureByDate(LocalDate dateDebut,LocalDate dateFin){
-       List<Facture> result = factureRepository.findFactureByDate(dateDebut, dateFin);
-       return result;
+    public List<Facture> findFactureByDate(LocalDate dateDebut, LocalDate dateFin) {
+        List<Facture> result = factureRepository.findFactureByDate(dateDebut, dateFin);
+        return result;
     }
-    
+
     /**
-     *
      * @param localDate
      * @param critere
      * @return
@@ -82,8 +83,8 @@ public class FactureServiceImpl implements FactureService {
     public List<Facture> findAllCreancesThirtyDayAgo(LocalDate localDate, Integer critere) {
         log.debug("Request to get all Creances");
         String query = "SELECT NEW com.webstocker.domain.Creance(f.id,f.client.nomClient, f.dateFacture, SUM(l.quantite * l.prixVente))"
-                + " FROM Facture f JOIN f.bonDeSortie b JOIN b.ligneBonDeSorties l "
-                + " WHERE f.reglements IS EMPTY";
+            + " FROM Facture f JOIN f.bonDeSortie b JOIN b.ligneBonDeSorties l "
+            + " WHERE f.reglements IS EMPTY";
         LocalDate locDate = null;
         List<Facture> result = null;
         switch (critere) {
@@ -97,8 +98,8 @@ public class FactureServiceImpl implements FactureService {
                 }
                 query += " AND f.dateFacture =:localDate GROUP BY f.id";
                 result = em.createQuery(query)
-                        .setParameter("localDate", locDate)
-                        .getResultList();
+                    .setParameter("localDate", locDate)
+                    .getResultList();
                 break;
             case 1:
             case 5:
@@ -112,9 +113,9 @@ public class FactureServiceImpl implements FactureService {
                 }
                 query += " AND f.dateFacture " + comparator + ":localDate AND f.dateFacture<=:localDate1 GROUP BY f.id";
                 result = em.createQuery(query)
-                        .setParameter("localDate", locDate)
-                        .setParameter("localDate1", localDate)
-                        .getResultList();
+                    .setParameter("localDate", locDate)
+                    .setParameter("localDate1", localDate)
+                    .getResultList();
                 break;
             case 3:
                 locDate = localDate.minusDays(Constantes.THIRTYDAYS);
@@ -123,9 +124,9 @@ public class FactureServiceImpl implements FactureService {
                 System.out.println("Date fin " + locDate);
                 query += " AND f.dateFacture BETWEEN :localDate1 AND :localDate GROUP BY f.id";
                 result = em.createQuery(query)
-                        .setParameter("localDate", locDate)
-                        .setParameter("localDate1", locDate1)
-                        .getResultList();
+                    .setParameter("localDate", locDate)
+                    .setParameter("localDate1", locDate1)
+                    .getResultList();
                 break;
         }
         return result;
@@ -165,8 +166,8 @@ public class FactureServiceImpl implements FactureService {
     public List<Facture> search(String query) {
         log.debug("Request to search Factures for query {}", query);
         return StreamSupport
-                .stream(factureSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toList());
+            .stream(factureSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -191,12 +192,12 @@ public class FactureServiceImpl implements FactureService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
-        
+
         return factureRepository.findByDateLimitePaiementBetween(debut, fin);
     }
 
     @Override
-    public List<Facture> getFactureParPeriode(String dateDebut,String dateFin) {        
+    public List<Facture> getFactureParPeriode(String dateDebut, String dateFin) {
         return factureRepository.findAllFactureByPeriode(dateDebut, dateFin);
     }
 
@@ -204,4 +205,18 @@ public class FactureServiceImpl implements FactureService {
     public Facture getFactureParBonDeSortie(BonDeSortie bonDesortie) {
         return factureRepository.findByBonDeSortie(bonDesortie);
     }
+
+    @Override
+    public List<Facture> getFactureParNumero(String numero) {
+        return factureRepository.findByNumero(numero);
+    }
+
+    @Override
+    public List<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+        LocalDate fin = LocalDate.parse(dateFin, formatter);
+        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE.toString(), debut, fin);
+    }
+
 }

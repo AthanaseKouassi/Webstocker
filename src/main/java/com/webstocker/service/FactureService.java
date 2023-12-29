@@ -63,7 +63,9 @@ public interface FactureService {
 
     Facture getFactureParBonDeSortie(BonDeSortie bonDesortie);
 
-    List<Facture> getFactureParNumero(String numero);
+    List<Facture> getFactureNonRegleeParNumero(String numero);
 
     List<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin);
+
+
 }

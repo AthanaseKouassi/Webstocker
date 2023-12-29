@@ -4,8 +4,7 @@ import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Magasin;
 import com.webstocker.domain.Produit;
-import com.webstocker.domain.enumeration.TypeSortie;
-import java.time.LocalDate;
+import com.webstocker.web.rest.dto.newfeature.DetailFactureDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,40 +24,39 @@ public interface LigneBonDeSortieService {
     LigneBonDeSortie save(LigneBonDeSortie ligneBonDeSortie);
 
     /**
-     *  Get all the ligneBonDeSorties.
+     * Get all the ligneBonDeSorties.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     Page<LigneBonDeSortie> findAll(Pageable pageable);
 
     /**
-     *  Get the "id" ligneBonDeSortie.
+     * Get the "id" ligneBonDeSortie.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     LigneBonDeSortie findOne(Long id);
 
     /**
-     *  Delete the "id" ligneBonDeSortie.
+     * Delete the "id" ligneBonDeSortie.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     void delete(Long id);
 
     /**
      * Search for the ligneBonDeSortie corresponding to the query.
      *
-     *  @param query the query of the search
-     *  
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param query    the query of the search
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     Page<LigneBonDeSortie> search(String query, Pageable pageable);
 
     List<LigneBonDeSortie> recupererLignesPerte(BonDeSortie bonDeSortie);
-    
+
     List<LigneBonDeSortie> recupererLignesFacture(BonDeSortie bonDeSortie);
 
     List<LigneBonDeSortie> recupererLignesBonDeSortieTransfert(BonDeSortie bonDeSortie);
@@ -125,20 +123,24 @@ public interface LigneBonDeSortieService {
     List<LigneBonDeSortie> getTousLesTranfertAvantDate(String madate);
 
     List<LigneBonDeSortie> getAllFactureParPeriode(String dateDebut, String dateFin);
-   
-    Page<LigneBonDeSortie> getAllFactureParPeriode(String dateDebut, String dateFin,Pageable pageable);
+
+    Page<LigneBonDeSortie> getAllFactureParPeriode(String dateDebut, String dateFin, Pageable pageable);
 
     List<LigneBonDeSortie> findAllByBonDeSortie(BonDeSortie bonDeSortie);
-    
-    List<LigneBonDeSortie> transfert(String magasin,String dateDebut, String dateFin );
 
-    List<LigneBonDeSortie> listeDesTransfertParMagasin(String dateDebut, String dateFin );
-    
+    List<LigneBonDeSortie> transfert(String magasin, String dateDebut, String dateFin);
+
+    List<LigneBonDeSortie> listeDesTransfertParMagasin(String dateDebut, String dateFin);
+
     Page<LigneBonDeSortie> getListVenteParDate(String dateDebut, String dateFin, Pageable pageable);
-    
+
     Page<LigneBonDeSortie> getListVenteParNumeroFacture(String numeroFacturenormalise, Pageable pageable);
-    
-    List<LigneBonDeSortie>findFactureParPeriode(String dateDebut, String dateFin);
-    
-    
+
+    List<LigneBonDeSortie> findFactureParPeriode(String dateDebut, String dateFin);
+
+    List<LigneBonDeSortie> getDetailFactureNonReglee(Long idFacture);
+
+    List<DetailFactureDto> getDetailFacture(Long idFacture);
+
+
 }

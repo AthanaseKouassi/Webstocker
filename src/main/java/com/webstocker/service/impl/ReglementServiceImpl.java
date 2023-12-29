@@ -146,6 +146,7 @@ public class ReglementServiceImpl implements ReglementService {
         }
     }
 
+
     // Reglement Cash de la facture
     private void reglementFactureCash(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
 
@@ -162,17 +163,23 @@ public class ReglementServiceImpl implements ReglementService {
         }
     }
 
-    private Reglement reglementFactureCredit(String numeroFacture) {
-        List<Facture> listfacture = factureRepository.findByNumero(numeroFacture);
-
-        for (Facture fact : listfacture) {
-
-
-            Reglement reglement = new Reglement();
+    @Override
+    public Reglement regleFactureCredit(Long idFacture, String dateReglement) {
+        Facture facture = factureRepository.findOne(idFacture);
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
+        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
 
 
-        }
+//        ligneBonDeSorties.stream().map(lbs -> {
+//            Reglement reglement = new Reglement();
+//            reglement.setProduit(lbs.getProduit());
+//            reglement.setFacture(facture);
+//            reglement.setDateReglement(webstockerDateFormat.convertirStingToLocalDate(dateReglement));
+//            reglement.setMontantReglement(lbs.getPrixDeVente());
+//        });
+
         return null;
     }
+
 
 }

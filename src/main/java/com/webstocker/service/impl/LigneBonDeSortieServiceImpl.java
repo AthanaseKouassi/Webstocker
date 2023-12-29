@@ -1,60 +1,55 @@
 package com.webstocker.service.impl;
 
-import com.webstocker.domain.BonDeSortie;
-import com.webstocker.domain.Magasin;
-import com.webstocker.domain.Produit;
+import com.webstocker.domain.*;
 import com.webstocker.domain.enumeration.TypeSortie;
-import com.webstocker.repository.MagasinRepository;
-import com.webstocker.repository.ProduitRepository;
-import com.webstocker.service.LigneBonDeSortieService;
-import com.webstocker.domain.LigneBonDeSortie;
-import com.webstocker.repository.LigneBonDeSortieRepository;
+import com.webstocker.repository.*;
 import com.webstocker.repository.search.LigneBonDeSortieSearchRepository;
+import com.webstocker.service.LigneBonDeSortieService;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
+import com.webstocker.web.rest.dto.newfeature.DetailFactureDto;
+import com.webstocker.web.rest.mapper.newfeature.DetailFactureMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing LigneBonDeSortie.
  */
 @Service
 @Transactional
-public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
+public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService {
 
     private final Logger log = LoggerFactory.getLogger(LigneBonDeSortieServiceImpl.class);
 
     @Inject
     private LigneBonDeSortieRepository ligneBonDeSortieRepository;
-
+    @Inject
+    private FactureRepository factureRepository;
     @Inject
     private LigneBonDeSortieSearchRepository ligneBonDeSortieSearchRepository;
-    
     @Inject
     private ProduitRepository produitRepository;
-    
     @Inject
     private MagasinRepository magasinRepository;
+    @Inject
+    private BonDeSortieRepository bonDeSortieRepository;
+    @Inject
+    private ReglementRepository reglementRepository;
+    @Inject
+    private DetailFactureMapper detailFactureMapper;
 
-//    public LigneBonDeSortieServiceImpl(LigneBonDeSortieRepository ligneBonDeSortieRepository, LigneBonDeSortieSearchRepository ligneBonDeSortieSearchRepository,
-//            ProduitRepository produitRepository, MagasinRepository magasinRepository) {
-//        this.ligneBonDeSortieRepository = ligneBonDeSortieRepository;
-//        this.ligneBonDeSortieSearchRepository = ligneBonDeSortieSearchRepository;
-//        this.produitRepository =  produitRepository;
-//        this.magasinRepository = magasinRepository;
-//    }
- 
+
     /**
      * Save a ligneBonDeSortie.
      *
@@ -70,10 +65,10 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     }
 
     /**
-     *  Get all the ligneBonDeSorties.
+     * Get all the ligneBonDeSorties.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -83,10 +78,10 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     }
 
     /**
-     *  Get one ligneBonDeSortie by id.
+     * Get one ligneBonDeSortie by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Override
     @Transactional(readOnly = true)
@@ -96,9 +91,9 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     }
 
     /**
-     *  Delete the  ligneBonDeSortie by id.
+     * Delete the  ligneBonDeSortie by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     @Override
     public void delete(Long id) {
@@ -110,9 +105,9 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     /**
      * Search for the ligneBonDeSortie corresponding to the query.
      *
-     *  @param query the query of the search
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param query    the query of the search
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -126,7 +121,7 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     public List<LigneBonDeSortie> recupererLignesFacture(BonDeSortie bonDeSortie) {
         if (bonDeSortie.getTypeSortie() == TypeSortie.VENTE) {
             return ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
-            }
+        }
         return null;
     }
 
@@ -282,10 +277,11 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
     }
 
     /**
-     * Quantité de produit vendue par mois 
+     * Quantité de produit vendue par mois
+     *
      * @param dateDuMois
-     * @return 
-     */    
+     * @return
+     */
     @Override
     public List<LigneBonDeSortie> getQuantiteDeProduitVendueParMois(String dateDuMois) {
         String dateDebut;
@@ -382,7 +378,8 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
 
-        return ligneBonDeSortieRepository.findByBonDeSortieMagasinAndBonDeSortieTypeSortieAndBonDeSortieDaateCreationBetween(magasin, typesortie, debut, fin);
+        return ligneBonDeSortieRepository.findByBonDeSortieMagasinAndBonDeSortieTypeSortieAndBonDeSortieDaateCreationBetween(
+            magasin, typesortie, debut, fin);
     }
 
     @Override
@@ -393,29 +390,62 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService{
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
 
-        return ligneBonDeSortieRepository.findByBonDeSortieTypeSortieAndBonDeSortieFactureDateFactureBetween(typesortie, debut, fin, pageable);
+        return ligneBonDeSortieRepository.findByBonDeSortieTypeSortieAndBonDeSortieFactureDateFactureBetween(
+            typesortie, debut, fin, pageable);
     }
 
     @Override
     public Page<LigneBonDeSortie> getListVenteParNumeroFacture(String numeroFacturenormalise, Pageable pageable) {
         TypeSortie typesortie = TypeSortie.VENTE;
-        Page<LigneBonDeSortie> page = ligneBonDeSortieRepository.findByBonDeSortieTypeSortieAndBonDeSortieNumeroFactureNormaliseContaining(typesortie, numeroFacturenormalise, pageable);
-
-        return page;
+        return ligneBonDeSortieRepository.findByBonDeSortieTypeSortieAndBonDeSortieNumeroFactureNormaliseContaining(
+            typesortie, numeroFacturenormalise, pageable);
     }
 
     @Override
     public Page<LigneBonDeSortie> getAllFactureParPeriode(String dateDebut, String dateFin, Pageable pageable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public List<LigneBonDeSortie> findFactureParPeriode(String dateDebut, String dateFin) {
-
         return ligneBonDeSortieRepository.findFactureParPeriode(dateDebut, dateFin);
-
     }
 
+    @Override
+    public List<LigneBonDeSortie> getDetailFactureNonReglee(Long idFacture) {
+        Facture facture = factureRepository.findOne(idFacture);
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
+        List<Reglement> listReglement = reglementRepository.findByFacture(facture);
+        if (!listReglement.isEmpty()) {
+
+        }
+        return ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+    }
+
+    @Override
+    public List<DetailFactureDto> getDetailFacture(Long idFacture) {
+        List<DetailFactureDto> factureDetail = new ArrayList<>();
+        Facture facture = factureRepository.findOne(idFacture);
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
+        List<LigneBonDeSortie> listBonDeSortie = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+        List<Reglement> listReglement = reglementRepository.findByFacture(facture);
+
+        if (!listReglement.isEmpty()) {
+            for (LigneBonDeSortie lbs : listBonDeSortie) {
+                for (Reglement reglement : listReglement) {
+                    DetailFactureDto detailFactureDto = detailFactureMapper.mapToDto(reglement, lbs, facture);
+                    factureDetail.add(detailFactureDto);
+                }
+            }
+        } else {
+            for (LigneBonDeSortie lbs : listBonDeSortie) {
+                DetailFactureDto detailFactureDto = detailFactureMapper.mapNoReglementToDto(lbs, facture);
+                factureDetail.add(detailFactureDto);
+            }
+        }
+
+        return factureDetail;
+    }
 
 
 }

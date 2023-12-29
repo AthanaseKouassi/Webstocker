@@ -32,7 +32,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 public class FactureServiceImpl implements FactureService {
 
     private final Logger log = LoggerFactory.getLogger(FactureServiceImpl.class);
-
+    private final String PATTERN_DATE = "yyyy-MM-dd";
     @Inject
     private FactureRepository factureRepository;
 
@@ -42,12 +42,6 @@ public class FactureServiceImpl implements FactureService {
     @Inject
     private FactureSearchRepository factureSearchRepository;
 
-    /**
-     * Save a facture.
-     *
-     * @param facture the entity to save
-     * @return the persisted entity
-     */
     public Facture save(Facture facture) {
         log.debug("Request to save Facture : {}", facture);
         Facture result = factureRepository.save(facture);
@@ -55,11 +49,6 @@ public class FactureServiceImpl implements FactureService {
         return result;
     }
 
-    /**
-     * Get all the factures.
-     *
-     * @return the list of entities
-     */
     @Transactional(readOnly = true)
     public List<Facture> findAll() {
         log.debug("Request to get all Factures");
@@ -74,11 +63,6 @@ public class FactureServiceImpl implements FactureService {
         return result;
     }
 
-    /**
-     * @param localDate
-     * @param critere
-     * @return
-     */
     @Override
     public List<Facture> findAllCreancesThirtyDayAgo(LocalDate localDate, Integer critere) {
         log.debug("Request to get all Creances");
@@ -132,12 +116,6 @@ public class FactureServiceImpl implements FactureService {
         return result;
     }
 
-    /**
-     * Get one facture by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
     @Transactional(readOnly = true)
     public Facture findOne(Long id) {
         log.debug("Request to get Facture : {}", id);
@@ -145,23 +123,12 @@ public class FactureServiceImpl implements FactureService {
 
     }
 
-    /**
-     * Delete the facture by id.
-     *
-     * @param id the id of the entity
-     */
     public void delete(Long id) {
         log.debug("Request to delete Facture : {}", id);
         factureRepository.delete(id);
         factureSearchRepository.delete(id);
     }
 
-    /**
-     * Search for the facture corresponding to the query.
-     *
-     * @param query the query of the search
-     * @return the list of entities
-     */
     @Transactional(readOnly = true)
     public List<Facture> search(String query) {
         log.debug("Request to search Factures for query {}", query);
@@ -189,7 +156,7 @@ public class FactureServiceImpl implements FactureService {
         dateDebut = premierEtDernier.getDateDebutDuMois(maDate);
         dateFin = premierEtDernier.getDateFinDuMois(maDate);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
 
@@ -207,23 +174,28 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
-    public List<Facture> getFactureParNumero(String numero) {
-        return factureRepository.findByNumero(numero);
+    public List<Facture> getFactureNonRegleeParNumero(String numero) {
+        return null;
     }
 
     @Override
     public List<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
-        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE.toString(), debut, fin);
+        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE, debut, fin);
     }
 
-    public List<Facture> listFactureNonRegleeParPeriode(String dateDebut, String dateFin) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
-        return factureRepository.findByDateLimitePaiementBetween(debut, fin);
+        if (!numero.isEmpty()) {
+            return factureRepository.findStatutFactureAndByNumero(StatutFacture.NON_SOLDE, numero);
+        } else {
+            return factureRepository.findByDateLimitePaiementBetween(debut, fin);
+        }
+
     }
 
 

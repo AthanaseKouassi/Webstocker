@@ -53,4 +53,6 @@ public interface ReglementService {
     List<Reglement> findByFacture(Facture facture);
 
     void reglementFacture(Facture facture, String dateReglement);
+
+    Reglement regleFactureCredit(Long idFacture, String dateReglement);
 }

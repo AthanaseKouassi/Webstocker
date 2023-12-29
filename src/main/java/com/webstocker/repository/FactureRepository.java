@@ -2,6 +2,7 @@ package com.webstocker.repository;
 
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -61,12 +62,12 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
 
     List<Facture> findByStatutFacture(String statutfacture);
 
-    List<Facture> findByStatutFactureAndDateFactureBetween(String statutfacture, LocalDate debut, LocalDate fin);
+    List<Facture> findByStatutFactureAndDateFactureBetween(StatutFacture statutfacture, LocalDate debut, LocalDate fin);
 
     @Modifying
     @Query(value = "UPDATE facture  SET statut = ?1 WHERE id = ?2", nativeQuery = true)
     void updateStatutFacture(String statutFacture, Long idFacture);
 
-    List<Facture> findByNumero(String numero);
+    List<Facture> findStatutFactureAndByNumero(StatutFacture statutfacture, String numero);
 
 }

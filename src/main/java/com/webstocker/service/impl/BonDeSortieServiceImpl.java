@@ -297,7 +297,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     }
     //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
     //********************** REFACTORISATION ************
-    
+
     private void deleteFacture(Facture facture) {
         factureRepository.delete(facture.getId());
         if (factureRepository.exists(facture.getId())) {

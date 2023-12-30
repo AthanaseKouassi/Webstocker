@@ -1,12 +1,10 @@
 package com.webstocker.web.rest.dto.newfeature;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 public class ReglementDto {
     private Long id;
     private LocalDate dateReglement;

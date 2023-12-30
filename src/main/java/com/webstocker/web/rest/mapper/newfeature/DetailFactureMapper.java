@@ -6,17 +6,17 @@ import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.web.rest.dto.newfeature.DetailFactureDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 
 @Component
 public class DetailFactureMapper {
 
-    @Autowired
+    @Inject
     private FactureRepository factureRepository;
-    @Autowired
+    @Inject
     private ProduitRepository produitRepository;
 
     public DetailFactureDto mapToDto(Reglement reglement, LigneBonDeSortie ligneBonDeSortie, Facture facture) {
@@ -25,8 +25,9 @@ public class DetailFactureMapper {
         detailFactureDto.setMontantRegle(reglement.getMontantReglement());
         detailFactureDto.setDateReglement(reglement.getDateReglement());
         detailFactureDto.setIdProduit(ligneBonDeSortie.getProduit().getId());
-        detailFactureDto.setResteApaye(ligneBonDeSortie.getPrixVente()
-            .subtract(BigDecimal.valueOf(reglement.getMontantReglement())));
+        detailFactureDto.setQuantite(ligneBonDeSortie.getQuantite());
+        detailFactureDto.setNomProduit(ligneBonDeSortie.getProduit().getNomProduit());
+        detailFactureDto.setResteApaye(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente() - reglement.getMontantReglement()));
 
         return detailFactureDto;
     }
@@ -37,6 +38,9 @@ public class DetailFactureMapper {
         detailFactureDto.setPrixDeVente(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente()));
         detailFactureDto.setIdProduit(ligneBonDeSortie.getProduit().getId());
         detailFactureDto.setResteApaye(ligneBonDeSortie.getPrixVente());
+        detailFactureDto.setNomProduit(ligneBonDeSortie.getProduit().getNomProduit());
+        detailFactureDto.setResteApaye(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente()));
+        detailFactureDto.setQuantite(ligneBonDeSortie.getQuantite());
 
         return detailFactureDto;
     }

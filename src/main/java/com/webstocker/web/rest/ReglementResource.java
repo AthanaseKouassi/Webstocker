@@ -3,7 +3,8 @@ package com.webstocker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Reglement;
 import com.webstocker.service.ReglementService;
-import com.webstocker.web.rest.dto.BonDeSortieDTO;
+import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
+import com.webstocker.web.rest.mapper.newfeature.ReglementMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ public class ReglementResource {
 
     @Inject
     private ReglementService reglementService;
+    @Inject
+    private ReglementMapper reglementMapper;
+
 
     /**
      * POST  /reglements : Create a new reglement.
@@ -147,14 +151,14 @@ public class ReglementResource {
         return reglementService.search(query);
     }
 
-    @RequestMapping(value = "/reglement-facture",
+    @RequestMapping(value = "/reglement/facture-credit",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Void> reglerFacture(@RequestBody BonDeSortieDTO bonDeSortieDTO) {
-        // reglementService.reglementFacture();
-        //  return ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert()).build();
-        return null;
+    public ResponseEntity<ReglementFactureDto> reglerFactureCredit(@RequestBody ReglementFactureDto reglementFactureDto) {
+        List<Reglement> listReglements = reglementMapper.listDtoTo(reglementFactureDto.getReglementDtos());
+        return new ResponseEntity<>(reglementService
+            .reglementFactureCredit(reglementFactureDto.getIdFacture(), listReglements), HttpStatus.CREATED);
     }
 
 }

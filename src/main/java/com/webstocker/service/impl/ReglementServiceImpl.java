@@ -13,6 +13,10 @@ import com.webstocker.repository.search.ReglementSearchRepository;
 import com.webstocker.service.ReglementService;
 import com.webstocker.service.util.WebstockerDateFormat;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
+import com.webstocker.web.rest.dto.newfeature.ReglementDto;
+import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
+import com.webstocker.web.rest.mapper.newfeature.DetailFactureMapper;
+import com.webstocker.web.rest.mapper.newfeature.ReglementMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -37,7 +43,8 @@ public class ReglementServiceImpl implements ReglementService {
 
     private final Logger log = LoggerFactory.getLogger(ReglementServiceImpl.class);
     @Inject
-    BonDeSortieRepository bonDeSortieRepository;
+    private BonDeSortieRepository bonDeSortieRepository;
+
     @Inject
     private ReglementRepository reglementRepository;
     @Inject
@@ -46,24 +53,17 @@ public class ReglementServiceImpl implements ReglementService {
     private ReglementSearchRepository reglementSearchRepository;
     @Inject
     private FactureRepository factureRepository;
-
-    @Autowired
+    @Inject
     private WebstockerDateFormat webstockerDateFormat;
+    @Autowired
+    private DetailFactureMapper detailFactureMapper;
+    @Autowired
+    private ReglementMapper reglementMapper;
 
-    /**
-     * Save a reglement.
-     *
-     * @param reglement the entity to save
-     * @return the persisted entity
-     */
+
     public Reglement save(Reglement reglement) {
         log.debug("Request to save Reglement : {}", reglement);
-        System.out.println("***************facture**********************");
-        System.out.println(reglement.getFacture());
-        System.out.println("***************facture**********************");
-        Reglement result = reglementRepository.save(reglement);
-//        reglementSearchRepository.save(result);
-        return result;
+        return reglementRepository.save(reglement);
     }
 
     /**
@@ -74,8 +74,7 @@ public class ReglementServiceImpl implements ReglementService {
     @Transactional(readOnly = true)
     public List<Reglement> findAll() {
         log.debug("Request to get all Reglements");
-        List<Reglement> result = reglementRepository.findAll();
-        return result;
+        return reglementRepository.findAll();
     }
 
     /**
@@ -87,8 +86,7 @@ public class ReglementServiceImpl implements ReglementService {
     @Transactional(readOnly = true)
     public Reglement findOne(Long id) {
         log.debug("Request to get Reglement : {}", id);
-        Reglement reglement = reglementRepository.findOne(id);
-        return reglement;
+        return reglementRepository.findOne(id);
     }
 
     /**
@@ -99,7 +97,6 @@ public class ReglementServiceImpl implements ReglementService {
     public void delete(Long id) {
         log.debug("Request to delete Reglement : {}", id);
         reglementRepository.delete(id);
-//        reglementSearchRepository.delete(id);
     }
 
     /**
@@ -146,8 +143,33 @@ public class ReglementServiceImpl implements ReglementService {
         }
     }
 
+    @Override
+    public ReglementFactureDto reglementFactureCredit(Long idFacture, List<Reglement> reglements) {
+        ReglementFactureDto reglementFactureDto = new ReglementFactureDto();
+        List<ReglementDto> listReglment = new ArrayList<>();
+        Facture facture = factureRepository.findOne(idFacture);
+        BigDecimal totalRegle = BigDecimal.ZERO;
+        for (Reglement reg : reglements) {
+            Reglement reglement = new Reglement();
+            reglement.setProduit(reg.getProduit());
+            reglement.setFacture(facture);
+            reglement.setDateReglement(reg.getDateReglement());
+            reglement.setMontantReglement(reg.getMontantReglement());
 
-    // Reglement Cash de la facture
+            totalRegle = totalRegle.add(BigDecimal.valueOf(reg.getMontantReglement()));
+
+            reglementRepository.save(reglement);
+            factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
+            listReglment.add(reglementMapper.reglementToReglementDto(reglement));
+        }
+
+        reglementFactureDto.setIdFacture(idFacture);
+        reglementFactureDto.setReglementDtos(listReglment);
+        reglementFactureDto.setTotalFacture(totalRegle);
+
+        return reglementFactureDto;
+    }
+
     private void reglementFactureCash(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
 
         List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
@@ -161,24 +183,6 @@ public class ReglementServiceImpl implements ReglementService {
             reglementRepository.save(reglement);
             factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
         }
-    }
-
-    @Override
-    public Reglement regleFactureCredit(Long idFacture, String dateReglement) {
-        Facture facture = factureRepository.findOne(idFacture);
-        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
-        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
-
-
-//        ligneBonDeSorties.stream().map(lbs -> {
-//            Reglement reglement = new Reglement();
-//            reglement.setProduit(lbs.getProduit());
-//            reglement.setFacture(facture);
-//            reglement.setDateReglement(webstockerDateFormat.convertirStingToLocalDate(dateReglement));
-//            reglement.setMontantReglement(lbs.getPrixDeVente());
-//        });
-
-        return null;
     }
 
 

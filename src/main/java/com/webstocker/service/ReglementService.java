@@ -2,6 +2,7 @@ package com.webstocker.service;
 
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.Reglement;
+import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
 
 import java.util.List;
 
@@ -54,5 +55,5 @@ public interface ReglementService {
 
     void reglementFacture(Facture facture, String dateReglement);
 
-    Reglement regleFactureCredit(Long idFacture, String dateReglement);
+    ReglementFactureDto reglementFactureCredit(Long idFacture, List<Reglement> reglements);
 }

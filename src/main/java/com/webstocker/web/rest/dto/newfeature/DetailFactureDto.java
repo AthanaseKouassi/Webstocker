@@ -11,6 +11,7 @@ public class DetailFactureDto {
     private String nomProduit;
     private BigDecimal prixDeVente;
     private Long montantRegle;
+    private Long quantite;
     private Long idProduit;
     private Long idFacture;
     private LocalDate dateReglement;

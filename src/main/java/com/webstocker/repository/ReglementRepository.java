@@ -20,4 +20,5 @@ public interface ReglementRepository extends JpaRepository<Reglement, Long> {
 
     Reglement findByFactureAndProduit(Facture facture, Produit produit);
 
+
 }

@@ -28,6 +28,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -147,17 +149,49 @@ public class ReglementServiceImpl implements ReglementService {
         ReglementFactureDto reglementFactureDto = new ReglementFactureDto();
         List<ReglementDto> listReglment = new ArrayList<>();
         Facture facture = factureRepository.findOne(idFacture);
+        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie());
+        List<Reglement> listReglementsEffectue = new ArrayList<>();
 
-        for (Reglement reg : reglements) {
-            Reglement reglement = new Reglement();
-            reglement.setProduit(reg.getProduit());
-            reglement.setFacture(facture);
-            reglement.setDateReglement(reg.getDateReglement());
-            reglement.setMontantReglement(reg.getMontantReglement());
+        List<Boolean> listbool = new ArrayList<>();
+        for (LigneBonDeSortie lbs : ligneBonDeSorties) {
 
-            reglementRepository.save(reglement);
-            factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
-            listReglment.add(reglementMapper.reglementToReglementDto(reglement));
+            double sumMontDejaRegle = 0;
+            if (lbs.getBonDeSortie().getFacture().getReglements() != null) {
+
+                sumMontDejaRegle = lbs.getBonDeSortie()
+                    .getFacture()
+                    .getReglements()
+                    .stream().filter(r -> Objects.equals(r.getProduit().getId(), lbs.getProduit().getId()))
+                    .mapToDouble(Reglement::getMontantReglement)
+                    .sum();
+            }
+
+            Reglement reg = reglements.stream()
+                .filter(m -> m.getProduit().getId().equals(lbs.getProduit().getId()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Aucun élément correspondant trouvé"));
+
+            double totalRegle = sumMontDejaRegle + reg.getMontantReglement();
+            log.info("SOMME DEJA REGLE :: {} pour le produit {}", sumMontDejaRegle, reg.getProduit().getId());
+            log.info("SOMME A REGLE :: {}", reg.getMontantReglement());
+            log.info("TOTAL REGLE :: {}", totalRegle);
+            if (totalRegle <= Double.valueOf(lbs.getPrixDeVente())) {
+                Reglement reglement = new Reglement();
+                reglement.setProduit(reg.getProduit());
+                reglement.setFacture(facture);
+                reglement.setDateReglement(reg.getDateReglement());
+                reglement.setMontantReglement(reg.getMontantReglement());
+
+                listReglementsEffectue.add(reglement);
+                listbool.add(totalRegle == Double.valueOf(lbs.getPrixDeVente()));
+            }
+
+        }
+
+        reglementRepository.save(listReglementsEffectue);
+        if (listbool.stream().allMatch(Boolean::booleanValue)) {
+            facture.setStatutFacture(StatutFacture.SOLDE);
+            factureRepository.save(facture);
         }
 
         reglementFactureDto.setIdFacture(idFacture);

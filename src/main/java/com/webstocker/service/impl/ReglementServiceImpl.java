@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -148,15 +147,13 @@ public class ReglementServiceImpl implements ReglementService {
         ReglementFactureDto reglementFactureDto = new ReglementFactureDto();
         List<ReglementDto> listReglment = new ArrayList<>();
         Facture facture = factureRepository.findOne(idFacture);
-        BigDecimal totalRegle = BigDecimal.ZERO;
+
         for (Reglement reg : reglements) {
             Reglement reglement = new Reglement();
             reglement.setProduit(reg.getProduit());
             reglement.setFacture(facture);
             reglement.setDateReglement(reg.getDateReglement());
             reglement.setMontantReglement(reg.getMontantReglement());
-
-            totalRegle = totalRegle.add(BigDecimal.valueOf(reg.getMontantReglement()));
 
             reglementRepository.save(reglement);
             factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
@@ -165,7 +162,6 @@ public class ReglementServiceImpl implements ReglementService {
 
         reglementFactureDto.setIdFacture(idFacture);
         reglementFactureDto.setReglementDtos(listReglment);
-        reglementFactureDto.setTotalFacture(totalRegle);
 
         return reglementFactureDto;
     }

@@ -2,7 +2,10 @@ package com.webstocker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Reglement;
+import com.webstocker.service.FactureService;
+import com.webstocker.service.ProduitService;
 import com.webstocker.service.ReglementService;
+import com.webstocker.web.rest.dto.newfeature.ReglementDto;
 import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
 import com.webstocker.web.rest.mapper.newfeature.ReglementMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
@@ -17,6 +20,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +37,10 @@ public class ReglementResource {
     private ReglementService reglementService;
     @Inject
     private ReglementMapper reglementMapper;
+    @Inject
+    private FactureService factureService;
+    @Inject
+    private ProduitService produitService;
 
 
     /**
@@ -153,10 +161,25 @@ public class ReglementResource {
 
     @RequestMapping(value = "/reglement/facture-credit",
         method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<ReglementFactureDto> reglerFactureCredit(@RequestBody ReglementFactureDto reglementFactureDto) {
-        List<Reglement> listReglements = reglementMapper.listDtoTo(reglementFactureDto.getReglementDtos());
+
+        List<ReglementDto> reglementDtos = reglementFactureDto.getReglementDtos();
+        List<Reglement> listReglements = new ArrayList<>();
+
+        for (ReglementDto list : reglementDtos) {
+            Reglement reg = new Reglement();
+            reg.setFacture(factureService.findOne(list.getIdFacture()));
+            reg.setDateReglement(list.getDateReglement());
+            reg.setProduit(produitService.findOne(list.getIdProduit()));
+            reg.setMontantReglement(list.getMontantReglement());
+            listReglements.add(reg);
+        }
+
+        log.info("Liste des reglements :: {}", listReglements.get(1));
+
         return new ResponseEntity<>(reglementService
             .reglementFactureCredit(reglementFactureDto.getIdFacture(), listReglements), HttpStatus.CREATED);
     }

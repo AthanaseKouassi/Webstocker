@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Component
 public class DetailFactureMapper {
@@ -19,15 +20,20 @@ public class DetailFactureMapper {
     @Inject
     private ProduitRepository produitRepository;
 
-    public DetailFactureDto mapToDto(Reglement reglement, LigneBonDeSortie ligneBonDeSortie, Facture facture) {
+    public DetailFactureDto mapToDto(LigneBonDeSortie ligneBonDeSortie, Facture facture) {
         DetailFactureDto detailFactureDto = new DetailFactureDto();
+        detailFactureDto.setId(ligneBonDeSortie.getId());
         detailFactureDto.setIdFacture(facture.getId());
-        detailFactureDto.setMontantRegle(reglement.getMontantReglement());
-        detailFactureDto.setDateReglement(reglement.getDateReglement());
+
+        detailFactureDto.setMontantRegle(!facture.getReglements().isEmpty() ? facture.getReglements().stream()
+            .filter(r -> Objects.equals(r.getProduit().getId(), ligneBonDeSortie.getProduit().getId()))
+            .mapToLong(Reglement::getMontantReglement).sum() : 0L);
+
         detailFactureDto.setIdProduit(ligneBonDeSortie.getProduit().getId());
         detailFactureDto.setQuantite(ligneBonDeSortie.getQuantite());
         detailFactureDto.setNomProduit(ligneBonDeSortie.getProduit().getNomProduit());
-        detailFactureDto.setResteApaye(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente() - reglement.getMontantReglement()));
+        detailFactureDto.setPrixDeVente(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente()));
+        detailFactureDto.setResteApaye(BigDecimal.valueOf(ligneBonDeSortie.getPrixDeVente() - detailFactureDto.getMontantRegle()));
 
         return detailFactureDto;
     }

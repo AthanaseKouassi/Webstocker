@@ -165,7 +165,7 @@ public class ReglementResource {
         consumes = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<ReglementFactureDto> reglerFactureCredit(@RequestBody ReglementFactureDto reglementFactureDto) {
-
+        log.info("OUUHHH {}", reglementFactureDto);
         List<ReglementDto> reglementDtos = reglementFactureDto.getReglementDtos();
         List<Reglement> listReglements = new ArrayList<>();
 
@@ -177,8 +177,6 @@ public class ReglementResource {
             reg.setMontantReglement(list.getMontantReglement());
             listReglements.add(reg);
         }
-
-        log.info("Liste des reglements :: {}", listReglements.get(1));
 
         return new ResponseEntity<>(reglementService
             .reglementFactureCredit(reglementFactureDto.getIdFacture(), listReglements), HttpStatus.CREATED);

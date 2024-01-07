@@ -428,20 +428,10 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService {
         Facture facture = factureRepository.findOne(idFacture);
         BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
         List<LigneBonDeSortie> listBonDeSortie = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
-        List<Reglement> listReglement = reglementRepository.findByFacture(facture);
 
-        if (!listReglement.isEmpty()) {
-            for (LigneBonDeSortie lbs : listBonDeSortie) {
-                for (Reglement reglement : listReglement) {
-                    DetailFactureDto detailFactureDto = detailFactureMapper.mapToDto(reglement, lbs, facture);
-                    factureDetail.add(detailFactureDto);
-                }
-            }
-        } else {
-            for (LigneBonDeSortie lbs : listBonDeSortie) {
-                DetailFactureDto detailFactureDto = detailFactureMapper.mapNoReglementToDto(lbs, facture);
-                factureDetail.add(detailFactureDto);
-            }
+        for (LigneBonDeSortie lbs : listBonDeSortie) {
+            DetailFactureDto detailFactureDto = detailFactureMapper.mapToDto(lbs, facture);
+            factureDetail.add(detailFactureDto);
         }
 
         return factureDetail;

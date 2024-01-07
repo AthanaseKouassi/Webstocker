@@ -15,5 +15,5 @@ public class DetailFactureDto {
     private Long idProduit;
     private Long idFacture;
     private LocalDate dateReglement;
-
+    private Long id;
 }

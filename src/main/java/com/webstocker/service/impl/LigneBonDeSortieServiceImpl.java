@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -428,6 +429,7 @@ public class LigneBonDeSortieServiceImpl implements LigneBonDeSortieService {
         Facture facture = factureRepository.findOne(idFacture);
         BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
         List<LigneBonDeSortie> listBonDeSortie = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+        facture.setReglements(new HashSet<>(reglementRepository.findByFacture(facture)));
 
         for (LigneBonDeSortie lbs : listBonDeSortie) {
             DetailFactureDto detailFactureDto = detailFactureMapper.mapToDto(lbs, facture);

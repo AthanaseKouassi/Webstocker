@@ -10,9 +10,12 @@ import com.webstocker.service.FactureService;
 import com.webstocker.service.LigneBonDeSortieService;
 import com.webstocker.service.ReglementService;
 import com.webstocker.web.rest.dto.FactureDTO;
+import com.webstocker.web.rest.dto.newfeature.FactureNDto;
+import com.webstocker.web.rest.mapper.newfeature.FactureNDtoMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,19 +38,16 @@ import java.util.Optional;
 public class FactureResource {
 
     private final Logger log = LoggerFactory.getLogger(FactureResource.class);
-
+    @Autowired
+    private FactureNDtoMapper factureNDtoMapper;
     @Inject
     private FactureService factureService;
-
     @Inject
     private BonDeSortieService bonDeSortieService;
-
     @Inject
     private LigneBonDeSortieService ligneBonDeSortieService;
-
     @Inject
     private ReglementService reglementService;
-
 
     /**
      * POST  /factures : Create a new facture.
@@ -289,13 +289,20 @@ public class FactureResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @RequestMapping(value = "/factures-non-solde",
+    @RequestMapping(value = "facture/factures-non-solde",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Facture> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
-        log.debug("Factures");
-        return factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin);
+    public List<FactureNDto> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
+        return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin));
+    }
+
+    @RequestMapping(value = "/facture/{numero}/factures-non-solde",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<FactureNDto> getFactureNonReglesParNumero(@PathVariable String numero) {
+        return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParNumero(numero));
     }
 
 

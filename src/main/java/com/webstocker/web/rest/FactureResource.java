@@ -10,6 +10,8 @@ import com.webstocker.service.FactureService;
 import com.webstocker.service.LigneBonDeSortieService;
 import com.webstocker.service.ReglementService;
 import com.webstocker.web.rest.dto.FactureDTO;
+import com.webstocker.web.rest.dto.newfeature.FactureNDto;
+import com.webstocker.web.rest.mapper.newfeature.FactureNDtoMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,19 +37,16 @@ import java.util.Optional;
 public class FactureResource {
 
     private final Logger log = LoggerFactory.getLogger(FactureResource.class);
-
+    @Inject
+    FactureNDtoMapper factureNDtoMapper;
     @Inject
     private FactureService factureService;
-
     @Inject
     private BonDeSortieService bonDeSortieService;
-
     @Inject
     private LigneBonDeSortieService ligneBonDeSortieService;
-
     @Inject
     private ReglementService reglementService;
-
 
     /**
      * POST  /factures : Create a new facture.
@@ -296,6 +295,15 @@ public class FactureResource {
     public List<Facture> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
         log.debug("Factures");
         return factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin);
+    }
+
+    @RequestMapping(value = "/facture/{numero}/factures-non-solde",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<FactureNDto> getFactureNonReglesParNumero(@PathVariable String numero) {
+        log.info("Factures non reglées par numero :: {}", numero);
+        return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParNumero(numero));
     }
 
 

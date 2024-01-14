@@ -68,6 +68,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     @Query(value = "UPDATE facture  SET statut = ?1 WHERE id = ?2", nativeQuery = true)
     void updateStatutFacture(String statutFacture, Long idFacture);
 
-    List<Facture> findStatutFactureAndByNumero(StatutFacture statutfacture, String numero);
+    List<Facture> findByStatutFactureAndNumero(StatutFacture statutfacture, String numero);
 
 }

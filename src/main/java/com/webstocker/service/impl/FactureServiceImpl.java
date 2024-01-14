@@ -186,12 +186,18 @@ public class FactureServiceImpl implements FactureService {
         return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE, debut, fin);
     }
 
+    @Override
+    public List<Facture> getFactureNonSoldeParNumero(String numero) {
+        log.info("OUUHHHHHH :::{}", factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero));
+        return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
+    }
+
     public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
         LocalDate debut = LocalDate.parse(dateDebut, formatter);
         LocalDate fin = LocalDate.parse(dateFin, formatter);
         if (!numero.isEmpty()) {
-            return factureRepository.findStatutFactureAndByNumero(StatutFacture.NON_SOLDE, numero);
+            return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
         } else {
             return factureRepository.findByDateLimitePaiementBetween(debut, fin);
         }

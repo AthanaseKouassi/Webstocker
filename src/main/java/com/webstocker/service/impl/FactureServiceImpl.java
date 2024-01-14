@@ -173,10 +173,10 @@ public class FactureServiceImpl implements FactureService {
         return factureRepository.findByBonDeSortie(bonDesortie);
     }
 
-    @Override
-    public List<Facture> getFactureNonRegleeParNumero(String numero) {
-        return null;
-    }
+//    @Override
+//    public List<Facture> getFactureNonRegleeParNumero(String numero) {
+//        return null;
+//    }
 
     @Override
     public List<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin) {
@@ -188,7 +188,6 @@ public class FactureServiceImpl implements FactureService {
 
     @Override
     public List<Facture> getFactureNonSoldeParNumero(String numero) {
-        log.info("OUUHHHHHH :::{}", factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero));
         return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
     }
 

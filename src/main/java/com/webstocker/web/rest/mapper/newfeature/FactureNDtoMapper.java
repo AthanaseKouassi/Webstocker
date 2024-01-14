@@ -1,36 +1,46 @@
 package com.webstocker.web.rest.mapper.newfeature;
 
 import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Reglement;
 import com.webstocker.repository.BonDeSortieRepository;
 import com.webstocker.repository.ClientRepository;
-import com.webstocker.repository.FactureRepository;
+import com.webstocker.repository.LigneBonDeSortieRepository;
+import com.webstocker.repository.ReglementRepository;
 import com.webstocker.web.rest.dto.newfeature.FactureNDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class FactureNDtoMapper {
     @Autowired
-    FactureRepository factureRepository;
+    ReglementRepository reglementRepository;
     @Autowired
     BonDeSortieRepository bonDeSortieRepository;
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    LigneBonDeSortieRepository ligneBonDeSortieRepository;
 
 
-    FactureNDto ToFactureDTO(Facture facture) {
+    FactureNDto toFactureDTO(Facture facture) {
         FactureNDto fact = new FactureNDto();
         fact.setId(facture.getId());
         fact.setDateFacture(facture.getDateFacture());
         fact.setStatutFacture(facture.getStatutFacture());
+        fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
         fact.setIdClient(facture.getClient().getId());
         fact.setNumero(facture.getNumero());
-        fact.setDelaiPaiement(facture.getDelaiPaiement());
-        //  fact.setReglements(new LinkedList<>(facture.getReglements()));
-        fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
+        fact.setNomClient(facture.getClient().getNomClient());
+        fact.setMontantTotal(ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie())
+            .stream().mapToLong(LigneBonDeSortie::getPrixDeVente).sum());
+        fact.setResteApayer(fact.getMontantTotal() - reglementRepository.findByFacture(facture)
+            .stream().mapToLong(Reglement::getMontantReglement).sum());
 
         return fact;
     }
@@ -43,24 +53,25 @@ public class FactureNDtoMapper {
         fact.setStatutFacture(nDto.getStatutFacture());
         fact.setClient(clientRepository.findOne(nDto.getIdClient()));
         fact.setNumero(nDto.getNumero());
-        fact.setDelaiPaiement(nDto.getDelaiPaiement());
-        // fact.setReglements(new HashSet<>(nDto.getReglements()));
         fact.setBonDeSortie(bonDeSortieRepository.findOne(nDto.getIdBonDeSortie()));
         return fact;
     }
 
     public List<FactureNDto> toFactureDTOs(List<Facture> factures) {
         List<FactureNDto> list = new ArrayList<>();
-        for (Facture f : factures) {
+        for (Facture facture : factures) {
             FactureNDto fact = new FactureNDto();
-            fact.setId(f.getId());
-            fact.setDateFacture(f.getDateFacture());
-            fact.setStatutFacture(f.getStatutFacture());
-            fact.setIdClient(f.getClient().getId());
-            fact.setNumero(f.getNumero());
-            fact.setDelaiPaiement(f.getDelaiPaiement());
-            //fact.setReglements(new LinkedList<>(f.getReglements()));
-            fact.setIdBonDeSortie(f.getBonDeSortie().getId());
+            fact.setId(facture.getId());
+            fact.setDateFacture(facture.getDateFacture());
+            fact.setStatutFacture(facture.getStatutFacture());
+            fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
+            fact.setIdClient(facture.getClient().getId());
+            fact.setNumero(facture.getNumero());
+            fact.setNomClient(facture.getClient().getNomClient());
+            fact.setMontantTotal(ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie())
+                .stream().mapToLong(LigneBonDeSortie::getPrixDeVente).sum());
+            fact.setResteApayer(fact.getMontantTotal() - reglementRepository.findByFacture(facture)
+                .stream().mapToLong(Reglement::getMontantReglement).sum());
 
             list.add(fact);
         }

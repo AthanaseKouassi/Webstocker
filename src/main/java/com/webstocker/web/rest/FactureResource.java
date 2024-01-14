@@ -15,6 +15,7 @@ import com.webstocker.web.rest.mapper.newfeature.FactureNDtoMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +38,8 @@ import java.util.Optional;
 public class FactureResource {
 
     private final Logger log = LoggerFactory.getLogger(FactureResource.class);
-    @Inject
-    FactureNDtoMapper factureNDtoMapper;
+    @Autowired
+    private FactureNDtoMapper factureNDtoMapper;
     @Inject
     private FactureService factureService;
     @Inject
@@ -288,13 +289,12 @@ public class FactureResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @RequestMapping(value = "/factures-non-solde",
+    @RequestMapping(value = "facture/factures-non-solde",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Facture> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
-        log.debug("Factures");
-        return factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin);
+    public List<FactureNDto> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin) {
+        return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin));
     }
 
     @RequestMapping(value = "/facture/{numero}/factures-non-solde",
@@ -302,7 +302,6 @@ public class FactureResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<FactureNDto> getFactureNonReglesParNumero(@PathVariable String numero) {
-        log.info("Factures non reglées par numero :: {}", numero);
         return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParNumero(numero));
     }
 

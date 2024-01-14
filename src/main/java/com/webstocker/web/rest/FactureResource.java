@@ -305,5 +305,13 @@ public class FactureResource {
         return factureNDtoMapper.toFactureDTOs(factureService.getFactureNonSoldeParNumero(numero));
     }
 
+    @RequestMapping(value = "/facture/{categorie}/categorie-creance",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Facture> getCreanceCatégorie(@PathVariable int categorie) {
+        return null;
+    }
+
 
 }

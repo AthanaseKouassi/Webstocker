@@ -191,6 +191,24 @@ public class FactureServiceImpl implements FactureService {
         return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
     }
 
+    @Override
+    public List<Facture> getFactureCreance(int categorieCreance) {
+        if (categorieCreance == 1) {
+            // Créances moins de 30 jours
+            return factureRepository.getFactureMoinsdetrentejour();
+        }
+        if (categorieCreance == 2) {
+            // Créances entre 30 et 45 jours
+            return factureRepository.getFactureEntreTrenteEtQuaranteCinqJours();
+        }
+        if (categorieCreance == 3) {
+            // Créances plus de 45 jours
+            return factureRepository.getFacturePlusDeQuaranteCinqJours();
+        }
+        throw new IllegalArgumentException("La catégorie creance :: " + categorieCreance + " n'est pas supportée");
+    }
+
+
     public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
         LocalDate debut = LocalDate.parse(dateDebut, formatter);

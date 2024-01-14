@@ -1,7 +1,10 @@
 package com.webstocker.web.rest.dto.newfeature;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Data
 public class CreanceDto {
     private Long idFacture;
     private Long idProduit;

@@ -317,7 +317,7 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         facture.setClient(result.getClient());
-        facture.setNumero(result.getNumero());
+        facture.setNumero(result.getNumeroFactureNormalise());
         facture.setStatutFacture(StatutFacture.NON_SOLDE);
         log.debug("Facture ID: {} créé ", facture.getId());
         return facture;

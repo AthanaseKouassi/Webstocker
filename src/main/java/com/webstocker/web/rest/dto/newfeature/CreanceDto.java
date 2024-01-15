@@ -12,11 +12,12 @@ public class CreanceDto {
     private Long idClient;
     private String nomClient;
     private String nomUser;
-    private String nomProduit;
     private LocalDate dateFacture;
     private String numero;
     private Long prixDeVente;
-    private Long resteApayer;
     private String libelleCategorie;
+    private String nomProduit;
+    private Long montantRegle;
+    private Long resteApayer;
 
 }

@@ -2,6 +2,7 @@ package com.webstocker.service;
 
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
+import com.webstocker.web.rest.dto.newfeature.CreanceDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -67,6 +68,6 @@ public interface FactureService {
 
     List<Facture> getFactureNonSoldeParNumero(String numero);
 
-    List<Facture> getFactureCreance(int categorieCreance);
+    List<CreanceDto> getFactureCreance(int categorieCreance);
 
 }

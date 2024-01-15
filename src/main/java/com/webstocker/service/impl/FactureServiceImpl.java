@@ -2,14 +2,19 @@ package com.webstocker.service.impl;
 
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Reglement;
 import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.search.FactureSearchRepository;
 import com.webstocker.service.FactureService;
 import com.webstocker.utilitaires.Constantes;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
+import com.webstocker.web.rest.dto.newfeature.CreanceDto;
+import com.webstocker.web.rest.mapper.newfeature.CreanceDtoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -33,14 +39,15 @@ public class FactureServiceImpl implements FactureService {
 
     private final Logger log = LoggerFactory.getLogger(FactureServiceImpl.class);
     private final String PATTERN_DATE = "yyyy-MM-dd";
+    @Autowired
+    CreanceDtoMapper creanceDtoMapper;
     @Inject
     private FactureRepository factureRepository;
-
     @PersistenceContext
     private EntityManager em;
-
     @Inject
     private FactureSearchRepository factureSearchRepository;
+
 
     public Facture save(Facture facture) {
         log.debug("Request to save Facture : {}", facture);
@@ -192,20 +199,20 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
-    public List<Facture> getFactureCreance(int categorieCreance) {
-        if (categorieCreance == 1) {
-            // Créances moins de 30 jours
-            return factureRepository.getFactureMoinsdetrentejour();
+    public List<CreanceDto> getFactureCreance(int categorieCreance) {
+        List<CreanceDto> creanceDtos = new ArrayList<>();
+        List<Facture> factures = getFactures(categorieCreance);
+
+        for (Facture f : factures) {
+            for (LigneBonDeSortie lbs : f.getBonDeSortie().getLigneBonDeSorties()) {
+                long montantRegle = f.getReglements().stream().filter(r -> r.getProduit().equals(lbs.getProduit()))
+                    .mapToLong(Reglement::getMontantReglement).sum();
+                if (montantRegle < lbs.getPrixDeVente()) {
+                    creanceDtos.add(creanceDtoMapper.mapToCreanceDto(f, lbs, f.getBonDeSortie().getDemandeur(), categorieCreance));
+                }
+            }
         }
-        if (categorieCreance == 2) {
-            // Créances entre 30 et 45 jours
-            return factureRepository.getFactureEntreTrenteEtQuaranteCinqJours();
-        }
-        if (categorieCreance == 3) {
-            // Créances plus de 45 jours
-            return factureRepository.getFacturePlusDeQuaranteCinqJours();
-        }
-        throw new IllegalArgumentException("La catégorie creance :: " + categorieCreance + " n'est pas supportée");
+        return creanceDtos;
     }
 
 
@@ -218,8 +225,20 @@ public class FactureServiceImpl implements FactureService {
         } else {
             return factureRepository.findByDateLimitePaiementBetween(debut, fin);
         }
-
     }
 
+    private List<Facture> getFactures(int categorieCreance) {
+        List<Facture> factures;
+        if (categorieCreance == 1) {
+            factures = factureRepository.getFactureMoinsdetrentejour();
+        } else if (categorieCreance == 2) {
+            factures = factureRepository.getFactureEntreTrenteEtQuaranteCinqJours();
+        } else if (categorieCreance == 3) {
+            factures = factureRepository.getFacturePlusDeQuaranteCinqJours();
+        } else {
+            throw new IllegalArgumentException("La catégorie creance :: " + categorieCreance + " n'est pas supportée");
+        }
+        return factures;
+    }
 
 }

@@ -10,7 +10,9 @@ import com.webstocker.service.FactureService;
 import com.webstocker.service.LigneBonDeSortieService;
 import com.webstocker.service.ReglementService;
 import com.webstocker.web.rest.dto.FactureDTO;
+import com.webstocker.web.rest.dto.newfeature.CreanceDto;
 import com.webstocker.web.rest.dto.newfeature.FactureNDto;
+import com.webstocker.web.rest.mapper.newfeature.CreanceDtoMapper;
 import com.webstocker.web.rest.mapper.newfeature.FactureNDtoMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -40,6 +42,8 @@ public class FactureResource {
     private final Logger log = LoggerFactory.getLogger(FactureResource.class);
     @Autowired
     private FactureNDtoMapper factureNDtoMapper;
+    @Autowired
+    private CreanceDtoMapper creanceDtoMapper;
     @Inject
     private FactureService factureService;
     @Inject
@@ -309,8 +313,8 @@ public class FactureResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Facture> getCreanceCatégorie(@PathVariable int categorie) {
-        return null;
+    public List<CreanceDto> getCreanceCatégorie(@PathVariable int categorie) {
+        return factureService.getFactureCreance(categorie);
     }
 
 

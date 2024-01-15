@@ -70,4 +70,20 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
 
     List<Facture> findByStatutFactureAndNumero(StatutFacture statutfacture, String numero);
 
+    @Query(value = "SELECT f.* FROM facture f  " +
+        "WHERE datediff(current_date(),f.date_facture) >= 30  " +
+        "AND datediff(current_date(),f.date_facture) < 45  " +
+        "AND f.statut = 'NON_SOLDE' " +
+        "ORDER BY datediff(current_date(),f.date_facture) DESC ", nativeQuery = true)
+    List<Facture> getFactureEntreTrenteEtQuaranteCinqJours();
+
+    @Query(value = "SELECT f.* FROM facture f  " +
+        "WHERE datediff(current_date(),f.date_facture) < 30 AND f.statut = 'NON_SOLDE'  " +
+        "ORDER BY datediff(current_date(),f.date_facture) DESC ", nativeQuery = true)
+    List<Facture> getFactureMoinsdetrentejour();
+
+    @Query(value = "SELECT f.* FROM facture f  " +
+        "WHERE datediff(current_date(),f.date_facture) >= 45 and f.statut = 'NON_SOLDE'  " +
+        "ORDER BY datediff(current_date(),f.date_facture) DESC ", nativeQuery = true)
+    List<Facture> getFacturePlusDeQuaranteCinqJours();
 }

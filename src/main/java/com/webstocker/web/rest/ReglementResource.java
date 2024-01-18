@@ -7,7 +7,6 @@ import com.webstocker.service.ProduitService;
 import com.webstocker.service.ReglementService;
 import com.webstocker.web.rest.dto.newfeature.ReglementDto;
 import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
-import com.webstocker.web.rest.mapper.newfeature.ReglementMapper;
 import com.webstocker.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +34,6 @@ public class ReglementResource {
 
     @Inject
     private ReglementService reglementService;
-    @Inject
-    private ReglementMapper reglementMapper;
     @Inject
     private FactureService factureService;
     @Inject

@@ -19,5 +19,6 @@ public class CreanceDto {
     private String nomProduit;
     private Long montantRegle;
     private Long resteApayer;
+    private String telClient;
 
 }

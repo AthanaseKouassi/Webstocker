@@ -16,7 +16,6 @@ import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
 import com.webstocker.web.rest.dto.newfeature.ReglementDto;
 import com.webstocker.web.rest.dto.newfeature.ReglementFactureDto;
 import com.webstocker.web.rest.mapper.newfeature.DetailFactureMapper;
-import com.webstocker.web.rest.mapper.newfeature.ReglementMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +57,8 @@ public class ReglementServiceImpl implements ReglementService {
     private WebstockerDateFormat webstockerDateFormat;
     @Autowired
     private DetailFactureMapper detailFactureMapper;
-    @Autowired
-    private ReglementMapper reglementMapper;
+//    @Autowired
+//    private ReglementMapper reglementMapper;
 
 
     public Reglement save(Reglement reglement) {

@@ -27,6 +27,7 @@ public class CreanceDtoMapper {
         dto.setIdUser(user.getId());
         dto.setIdProduit(ligneBonDeSortie.getProduit().getId());
         dto.setPrixDeVente(ligneBonDeSortie.getPrixDeVente());
+        dto.setTelClient(facture.getClient().getTelephoneClient());
         dto.setIdFacture(facture.getId());
         dto.setLibelleCategorie("Categorie " + categorie);
         dto.setNomUser(user.getFirstName() + " " + user.getLastName());

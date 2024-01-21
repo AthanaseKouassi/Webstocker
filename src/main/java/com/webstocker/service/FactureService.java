@@ -3,6 +3,8 @@ package com.webstocker.service;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.web.rest.dto.newfeature.CreanceDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -69,5 +71,8 @@ public interface FactureService {
     List<Facture> getFactureNonSoldeParNumero(String numero);
 
     List<CreanceDto> getFactureCreance(int categorieCreance);
+
+    Page<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin, Pageable pageable);
+
 
 }

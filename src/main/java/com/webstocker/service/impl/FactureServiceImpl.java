@@ -15,6 +15,8 @@ import com.webstocker.web.rest.mapper.newfeature.CreanceDtoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -180,11 +182,6 @@ public class FactureServiceImpl implements FactureService {
         return factureRepository.findByBonDeSortie(bonDesortie);
     }
 
-//    @Override
-//    public List<Facture> getFactureNonRegleeParNumero(String numero) {
-//        return null;
-//    }
-
     @Override
     public List<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
@@ -197,6 +194,16 @@ public class FactureServiceImpl implements FactureService {
     public List<Facture> getFactureNonSoldeParNumero(String numero) {
         return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
     }
+
+
+    @Override
+    public Page<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin, Pageable pageable) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
+        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+        LocalDate fin = LocalDate.parse(dateFin, formatter);
+        return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE, debut, fin, pageable);
+    }
+
 
     @Override
     public List<CreanceDto> getFactureCreance(int categorieCreance) {
@@ -216,16 +223,16 @@ public class FactureServiceImpl implements FactureService {
     }
 
 
-    public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
-        LocalDate debut = LocalDate.parse(dateDebut, formatter);
-        LocalDate fin = LocalDate.parse(dateFin, formatter);
-        if (!numero.isEmpty()) {
-            return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
-        } else {
-            return factureRepository.findByDateLimitePaiementBetween(debut, fin);
-        }
-    }
+//    public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
+//        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+//        LocalDate fin = LocalDate.parse(dateFin, formatter);
+//        if (!numero.isEmpty()) {
+//            return factureRepository.findByStatutFactureAndNumero(StatutFacture.NON_SOLDE, numero);
+//        } else {
+//            return factureRepository.findByDateLimitePaiementBetween(debut, fin);
+//        }
+//    }
 
     private List<Facture> getFactures(int categorieCreance) {
         List<Facture> factures;

@@ -3,6 +3,8 @@ package com.webstocker.repository;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.enumeration.newfeature.StatutFacture;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -64,11 +66,15 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
 
     List<Facture> findByStatutFactureAndDateFactureBetween(StatutFacture statutfacture, LocalDate debut, LocalDate fin);
 
+    Page<Facture> findByStatutFactureAndDateFactureBetween(StatutFacture statutfacture, LocalDate debut, LocalDate fin, Pageable pageable);
+
     @Modifying
     @Query(value = "UPDATE facture  SET statut = ?1 WHERE id = ?2", nativeQuery = true)
     void updateStatutFacture(String statutFacture, Long idFacture);
 
     List<Facture> findByStatutFactureAndNumero(StatutFacture statutfacture, String numero);
+
+    Page<Facture> findByStatutFactureAndNumero(StatutFacture statutfacture, String numero, Pageable pageable);
 
     @Query(value = "SELECT f.* FROM facture f  " +
         "WHERE datediff(current_date(),f.date_facture) >= 30  " +

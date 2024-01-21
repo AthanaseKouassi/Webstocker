@@ -322,14 +322,14 @@ public class FactureResource {
     }
 
 
-    @RequestMapping(value = "facture/factures-non-solde",
+    @RequestMapping(value = "facture/factures-non-solde-page",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<FactureNDto>> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin,
                                                                   Pageable pageable) throws URISyntaxException {
         Page<Facture> page = factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/facture/factures-non-solde");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/facture/factures-non-solde-page");
 
         return new ResponseEntity<>(factureNDtoMapper.toFactureDTOs(page.getContent()), headers, HttpStatus.OK);
     }

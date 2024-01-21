@@ -10,6 +10,7 @@ import com.webstocker.repository.ReglementRepository;
 import com.webstocker.web.rest.dto.newfeature.FactureNDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -76,6 +77,25 @@ public class FactureNDtoMapper {
             list.add(fact);
         }
         return list;
+    }
+
+    public Page<FactureNDto> toFactureDTOsPage(Page<Facture> factures) {
+        return factures.map(facture -> {
+            FactureNDto fact = new FactureNDto();
+            fact.setId(facture.getId());
+            fact.setDateFacture(facture.getDateFacture());
+            fact.setStatutFacture(facture.getStatutFacture());
+            fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
+            fact.setIdClient(facture.getClient().getId());
+            fact.setNumero(facture.getNumero());
+            fact.setNomClient(facture.getClient().getNomClient());
+            fact.setMontantTotal(ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie())
+                .stream().mapToLong(LigneBonDeSortie::getPrixDeVente).sum());
+            fact.setResteApayer(fact.getMontantTotal() - reglementRepository.findByFacture(facture)
+                .stream().mapToLong(Reglement::getMontantReglement).sum());
+
+            return fact;
+        });
     }
 
 }

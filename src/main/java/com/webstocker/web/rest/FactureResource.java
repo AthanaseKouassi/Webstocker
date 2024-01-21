@@ -329,9 +329,10 @@ public class FactureResource {
     public ResponseEntity<List<FactureNDto>> getFactureNonReglees(@RequestParam String dateDebut, @RequestParam String dateFin,
                                                                   Pageable pageable) throws URISyntaxException {
         Page<Facture> page = factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/facture/factures-non-solde-page");
+        Page<FactureNDto> pageNDto = factureNDtoMapper.toFactureDTOsPage(page);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNDto, "/api/facture/factures-non-solde-page");
 
-        return new ResponseEntity<>(factureNDtoMapper.toFactureDTOs(page.getContent()), headers, HttpStatus.OK);
+        return new ResponseEntity<>(pageNDto.getContent(), headers, HttpStatus.OK);
     }
 
 }

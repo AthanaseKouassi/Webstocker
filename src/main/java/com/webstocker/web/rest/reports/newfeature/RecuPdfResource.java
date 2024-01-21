@@ -1,6 +1,7 @@
 package com.webstocker.web.rest.reports.newfeature;
 
 import com.webstocker.domain.BonDeSortie;
+import com.webstocker.domain.Facture;
 import com.webstocker.service.RecuPdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,8 @@ public class RecuPdfResource {
 
 
     @RequestMapping(value = "/credit/recu", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> exportCreditPdf(@RequestBody BonDeSortie bonDeSortie) throws Exception {
-        ByteArrayOutputStream pdfStream = recuPdfService.generateCreditRecuPdf(bonDeSortie);
+    public ResponseEntity<byte[]> exportCreditPdf(@RequestBody Facture facture) throws Exception {
+        ByteArrayOutputStream pdfStream = recuPdfService.generateCreditRecuPdf(facture);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));

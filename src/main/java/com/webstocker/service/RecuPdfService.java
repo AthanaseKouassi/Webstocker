@@ -7,6 +7,8 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.webstocker.domain.BonDeSortie;
+import com.webstocker.domain.Facture;
+import com.webstocker.reports.newfeature.RecuCreditPdf;
 import com.webstocker.reports.newfeature.RecuPdf;
 import com.webstocker.repository.BonDeSortieRepository;
 import com.webstocker.repository.FactureRepository;
@@ -26,6 +28,9 @@ public class RecuPdfService {
 
     @Autowired
     private RecuPdf recuPdf;
+    @Autowired
+    private RecuCreditPdf recuCreditPdf;
+
     @Inject
     private BonDeSortieRepository bonDeSortieRepository;
     @Inject
@@ -49,12 +54,12 @@ public class RecuPdfService {
         recuPdf.addTableRecu(document, bonDeSortie);
         document.add(new Paragraph(" "));
 
-
         document.close();
         return outputStream;
     }
 
-    public ByteArrayOutputStream generateCreditRecuPdf(BonDeSortie bonDeSortie) throws Exception {
+
+    public ByteArrayOutputStream generateCreditRecuPdf(Facture facture) throws Exception {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -63,14 +68,13 @@ public class RecuPdfService {
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(50f));
 
-        recuPdf.titreRecu(document);
-        recuPdf.infoRecu(document, bonDeSortie);
+        recuCreditPdf.titreRecu(document);
+        recuCreditPdf.infoRecu(document, facture);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
-        recuPdf.addTableRecu(document, bonDeSortie);
+        recuCreditPdf.addTableRecu(document, facture);
         document.add(new Paragraph(" "));
-
 
         document.close();
         return outputStream;

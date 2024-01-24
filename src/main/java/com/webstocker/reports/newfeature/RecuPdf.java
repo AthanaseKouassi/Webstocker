@@ -1,18 +1,14 @@
 package com.webstocker.reports.newfeature;
 
 import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
-import com.itextpdf.layout.renderer.CellRenderer;
-import com.itextpdf.layout.renderer.DrawContext;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
@@ -35,7 +31,7 @@ import java.util.Locale;
 @Component
 public class RecuPdf {
 
-    private static final String TITRE_RECU = "RECU FACTURE N° ";
+    private static final String TITRE_RECU = "RECU FACTURE  ";
 
     @Autowired
     private ReglementRepository reglementRepository;
@@ -61,19 +57,61 @@ public class RecuPdf {
 
         String info = "Date reglement :\n" +
             "Client :\n" +
-            "Commercial :\n" +
-            "Numero Facture :";
+            "Numero Facture :\n" +
+            "Commercial :";
         String repInfo = currentDateTime + "\n" +
             facture.getClient().getNomClient() + "\n" +
-            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName() + "\n" +
-            bonDeSortie.getNumeroFactureNormalise();
+            bonDeSortie.getNumeroFactureNormalise() + "\n" +
+            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
 
-        Table table = new Table(UnitValue.createPercentArray(new float[]{15, 15, 25f})).useAllAvailableWidth();
-        table.addCell(createCellInfoRecu(info, 15));
-        table.addCell(createCellInfoRecu("", 15));
-        table.addCell(createCellInfoRecu(repInfo, 20));
+        Table table = new Table(UnitValue.createPercentArray(new float[]{10, 12,})).useAllAvailableWidth();
+        table.addCell(createCellInfoRecu(info, 10));
+        table.addCell(createCellInfoRecu(repInfo, 12));
 
-        doc.add(table);
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{15, 15, 25f})).useAllAvailableWidth();
+        table2.addCell(createCellInfoRecu("", 15));
+        table2.addCell(createCellInfoRecu("", 15));
+        table2.addCell(createCellInfoRecu("", 20));
+        table2.setBorder(Border.NO_BORDER);
+
+        Div div = new Div();
+        div.add(table);
+        div.add(table2);
+
+        doc.add(div);
+
+    }
+
+    public Paragraph createBorderedText() {
+        Paragraph container = new Paragraph();
+
+        String info = "Date reglement :\n" +
+            "Client :\n" +
+            "Numero Facture :\n" +
+            "Commercial :";
+
+        Text one = new Text(info).setBold();
+        container.add(one);
+        container.setBorder(new SolidBorder(ColorConstants.BLACK, 1f));
+        container.setBorderRight(Border.NO_BORDER);
+        return container;
+    }
+
+    public Paragraph createBorderedText2(BonDeSortie bonDeSortie) {
+        Paragraph container = new Paragraph();
+        Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
+
+        String repInfo = facture.getDateFacture() + "\n" +
+            facture.getClient().getNomClient() + "\n" +
+            bonDeSortie.getNumeroFactureNormalise() + "\n" +
+            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
+
+        Text two = new Text(repInfo);
+        container.setBorder(new SolidBorder(ColorConstants.BLACK, 1f));
+        container.setBorderLeft(Border.NO_BORDER);
+        container.add(two);
+
+        return container;
     }
 
     public void addTableRecu(Document doc, BonDeSortie bonDeSortie) {
@@ -159,30 +197,6 @@ public class RecuPdf {
         Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style);
         return cell;
-    }
-
-
-    private class RoundedCornersCellRenderer extends CellRenderer {
-
-        public RoundedCornersCellRenderer(Cell modelElement) {
-            super(modelElement);
-        }
-
-        @Override
-        public void drawBorder(DrawContext drawContext) {
-            float x = getOccupiedAreaBBox().getX();
-            float y = getOccupiedAreaBBox().getY();
-            float width = getOccupiedAreaBBox().getWidth();
-            float height = getOccupiedAreaBBox().getHeight();
-            float radius = 10f; // Ajustez cette valeur selon vos préférences pour le rayon des coins arrondis
-
-            PdfCanvas canvas = drawContext.getCanvas();
-
-            // Dessiner les bords arrondis
-            canvas.setStrokeColor(ColorConstants.BLACK);
-            canvas.roundRectangle(x, y, width, height, radius);
-            canvas.stroke();
-        }
     }
 
 

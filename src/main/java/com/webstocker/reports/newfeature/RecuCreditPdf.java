@@ -5,6 +5,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
@@ -31,7 +32,7 @@ import java.util.Locale;
 @Component
 public class RecuCreditPdf {
 
-    private static final String TITRE_RECU = "RECU FACTURE N° ";
+    private static final String TITRE_RECU = "RECU FACTURE ";
 
     @Autowired
     private ReglementRepository reglementRepository;
@@ -53,28 +54,35 @@ public class RecuCreditPdf {
     public void infoRecu(Document doc, Facture facture) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         final String currentDateTime = dateFormat.format(new Date());
-        // Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
 
         String info = "Date reglement :\n" +
             "Client :\n" +
-            "Commercial :\n" +
-            "Numero Facture :";
+            "Numero Facture :\n" +
+            "Commercial :";
         String repInfo = currentDateTime + "\n" +
             facture.getClient().getNomClient() + "\n" +
-            facture.getBonDeSortie().getDemandeur().getLastName() + " \n" +
-            facture.getBonDeSortie().getDemandeur().getFirstName() + "\n" +
-            facture.getNumero();
+            facture.getNumero() + "\n" +
+            facture.getBonDeSortie().getDemandeur().getLastName() + " " + facture.getBonDeSortie().getDemandeur().getFirstName();
 
-        Table table = new Table(UnitValue.createPercentArray(new float[]{15, 15, 25f})).useAllAvailableWidth();
+
+        Table table = new Table(UnitValue.createPercentArray(new float[]{15, 15,})).useAllAvailableWidth();
         table.addCell(createCellInfoRecu(info, 15));
-        table.addCell(createCellInfoRecu("", 15));
         table.addCell(createCellInfoRecu(repInfo, 20));
 
-        doc.add(table);
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{15, 15, 25f})).useAllAvailableWidth();
+        table2.addCell(createCellInfoRecu("", 15));
+        table2.addCell(createCellInfoRecu("", 15));
+        table2.addCell(createCellInfoRecu("", 20));
+        table2.setBorder(Border.NO_BORDER);
+
+        Div div = new Div();
+        div.add(table);
+        div.add(table2);
+
+        doc.add(div);
     }
 
     public void addTableRecu(Document doc, Facture facture) {
-        // final Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
         List<Reglement> reglements = reglementRepository.findByFacture(facture);
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         addHeadTable(table);

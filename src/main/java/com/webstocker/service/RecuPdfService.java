@@ -37,17 +37,25 @@ public class RecuPdfService {
     private FactureRepository factureRepository;
 
 
-    public ByteArrayOutputStream generateRecuPdf(BonDeSortie bonDeSortie) throws Exception {
+    public ByteArrayOutputStream generateRecuPdf(Long idBonDeSortie) throws Exception {
 
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(idBonDeSortie);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        document.add(new Paragraph(" ").setPadding(50f));
+        document.add(new Paragraph(" ").setPadding(40f));
 
         recuPdf.titreRecu(document);
-        recuPdf.infoRecu(document, bonDeSortie);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
+        Paragraph p = new Paragraph();
+        p.add(recuPdf.createBorderedText());
+        p.add(recuPdf.createBorderedText2(bonDeSortie));
+        document.add(p);
+
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -59,16 +67,18 @@ public class RecuPdfService {
     }
 
 
-    public ByteArrayOutputStream generateCreditRecuPdf(Facture facture) throws Exception {
-
+    public ByteArrayOutputStream generateCreditRecuPdf(Long idFacture) throws Exception {
+        Facture facture = factureRepository.findOne(idFacture);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        document.add(new Paragraph(" ").setPadding(50f));
+        document.add(new Paragraph(" ").setPadding(40f));
 
-        recuCreditPdf.titreRecu(document);
+        recuPdf.titreRecu(document);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
         recuCreditPdf.infoRecu(document, facture);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));

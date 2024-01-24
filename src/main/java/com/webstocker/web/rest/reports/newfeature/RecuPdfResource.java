@@ -1,7 +1,5 @@
 package com.webstocker.web.rest.reports.newfeature;
 
-import com.webstocker.domain.BonDeSortie;
-import com.webstocker.domain.Facture;
 import com.webstocker.service.RecuPdfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +23,9 @@ public class RecuPdfResource {
     @Inject
     private RecuPdfService recuPdfService;
 
-    @RequestMapping(value = "/recu", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> exportPdf(@RequestBody BonDeSortie bonDeSortie) throws Exception {
-        ByteArrayOutputStream pdfStream = recuPdfService.generateRecuPdf(bonDeSortie);
+    @RequestMapping(value = "/recu/{idBonDeSortie}", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> exportPdf(@PathVariable Long idBonDeSortie) throws Exception {
+        ByteArrayOutputStream pdfStream = recuPdfService.generateRecuPdf(idBonDeSortie);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -37,9 +35,9 @@ public class RecuPdfResource {
     }
 
 
-    @RequestMapping(value = "/credit/recu", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> exportCreditPdf(@RequestBody Facture facture) throws Exception {
-        ByteArrayOutputStream pdfStream = recuPdfService.generateCreditRecuPdf(facture);
+    @RequestMapping(value = "/credit/recu/{idFacture}", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> exportCreditPdf(@PathVariable Long idFacture) throws Exception {
+        ByteArrayOutputStream pdfStream = recuPdfService.generateCreditRecuPdf(idFacture);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));

@@ -16,32 +16,32 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 
 @RestController
-@RequestMapping("/api/pdf")
+@RequestMapping("/api/report")
 public class RecuPdfResource {
     private final Logger log = LoggerFactory.getLogger(RecuPdfResource.class);
 
     @Inject
     private RecuPdfService recuPdfService;
 
-    @RequestMapping(value = "/recu/{idBonDeSortie}", method = RequestMethod.POST)
+    @RequestMapping(value = "/recu/{idBonDeSortie}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportPdf(@PathVariable Long idBonDeSortie) throws Exception {
         ByteArrayOutputStream pdfStream = recuPdfService.generateRecuPdf(idBonDeSortie);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=recu.pdf");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=recu.pdf");
         headers.setContentLength(pdfStream.size());
         return new ResponseEntity<>(pdfStream.toByteArray(), headers, HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/credit/recu/{idFacture}", method = RequestMethod.POST)
+    @RequestMapping(value = "/credit/recu/{idFacture}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportCreditPdf(@PathVariable Long idFacture) throws Exception {
         ByteArrayOutputStream pdfStream = recuPdfService.generateCreditRecuPdf(idFacture);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=recu.pdf");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=recu.pdf");
         headers.setContentLength(pdfStream.size());
         return new ResponseEntity<>(pdfStream.toByteArray(), headers, HttpStatus.OK);
     }

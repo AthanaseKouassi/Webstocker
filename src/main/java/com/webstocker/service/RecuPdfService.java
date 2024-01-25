@@ -55,7 +55,7 @@ public class RecuPdfService {
         p.add(recuPdf.createBorderedText());
         p.add(recuPdf.createBorderedText2(bonDeSortie));
         document.add(p);
-
+        // recuPdf.infoRecu(document, bonDeSortie);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));

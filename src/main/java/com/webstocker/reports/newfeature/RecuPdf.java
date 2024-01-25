@@ -92,8 +92,9 @@ public class RecuPdf {
 
         Text one = new Text(info).setBold();
         container.add(one);
-        container.setBorder(new SolidBorder(ColorConstants.BLACK, 1f));
+        container.setBorder(new SolidBorder(ColorConstants.BLACK, 0f));
         container.setBorderRight(Border.NO_BORDER);
+        container.setBorderLeft(Border.NO_BORDER);
         return container;
     }
 
@@ -107,8 +108,9 @@ public class RecuPdf {
             bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
 
         Text two = new Text(repInfo);
-        container.setBorder(new SolidBorder(ColorConstants.BLACK, 1f));
+        container.setBorder(new SolidBorder(ColorConstants.BLACK, 0f));
         container.setBorderLeft(Border.NO_BORDER);
+        container.setBorderRight(Border.NO_BORDER);
         container.add(two);
 
         return container;
@@ -120,8 +122,11 @@ public class RecuPdf {
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         addHeadTable(table);
         addTableRow(reglements, table);
-        addCellTotalHT(table);
         doc.add(table);
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30, 30f})).useAllAvailableWidth();
+        table2.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        addCellTotalHT(table2);
+        doc.add(table2);
     }
 
     private void addHeadTable(Table table) {
@@ -131,17 +136,17 @@ public class RecuPdf {
     }
 
     private void addTableRow(List<Reglement> reglements, Table table) {
-
+        double totalRegle = 0;
         for (Reglement reg : reglements) {
             double montant = 0;
             montant = reg.getFacture().getBonDeSortie().getLigneBonDeSorties()
                 .stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
             table.addCell(createCellReglements(reg.getProduit().getNomProduit(), 60));
-            table.addCell(createCellReglements(String.valueOf(reg.getMontantReglement()), 40));
-            table.addCell(createCellReglements(String.valueOf(montant - reg.getMontantReglement()), 40));
-            totalrecu += reg.getMontantReglement();
+            table.addCell(createCellReglements(String.valueOf(reg.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellReglements(String.valueOf(Double.sum(montant, -Double.valueOf(reg.getMontantReglement()))), 40).setTextAlignment(TextAlignment.RIGHT));
+            totalRegle += Double.valueOf(reg.getMontantReglement());
         }
-
+        totalrecu = totalRegle;
 
     }
 
@@ -149,6 +154,7 @@ public class RecuPdf {
         table.addCell(createTotauxCell("total", 30).setPaddingTop(6));
         table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "FR")).format(totalrecu), 30)
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
+
     }
 
     private Cell createTotauxCell(String content, float width) {
@@ -177,6 +183,7 @@ public class RecuPdf {
     private Cell createHeaderCell(String header1, float width) {
         Cell cell = new Cell()
             .add(new Paragraph(header1).setTextAlignment(TextAlignment.CENTER))
+            .setBackgroundColor(ColorConstants.LIGHT_GRAY)
             .setWidth(width)
             .setBold();
 

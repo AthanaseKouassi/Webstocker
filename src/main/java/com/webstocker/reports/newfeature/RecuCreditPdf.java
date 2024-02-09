@@ -87,8 +87,11 @@ public class RecuCreditPdf {
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         addHeadTable(table);
         addTableRow(reglements, table);
-        addCellTotalHT(table);
         doc.add(table);
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30, 30f})).useAllAvailableWidth();
+        table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        addCellTotalHT(table2);
+        doc.add(table2);
     }
 
     private void addHeadTable(Table table) {

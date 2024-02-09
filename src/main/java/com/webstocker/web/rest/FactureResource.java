@@ -331,7 +331,8 @@ public class FactureResource {
         Page<Facture> page = factureService.getFactureNonSoldeParPeriode(dateDebut, dateFin, pageable);
         Page<FactureNDto> pageNDto = factureNDtoMapper.toFactureDTOsPage(page);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNDto, "/api/facture/factures-non-solde-page");
-
+        headers.set("X-Total-Count", String.valueOf(pageNDto.getTotalElements()));
+        headers.set("X-Total-Page", String.valueOf(pageNDto.getTotalPages()));
         return new ResponseEntity<>(pageNDto.getContent(), headers, HttpStatus.OK);
     }
 

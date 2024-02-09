@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -31,19 +32,20 @@ import java.util.Locale;
 @Component
 public class RecuPdf {
 
-    private static final String TITRE_RECU = "RECU FACTURE  ";
+    private static final String TITRE_RECU = "RECU DE PAIEMENT CLIENT ";
 
     @Autowired
     private ReglementRepository reglementRepository;
     @Autowired
     private FactureRepository factureRepository;
 
-    private double totalrecu = 0;
+    private BigDecimal totalrecu = BigDecimal.ZERO;
 
     public void titreRecu(Document doc) {
-        Table table = new Table(UnitValue.createPercentArray(new float[]{50, 25f})).useAllAvailableWidth();
-        table.setMargins(10f, 10f, 0f, 10f);
-        table.addCell(createCellTitre(TITRE_RECU, 200));
+        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 50f, 25f})).useAllAvailableWidth();
+        //   table.setMargins(10f, 10f, 0f, 10f);
+        table.addCell(createCellTitre(" ", 90).setHorizontalAlignment(HorizontalAlignment.CENTER));
+        table.addCell(createCellTitre(TITRE_RECU, 200).setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.addCell(createCellTitre(" ", 90));
         table.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 
@@ -85,10 +87,10 @@ public class RecuPdf {
     public Paragraph createBorderedText() {
         Paragraph container = new Paragraph();
 
-        String info = "Date reglement :\n" +
-            "Client :\n" +
-            "Numero Facture :\n" +
-            "Commercial :";
+        String info = "Date reglement :             \n" +
+            "Client :             \n" +
+            "Numero Facture :             \n" +
+            "Commercial :             ";
 
         Text one = new Text(info).setBold();
         container.add(one);
@@ -123,8 +125,8 @@ public class RecuPdf {
         addHeadTable(table);
         addTableRow(reglements, table);
         doc.add(table);
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30, 30f})).useAllAvailableWidth();
-        table2.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f})).useAllAvailableWidth();
+        table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
     }
@@ -136,22 +138,24 @@ public class RecuPdf {
     }
 
     private void addTableRow(List<Reglement> reglements, Table table) {
-        double totalRegle = 0;
+        BigDecimal totalRegle = BigDecimal.ZERO;
         for (Reglement reg : reglements) {
-            double montant = 0;
-            montant = reg.getFacture().getBonDeSortie().getLigneBonDeSorties()
-                .stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
+            double mont = 0;
+            mont = reg.getFacture().getBonDeSortie().getLigneBonDeSorties().stream()
+                .filter(r -> r.getProduit().equals(reg.getProduit())).mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
+
             table.addCell(createCellReglements(reg.getProduit().getNomProduit(), 60));
             table.addCell(createCellReglements(String.valueOf(reg.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(String.valueOf(Double.sum(montant, -Double.valueOf(reg.getMontantReglement()))), 40).setTextAlignment(TextAlignment.RIGHT));
-            totalRegle += Double.valueOf(reg.getMontantReglement());
+            table.addCell(createCellReglements(String.valueOf(BigDecimal.valueOf(mont).subtract(new BigDecimal(reg.getMontantReglement()))), 40).setTextAlignment(TextAlignment.RIGHT));
+            totalRegle = totalRegle.add(new BigDecimal(reg.getMontantReglement()));
         }
         totalrecu = totalRegle;
 
     }
 
     private void addCellTotalHT(Table table) {
-        table.addCell(createTotauxCell("total", 30).setPaddingTop(6));
+        table.addCell(createTotauxCell("TOTAL", 30).setPaddingTop(6));
+        table.addCell(createTotauxCell("", 30).setPaddingTop(6));
         table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "FR")).format(totalrecu), 30)
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
@@ -165,7 +169,7 @@ public class RecuPdf {
             .setBorderLeft(Border.NO_BORDER)
             .setBorderTop(Border.NO_BORDER);
 
-        Style style = new Style().setFontSize(9);
+        Style style = new Style().setFontSize(10);
         cell.addStyle(style);
         return cell;
     }

@@ -15,7 +15,9 @@ import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
+import com.webstocker.utilitaires.NombreEnChiffre;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +27,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 @Slf4j
@@ -39,7 +40,8 @@ public class RecuPdf {
     @Autowired
     private FactureRepository factureRepository;
 
-    private BigDecimal totalrecu = BigDecimal.ZERO;
+    private BigDecimal totalSolde = BigDecimal.ZERO;
+    private BigDecimal totalResteSolde = BigDecimal.ZERO;
 
     public void titreRecu(Document doc) {
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 50f, 25f})).useAllAvailableWidth();
@@ -119,52 +121,58 @@ public class RecuPdf {
     }
 
     public void addTableRecu(Document doc, BonDeSortie bonDeSortie) {
+
         final Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
         List<Reglement> reglements = reglementRepository.findByFacture(facture);
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         addHeadTable(table);
         addTableRow(reglements, table);
         doc.add(table);
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f})).useAllAvailableWidth();
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
+        doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalSolde.intValue()))));
     }
 
     private void addHeadTable(Table table) {
         table.addHeaderCell(createHeaderCell("Produit", 60));
-        table.addHeaderCell(createHeaderCell("Montant reglé", 15));
-        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
+        table.addHeaderCell(createHeaderCell("Montant reglé (FCFA)", 15));
+        table.addHeaderCell(createHeaderCell("Reste à payer (FCFA)", 10));
     }
 
     private void addTableRow(List<Reglement> reglements, Table table) {
         BigDecimal totalRegle = BigDecimal.ZERO;
+        BigDecimal totalAsolde = BigDecimal.ZERO;
         for (Reglement reg : reglements) {
             double mont = 0;
             mont = reg.getFacture().getBonDeSortie().getLigneBonDeSorties().stream()
                 .filter(r -> r.getProduit().equals(reg.getProduit())).mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
 
             table.addCell(createCellReglements(reg.getProduit().getNomProduit(), 60));
-            table.addCell(createCellReglements(String.valueOf(reg.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(String.valueOf(BigDecimal.valueOf(mont).subtract(new BigDecimal(reg.getMontantReglement()))), 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellReglements(NumberFormat.getInstance().format(reg.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellReglements(NumberFormat.getInstance().format(BigDecimal.valueOf(mont).subtract(new BigDecimal(reg.getMontantReglement()))), 40).setTextAlignment(TextAlignment.RIGHT));
             totalRegle = totalRegle.add(new BigDecimal(reg.getMontantReglement()));
+            totalAsolde = totalAsolde.add(BigDecimal.valueOf(mont).subtract(new BigDecimal(reg.getMontantReglement())));
+
         }
-        totalrecu = totalRegle;
+        totalSolde = totalRegle;
+        totalResteSolde = totalAsolde;
 
     }
 
     private void addCellTotalHT(Table table) {
-        table.addCell(createTotauxCell("TOTAL", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell("", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "FR")).format(totalrecu), 30)
-            .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
-
+        table.addCell(createTotauxCell("TOTAL", 60)).setHeight(20);
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalSolde), 40)
+            .setTextAlignment(TextAlignment.RIGHT));
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalResteSolde), 40)
+            .setTextAlignment(TextAlignment.RIGHT));
     }
 
-    private Cell createTotauxCell(String content, float width) {
+    private Cell createTotauxCell(String content, float with) {
         Cell cell = new Cell()
-            .add(new Paragraph(content))
-            .setWidth(width)
+            .add(new Paragraph(content)).setPaddingTop(4f)
+            .setWidth(with)
             .setBorderRight(Border.NO_BORDER)
             .setBorderLeft(Border.NO_BORDER)
             .setBorderTop(Border.NO_BORDER);

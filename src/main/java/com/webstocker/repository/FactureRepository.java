@@ -92,4 +92,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
         "WHERE datediff(current_date(),f.date_facture) >= 45 and f.statut = 'NON_SOLDE'  " +
         "ORDER BY datediff(current_date(),f.date_facture) DESC ", nativeQuery = true)
     List<Facture> getFacturePlusDeQuaranteCinqJours();
+
+    List<Facture> findByDateFactureBetweenOrderByDateFactureDesc(LocalDate dateDebut, LocalDate dateFin);
 }

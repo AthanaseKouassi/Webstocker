@@ -6,6 +6,7 @@ import com.webstocker.domain.enumeration.StatusTransfert;
 import com.webstocker.domain.enumeration.TypeSortie;
 import java.time.LocalDate;
 
+import com.webstocker.domain.enumeration.TypeVente;
 import org.springframework.data.jpa.repository.*;
 
 import java.util.List;
@@ -27,24 +28,22 @@ public interface BonDeSortieRepository extends JpaRepository<BonDeSortie, Long> 
     Page<BonDeSortie> findBonByNumber(String numero,Pageable pageable);
 
     List<BonDeSortie> findByMagasinNomMagasinAndDaateCreationBetween(String magasin, LocalDate dateDebut, LocalDate dateFin);
-   
+
     List<BonDeSortie> findByDaateCreationBetween( LocalDate dateDebut, LocalDate dateFin);
-    
+
     List<BonDeSortie> findByMagasinNomMagasinAndTypeSortieAndDaateCreationBetween(String magasin,TypeSortie typeSortie, LocalDate dateDebut, LocalDate dateFin);
-    
+
     Page<BonDeSortie> findByTypeSortie(TypeSortie typeSortie,Pageable pageable);
-   
+
     List<BonDeSortie> findByTypeSortie(TypeSortie typeSortie);
-    
+
     Page<BonDeSortie> findByTypeSortieAndNumeroContaining(TypeSortie typeSortie,String numero,Pageable pageable);
-    
+
     List<BonDeSortie> findByTypeSortieAndNumeroFactureNormaliseContaining(TypeSortie typeSortie,String numero);
-    
+
     Page<BonDeSortie> findByNumeroContaining(String numero,Pageable pageable);
-    
+
     Page<BonDeSortie> findByStatusTranfertOrderByDaateCreation(StatusTransfert statusTransfert,Pageable pageable);
-    
-    
-    
+
 
 }

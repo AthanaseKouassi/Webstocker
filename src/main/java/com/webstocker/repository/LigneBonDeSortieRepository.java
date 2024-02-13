@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 /**
  * Spring Data JPA repository for the LigneBonDeSortie entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface LigneBonDeSortieRepository extends JpaRepository<LigneBonDeSortie, Long> {
 
@@ -33,19 +32,19 @@ public interface LigneBonDeSortieRepository extends JpaRepository<LigneBonDeSort
     List<LigneBonDeSortie> findByBonDeSortieDaateCreationBetween(LocalDate dateDebut, LocalDate DateFin);
 
     List<LigneBonDeSortie> findAllByBonDeSortie(BonDeSortie bonDeSortie);
-    
-    
+
+
 
     List<LigneBonDeSortie> findByBonDeSortieFactureDateLimitePaiementBetween(LocalDate dateDebut, LocalDate dateFin);
 
     List<LigneBonDeSortie> findByBonDeSortieFactureDateFactureBetween(LocalDate dateDebut, LocalDate dateFin);
 
     Page<LigneBonDeSortie> findByBonDeSortieTypeSortieAndBonDeSortieFactureDateFactureBetween(TypeSortie typeSortie, LocalDate dateDebut, LocalDate dateFin, Pageable pageable);
-    
+
     List<LigneBonDeSortie> findByBonDeSortieTypeSortieAndBonDeSortieDaateCreationBetween(TypeSortie typeSortie, LocalDate dateDebut, LocalDate dateFin);
 
     Page<LigneBonDeSortie> findByBonDeSortieTypeSortieAndBonDeSortieNumeroFactureNormaliseContaining(TypeSortie typeSortie, String numeroFactureNormalise, Pageable pageable);
-    
+
     List<LigneBonDeSortie> findByBonDeSortieTypeSortieAndBonDeSortieNumeroFactureNormaliseContaining(TypeSortie typeSortie, String numeroFactureNormalise);
 
     List<LigneBonDeSortie> findByProduitAndBonDeSortieFactureDateLimitePaiementBetween(Produit produit, LocalDate dateDebut, LocalDate dateFin);
@@ -380,5 +379,9 @@ public interface LigneBonDeSortieRepository extends JpaRepository<LigneBonDeSort
             + "AND facture.date_facture BETWEEN ?1 AND ?2 "
             + "GROUP BY facture.id ", nativeQuery = true)
     List<LigneBonDeSortie> findFactureParPeriode(String dateDebut, String dateFin);
+
+
+    List<LigneBonDeSortie> findByBonDeSortieTypeVenteAndBonDeSortieDaateCreationBetweenOrderByProduit(TypeVente typeVente, LocalDate dateDebut, LocalDate dateFin);
+
 
 }

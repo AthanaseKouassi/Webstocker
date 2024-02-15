@@ -5,7 +5,10 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
@@ -22,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -45,7 +45,7 @@ public class RecuPdf {
 
     public void titreRecu(Document doc) {
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 50f, 25f})).useAllAvailableWidth();
-        //   table.setMargins(10f, 10f, 0f, 10f);
+
         table.addCell(createCellTitre(" ", 90).setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.addCell(createCellTitre(TITRE_RECU, 200).setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.addCell(createCellTitre(" ", 90));
@@ -54,37 +54,6 @@ public class RecuPdf {
         doc.add(table);
     }
 
-    public void infoRecu(Document doc, BonDeSortie bonDeSortie) {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        final String currentDateTime = dateFormat.format(new Date());
-        Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
-
-        String info = "Date reglement :\n" +
-            "Client :\n" +
-            "Numero Facture :\n" +
-            "Commercial :";
-        String repInfo = currentDateTime + "\n" +
-            facture.getClient().getNomClient() + "\n" +
-            bonDeSortie.getNumeroFactureNormalise() + "\n" +
-            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
-
-        Table table = new Table(UnitValue.createPercentArray(new float[]{10, 12,})).useAllAvailableWidth();
-        table.addCell(createCellInfoRecu(info, 10));
-        table.addCell(createCellInfoRecu(repInfo, 12));
-
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{15, 15, 25f})).useAllAvailableWidth();
-        table2.addCell(createCellInfoRecu("", 15));
-        table2.addCell(createCellInfoRecu("", 15));
-        table2.addCell(createCellInfoRecu("", 20));
-        table2.setBorder(Border.NO_BORDER);
-
-        Div div = new Div();
-        div.add(table);
-        div.add(table2);
-
-        doc.add(div);
-
-    }
 
     public Paragraph createBorderedText() {
         Paragraph container = new Paragraph();
@@ -132,7 +101,7 @@ public class RecuPdf {
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
-        doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalSolde.intValue()))));
+        doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalSolde.intValue())) + " Francs CFA"));
     }
 
     private void addHeadTable(Table table) {
@@ -207,13 +176,6 @@ public class RecuPdf {
     private Cell createCellTitre(String content, float width) {
         Cell cell = new Cell().add(new Paragraph(content)).setWidth(width).setBorder(Border.NO_BORDER);
         Style style = new Style().setFontSize(16).setBold().setFontColor(ColorConstants.BLACK);
-        cell.addStyle(style);
-        return cell;
-    }
-
-    private Cell createCellInfoRecu(String content, float width) {
-        Cell cell = new Cell().add(new Paragraph(content)).setWidth(width);
-        Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style);
         return cell;
     }

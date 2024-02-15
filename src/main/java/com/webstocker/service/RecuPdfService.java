@@ -69,6 +69,7 @@ public class RecuPdfService {
 
     public ByteArrayOutputStream generateCreditRecuPdf(Long idFacture) throws Exception {
         Facture facture = factureRepository.findOne(idFacture);
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
@@ -76,10 +77,16 @@ public class RecuPdfService {
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(40f));
 
-        recuPdf.titreRecu(document);
+
+        recuCreditPdf.titreRecu(document);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
-        recuCreditPdf.infoRecu(document, facture);
+
+        Paragraph p = new Paragraph();
+        p.add(recuCreditPdf.createBorderedText());
+        p.add(recuCreditPdf.createBorderedText2(bonDeSortie));
+        document.add(p);
+
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));

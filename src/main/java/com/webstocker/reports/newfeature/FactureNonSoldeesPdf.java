@@ -11,10 +11,10 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
-import com.webstocker.utilitaires.NombreEnChiffre;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -147,14 +147,14 @@ public class FactureNonSoldeesPdf {
         BigDecimal totalCA = BigDecimal.ZERO;
 
         for (Facture f : factures) {
-
-            table.addCell(createCellReglements(Objects.isNull(f.getNumero()) ? "" : f.getNumero(), 60));
-            table.addCell(createCellReglements(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(f.getDateFacture()), 60));
-            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(bs -> bs.getQuantite() * bs.getPrixDeVente()).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(bs -> bs.getQuantite() * bs.getPrixDeVente()).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(bs -> bs.getQuantite() * bs.getPrixDeVente()).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
-
+            if (Objects.nonNull(f.getNumero())) {
+                table.addCell(createCellReglements(f.getNumero(), 60));
+                table.addCell(createCellReglements(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(f.getDateFacture()), 60));
+                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
+            }
         }
         totalCAs = totalCA;
 
@@ -168,12 +168,12 @@ public class FactureNonSoldeesPdf {
         table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs), 30)
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
-        table.addCell(new Cell(1, 5)
-            .add(new Paragraph(NombreEnChiffre.getLettre(totalCAs.longValue())))
-            .setTextAlignment(TextAlignment.RIGHT)
-            .setBorderLeft(Border.NO_BORDER)
-            .setBorderRight(Border.NO_BORDER)
-            .setBorderBottom(Border.NO_BORDER));
+//        table.addCell(new Cell(1, 5)
+//            .add(new Paragraph(NombreEnChiffre.getLettre(totalCAs.longValue())))
+//            .setTextAlignment(TextAlignment.RIGHT)
+//            .setBorderLeft(Border.NO_BORDER)
+//            .setBorderRight(Border.NO_BORDER)
+//            .setBorderBottom(Border.NO_BORDER));
 
     }
 

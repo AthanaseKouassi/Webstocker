@@ -11,7 +11,6 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
-import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
@@ -29,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 @Slf4j
@@ -91,8 +91,8 @@ public class FactureNonSoldeesPdf {
         Paragraph container = new Paragraph();
 
         String info =
-            "Date début :   "+(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut))+"\n" +
-            "Date fin :   "+(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin))+"\n";
+            "Date début :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut)) + "\n" +
+                "Date fin :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin)) + "\n";
 
         Text one = new Text(info);
         container.add(one);
@@ -148,7 +148,7 @@ public class FactureNonSoldeesPdf {
 
         for (Facture f : factures) {
 
-            table.addCell(createCellReglements(f.getNumero(), 60));
+            table.addCell(createCellReglements(Objects.isNull(f.getNumero()) ? "" : f.getNumero(), 60));
             table.addCell(createCellReglements(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(f.getDateFacture()), 60));
             table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(bs -> bs.getQuantite() * bs.getPrixDeVente()).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
             table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));

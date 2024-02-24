@@ -336,4 +336,5 @@ public class FactureResource {
         return new ResponseEntity<>(pageNDto.getContent(), headers, HttpStatus.OK);
     }
 
+   
 }

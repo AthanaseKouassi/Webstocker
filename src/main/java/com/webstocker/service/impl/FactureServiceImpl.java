@@ -204,7 +204,6 @@ public class FactureServiceImpl implements FactureService {
         return factureRepository.findByStatutFactureAndDateFactureBetween(StatutFacture.NON_SOLDE, debut, fin, pageable);
     }
 
-
     @Override
     public List<CreanceDto> getFactureCreance(int categorieCreance) {
         List<CreanceDto> creanceDtos = new ArrayList<>();
@@ -222,6 +221,26 @@ public class FactureServiceImpl implements FactureService {
         return creanceDtos;
     }
 
+    @Override
+    public List<CreanceDto> getCreanceParClientAndPeriode(Long idClient, String dateDebut, String dateFin) {
+        List<CreanceDto> creanceDtos = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
+        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+        LocalDate fin = LocalDate.parse(dateFin, formatter);
+        List<Facture> listFactures = factureRepository.findByCommercialParPeriode(idClient, debut, fin);
+
+        for (Facture fact : listFactures) {
+            for (LigneBonDeSortie ligne : fact.getBonDeSortie().getLigneBonDeSorties()) {
+                long montantRegle = fact.getReglements().stream().filter(r -> r.getProduit().equals(ligne.getProduit()))
+                    .mapToLong(Reglement::getMontantReglement).sum();
+                if (montantRegle < ligne.getPrixDeVente()) {
+                    creanceDtos.add(creanceDtoMapper.mapToCreanceDtoClient(fact, ligne));
+                }
+            }
+        }
+
+        return creanceDtos;
+    }
 
 //    public List<Facture> listFactureNonRegleeParPeriode(String numero, String dateDebut, String dateFin) {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);

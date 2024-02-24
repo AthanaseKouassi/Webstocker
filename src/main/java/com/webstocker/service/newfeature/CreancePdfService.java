@@ -5,6 +5,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.webstocker.reports.newfeature.CreanceClientPdf;
 import com.webstocker.reports.newfeature.CreancePdf;
 import com.webstocker.service.FactureService;
 import com.webstocker.web.rest.dto.newfeature.CreanceDto;
@@ -22,6 +23,8 @@ import java.util.List;
 @Service
 public class CreancePdfService {
 
+    @Autowired
+    private CreanceClientPdf creanceClientPdf;
     @Autowired
     private CreancePdf creancePdf;
     @Inject
@@ -48,6 +51,30 @@ public class CreancePdfService {
         creancePdf.addTableRecu(document, creanceDtos);
 
         document.close();
+        return outputStream;
+    }
+
+    public ByteArrayOutputStream generatePdfCreanceClient(Long idClient, String dateDebut, String dateFin) throws Exception {
+        List<CreanceDto> creanceDtos = factureService.getCreanceParClientAndPeriode(idClient, dateDebut, dateFin);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        PdfWriter writer = new PdfWriter(outputStream);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+        document.add(new Paragraph(" ").setPadding(15f));
+
+        creanceClientPdf.titreRecu(document);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
+        Paragraph p = new Paragraph();
+        //   p.add(creancePdf.createBorderedText(numeroCategorie));
+        document.add(p);
+        document.add(new Paragraph(" "));
+        //   creancePdf.addTableRecu(document, creanceDtos);
+
+        document.close();
+
         return outputStream;
     }
 

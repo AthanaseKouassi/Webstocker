@@ -94,4 +94,12 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     List<Facture> getFacturePlusDeQuaranteCinqJours();
 
     List<Facture> findByDateFactureBetweenOrderByDateFactureDesc(LocalDate dateDebut, LocalDate dateFin);
+
+    @Query(value = " SELECT DISTINCT f.* FROM facture f " +
+        "INNER JOIN bon_de_sortie bds ON bds.id = f.bon_de_sortie_id " +
+        "INNER JOIN ligne_bon_de_sortie lbds ON lbds.bon_de_sortie_id = bds.id " +
+        "INNER JOIN reglement r ON r.facture_id = f.id " +
+        "WHERE f.statut = 'NON_SOLDE' AND bds.client_id = ?1 " +
+        "AND f.date_facture BETWEEN ?2 AND ?3 ", nativeQuery = true)
+    List<Facture> findByCommercialParPeriode(Long idClient, String dateDebut, String dateFin);
 }

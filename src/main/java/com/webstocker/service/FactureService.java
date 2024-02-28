@@ -74,5 +74,7 @@ public interface FactureService {
 
     Page<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin, Pageable pageable);
 
+    List<CreanceDto> getCreanceParClientAndPeriode(Long idClient, String dateDebut, String dateFin);
+
 
 }

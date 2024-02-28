@@ -31,9 +31,9 @@ public class CreancePdf {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH);
 
     public void titreRecu(Document doc) {
-        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 50f, 25f})).useAllAvailableWidth();
+        Table table = new Table(UnitValue.createPercentArray(new float[]{50, 50f, 25f})).useAllAvailableWidth();
 
-        table.addCell(createCellTitre(" ", 150).setHorizontalAlignment(HorizontalAlignment.CENTER));
+        table.addCell(createCellTitre(" ", 160).setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.addCell(createCellTitre(TITRE_RECU, 200).setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.addCell(createCellTitre(" ", 150));
         table.setHorizontalAlignment(HorizontalAlignment.RIGHT);
@@ -43,13 +43,14 @@ public class CreancePdf {
 
     public Paragraph createBorderedText(int numcategorie) {
         Paragraph container = new Paragraph();
+        String infoCategorie = " catégorie " + numcategorie;
         String info = "";
         if (numcategorie == 1) {
-            info = " catégorie " + numcategorie + " : créances inférieures à 30 jours";
+            info = infoCategorie + " : créances inférieures à 30 jours";
         } else if (numcategorie == 2) {
-            info = " catégorie " + numcategorie + " : créances entre 30 et 45 jours";
+            info = infoCategorie + " : créances entre 30 et 45 jours";
         } else if (numcategorie == 3) {
-            info = " catégorie " + numcategorie + " : créances supérieures à 45 jours";
+            info = infoCategorie + " : créances supérieures à 45 jours";
         }
         String info2 = "Catégorie créance :" + info;
 
@@ -89,12 +90,12 @@ public class CreancePdf {
 
             table.addCell(createCellCreance(ligne.getNomClient(), 15));
             table.addCell(createCellCreance(ligne.getTelClient(), 11));
-            table.addCell(createCellCreance(ligne.getNomUser(), 15));
+            table.addCell(createCellCreance(ligne.getNomUser().toUpperCase(), 15));
             table.addCell(createCellCreance(ligne.getNomProduit(), 15));
             table.addCell(createCellCreance(formatter.format(ligne.getDateFacture()), 11));
             table.addCell(createCellCreance(ligne.getNumero(), 11));
-            table.addCell(createCellCreance(String.valueOf(BigDecimal.valueOf(ligne.getMontantRegle())), 12).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellCreance(String.valueOf(BigDecimal.valueOf(ligne.getResteApayer())), 12).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellCreance(NumberFormat.getInstance().format(BigDecimal.valueOf(ligne.getMontantRegle())), 12).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellCreance(NumberFormat.getInstance().format(BigDecimal.valueOf(ligne.getResteApayer())), 12).setTextAlignment(TextAlignment.RIGHT));
             restApaye = restApaye.add(BigDecimal.valueOf(ligne.getResteApayer()));
 
         }
@@ -132,7 +133,7 @@ public class CreancePdf {
 
     private void addCellTotalHT(Table table) {
         table.addCell(createTotauxCell("TOTAL", 60)).setHeight(20);
-        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalAsolde), 40)
+        table.addCell(createTotauxCell(NumberFormat.getInstance(new Locale("fr", "CI")).format(totalAsolde), 40)
             .setTextAlignment(TextAlignment.RIGHT));
 
     }

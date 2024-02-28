@@ -12,10 +12,8 @@ import com.itextpdf.layout.properties.UnitValue;
 import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
-import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
-import com.webstocker.utilitaires.NombreEnChiffre;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -91,9 +89,9 @@ public class ChiffreAffaireParModePaiementPdf {
         Paragraph container = new Paragraph();
 
         String info =
-            "Mode paiement :   "+modePAiement+"\n" +
-            "Date début :   "+(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut))+"\n" +
-            "Date fin :   "+(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin))+"\n";
+            "Mode paiement :   " + modePAiement + "\n" +
+                "Date début :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut)) + "\n" +
+                "Date fin :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin)) + "\n";
 
         Text one = new Text(info);
         container.add(one);
@@ -149,8 +147,8 @@ public class ChiffreAffaireParModePaiementPdf {
 
             table.addCell(createCellReglements(l.getProduit().getNomProduit(), 60));
             table.addCell(createCellReglements(String.valueOf(l.getQuantite()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(BigDecimal.valueOf(l.getQuantite()).multiply(new BigDecimal(l.getPrixDeVente()))), 40).setTextAlignment(TextAlignment.RIGHT));
-            totalCA = totalCA.add(new BigDecimal(String.valueOf(BigDecimal.valueOf(l.getQuantite()).multiply(new BigDecimal(l.getPrixDeVente())))));
+            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(new BigDecimal(l.getPrixDeVente())), 40).setTextAlignment(TextAlignment.RIGHT));
+            totalCA = totalCA.add(new BigDecimal(l.getPrixDeVente()));
         }
         totalCAs = totalCA;
 
@@ -162,12 +160,12 @@ public class ChiffreAffaireParModePaiementPdf {
         table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs), 30)
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
-        table.addCell(new Cell(1, 3)
-            .add(new Paragraph(NombreEnChiffre.getLettre(totalCAs.longValue())))
-            .setTextAlignment(TextAlignment.RIGHT)
-            .setBorderLeft(Border.NO_BORDER)
-            .setBorderRight(Border.NO_BORDER)
-            .setBorderBottom(Border.NO_BORDER));
+//        table.addCell(new Cell(1, 3)
+//            .add(new Paragraph(NombreEnChiffre.getLettre(totalCAs.longValue())))
+//            .setTextAlignment(TextAlignment.RIGHT)
+//            .setBorderLeft(Border.NO_BORDER)
+//            .setBorderRight(Border.NO_BORDER)
+//            .setBorderBottom(Border.NO_BORDER));
 
     }
 

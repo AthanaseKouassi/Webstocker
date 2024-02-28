@@ -51,6 +51,7 @@ public class CreanceDtoMapper {
         dto.setPrixDeVente(ligneBonDeSortie.getPrixDeVente());
         dto.setTelClient(facture.getClient().getTelephoneClient());
         dto.setIdFacture(facture.getId());
+        dto.setNomUser(facture.getBonDeSortie().getDemandeur().getFirstName() + " " + facture.getBonDeSortie().getDemandeur().getLastName());
         dto.setNomProduit(ligneBonDeSortie.getProduit().getNomProduit());
         dto.setMontantRegle(facture.getReglements().stream()
             .filter(r -> r.getProduit().equals(ligneBonDeSortie.getProduit()))

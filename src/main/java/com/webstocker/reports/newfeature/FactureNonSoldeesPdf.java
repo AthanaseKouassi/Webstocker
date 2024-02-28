@@ -36,6 +36,7 @@ import java.util.Objects;
 public class FactureNonSoldeesPdf {
 
     private static final String TITRE_RECU = "FACTURES NON SOLDÉES";
+    private static final String PATTERN_DATE = "dd MMMM yyyy";
 
     @Autowired
     private ReglementRepository reglementRepository;
@@ -46,10 +47,7 @@ public class FactureNonSoldeesPdf {
 
     public void titreRecu(Document doc) {
         Table table = new Table(UnitValue.createPercentArray(new float[]{200f})).useAllAvailableWidth();
-        //   table.setMargins(10f, 10f, 0f, 10f);
-//        table.addCell(createCellTitre(" ", 90).setHorizontalAlignment(HorizontalAlignment.CENTER));
-        table.addCell(createCellTitre(TITRE_RECU, 900).setHorizontalAlignment(HorizontalAlignment.CENTER));
-//        table.addCell(createCellTitre(" ", 90));
+        table.addCell(createCellTitre().setHorizontalAlignment(HorizontalAlignment.CENTER));
         table.setHorizontalAlignment(HorizontalAlignment.RIGHT);
 
         doc.add(table);
@@ -90,9 +88,8 @@ public class FactureNonSoldeesPdf {
     public Paragraph createBorderedText(LocalDate dateDebut, LocalDate dateFin) {
         Paragraph container = new Paragraph();
 
-        String info =
-            "Date début :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut)) + "\n" +
-                "Date fin :   " + (DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin)) + "\n";
+        String info = "Date début :   " + (DateTimeFormatter.ofPattern(PATTERN_DATE).format(dateDebut)) + "\n" +
+            "Date fin :   " + (DateTimeFormatter.ofPattern(PATTERN_DATE).format(dateFin)) + "\n";
 
         Text one = new Text(info);
         container.add(one);
@@ -104,27 +101,7 @@ public class FactureNonSoldeesPdf {
         return container;
     }
 
-    public Paragraph createBorderedText2(BonDeSortie bonDeSortie) {
-        Paragraph container = new Paragraph();
-        Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
-
-        String repInfo = facture.getDateFacture() + "\n" +
-            facture.getClient().getNomClient() + "\n" +
-            bonDeSortie.getNumeroFactureNormalise() + "\n" +
-            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
-
-        Text two = new Text(repInfo);
-        container.setBorder(new SolidBorder(ColorConstants.BLACK, 0f));
-        container.setBorderLeft(Border.NO_BORDER);
-        container.setBorderRight(Border.NO_BORDER);
-        container.add(two);
-
-        return container;
-    }
-
     public void addTableFacture(Document doc, List<Facture> factures) {
-//        final Facture facture = factureRepository.findByBonDeSortie(ligneBonDeSortieRepository);
-//        List<Reglement> reglements = reglementRepository.findByFacture(facture);
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20, 20})).useAllAvailableWidth();
         addHeadTable(table);
         addTableRow(factures, table);
@@ -138,9 +115,9 @@ public class FactureNonSoldeesPdf {
     private void addHeadTable(Table table) {
         table.addHeaderCell(createHeaderCell("Facture", 60));
         table.addHeaderCell(createHeaderCell("Date", 60));
-        table.addHeaderCell(createHeaderCell("Cout", 15));
-        table.addHeaderCell(createHeaderCell("Soldée", 10));
-        table.addHeaderCell(createHeaderCell("Reste à Soldée", 10));
+        table.addHeaderCell(createHeaderCell("Montant total", 15));
+        table.addHeaderCell(createHeaderCell("Montant encaissé", 10));
+        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
     }
 
     private void addTableRow(List<Facture> factures, Table table) {
@@ -149,7 +126,7 @@ public class FactureNonSoldeesPdf {
         for (Facture f : factures) {
             if (Objects.nonNull(f.getNumero())) {
                 table.addCell(createCellReglements(f.getNumero(), 60));
-                table.addCell(createCellReglements(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(f.getDateFacture()), 60));
+                table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()), 60));
                 table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
@@ -161,26 +138,19 @@ public class FactureNonSoldeesPdf {
     }
 
     private void addCellTotalHT(Table table) {
-        table.addCell(createTotauxCell("TOTAL", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell("", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell("", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell("", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs), 30)
+        table.addCell(createTotauxCell("TOTAL").setPaddingTop(6));
+        table.addCell(createTotauxCell("").setPaddingTop(6));
+        table.addCell(createTotauxCell("").setPaddingTop(6));
+        table.addCell(createTotauxCell("").setPaddingTop(6));
+        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs))
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
-
-//        table.addCell(new Cell(1, 5)
-//            .add(new Paragraph(NombreEnChiffre.getLettre(totalCAs.longValue())))
-//            .setTextAlignment(TextAlignment.RIGHT)
-//            .setBorderLeft(Border.NO_BORDER)
-//            .setBorderRight(Border.NO_BORDER)
-//            .setBorderBottom(Border.NO_BORDER));
 
     }
 
-    private Cell createTotauxCell(String content, float width) {
+    private Cell createTotauxCell(String content) {
         Cell cell = new Cell()
             .add(new Paragraph(content))
-            .setWidth(width)
+            .setWidth(30)
             .setBorderRight(Border.NO_BORDER)
             .setBorderLeft(Border.NO_BORDER)
             .setBorderTop(Border.NO_BORDER);
@@ -212,8 +182,8 @@ public class FactureNonSoldeesPdf {
         return cell;
     }
 
-    private Cell createCellTitre(String content, float width) {
-        Cell cell = new Cell().add(new Paragraph(content)).setWidth(width).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER);
+    private Cell createCellTitre() {
+        Cell cell = new Cell().add(new Paragraph(FactureNonSoldeesPdf.TITRE_RECU)).setWidth(900).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER);
         Style style = new Style().setFontSize(16).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style).setHorizontalAlignment(HorizontalAlignment.CENTER);
         return cell;

@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -38,7 +40,7 @@ public class CreancePdfService {
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4.rotate());
-        document.add(new Paragraph(" ").setPadding(15f));
+        document.add(new Paragraph(" ").setPadding(10f));
 
         creancePdf.titreRecu(document);
         document.add(new Paragraph(" "));
@@ -56,11 +58,14 @@ public class CreancePdfService {
 
     public ByteArrayOutputStream generatePdfCreanceClient(Long idClient, String dateDebut, String dateFin) throws Exception {
         List<CreanceDto> creanceDtos = factureService.getCreanceParClientAndPeriode(idClient, dateDebut, dateFin);
+
+        LocalDate debut = LocalDate.parse(dateDebut, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate fin = LocalDate.parse(dateFin, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf, PageSize.A4);
+        Document document = new Document(pdf, PageSize.A4.rotate());
         document.add(new Paragraph(" ").setPadding(15f));
 
         creanceClientPdf.titreRecu(document);
@@ -68,10 +73,10 @@ public class CreancePdfService {
         document.add(new Paragraph(" "));
 
         Paragraph p = new Paragraph();
-        //   p.add(creancePdf.createBorderedText(numeroCategorie));
+        p.add(creanceClientPdf.createBorderedText(idClient, debut, fin));
         document.add(p);
         document.add(new Paragraph(" "));
-        //   creancePdf.addTableRecu(document, creanceDtos);
+        creanceClientPdf.addTableRecu(document, creanceDtos);
 
         document.close();
 

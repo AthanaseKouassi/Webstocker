@@ -224,10 +224,7 @@ public class FactureServiceImpl implements FactureService {
     @Override
     public List<CreanceDto> getCreanceParClientAndPeriode(Long idClient, String dateDebut, String dateFin) {
         List<CreanceDto> creanceDtos = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
-        LocalDate debut = LocalDate.parse(dateDebut, formatter);
-        LocalDate fin = LocalDate.parse(dateFin, formatter);
-        List<Facture> listFactures = factureRepository.findByCommercialParPeriode(idClient, debut, fin);
+        List<Facture> listFactures = factureRepository.findByCommercialParPeriode(idClient, dateDebut, dateFin);
 
         for (Facture fact : listFactures) {
             for (LigneBonDeSortie ligne : fact.getBonDeSortie().getLigneBonDeSorties()) {
@@ -238,7 +235,6 @@ public class FactureServiceImpl implements FactureService {
                 }
             }
         }
-
         return creanceDtos;
     }
 

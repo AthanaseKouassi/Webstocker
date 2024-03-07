@@ -13,10 +13,8 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.webstocker.domain.Client;
 import com.webstocker.repository.ClientRepository;
-import com.webstocker.utilitaires.NombreEnChiffre;
 import com.webstocker.web.rest.dto.newfeature.CreanceDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,8 +52,8 @@ public class CreanceClientPdf {
         Client client = clientRepository.findOne(idClient);
 
         String repInfo = "Client : " + client.getNomClient() + "\n" +
-            "Date début : " + DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut) + "\n" +
-            "Date fin : " + DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin);
+            "Période du : " + DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateDebut) + " au " +
+            DateTimeFormatter.ofPattern("dd MMMM yyyy").format(dateFin);
 
         Text two = new Text(repInfo);
         container.add(two);
@@ -72,7 +70,7 @@ public class CreanceClientPdf {
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
-        doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalCreance.intValue())) + " Francs CFA"));
+        //doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalCreance.intValue())) + " Francs CFA"));
     }
 
 

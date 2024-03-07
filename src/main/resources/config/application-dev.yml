@@ -21,7 +21,7 @@ spring:
         url: jdbc:mysql://localhost:3306/webstocker?useUnicode=true&characterEncoding=utf8&useSSL=false
         name:
         username: root
-        password: root
+        password:
 #        password: 01itweb01
         hikari:
             data-source-properties:

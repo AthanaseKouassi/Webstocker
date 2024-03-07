@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public class FactureNDto {
     private Long id;
     private LocalDate dateFacture;
+    private String nomCommercial;
     private String nomClient;
     private Long montantTotal;
     private Long resteApayer;

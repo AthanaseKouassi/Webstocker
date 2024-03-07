@@ -68,6 +68,7 @@ public class FactureNDtoMapper {
             fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
             fact.setIdClient(facture.getClient().getId());
             fact.setNumero(facture.getNumero());
+            fact.setNomCommercial(facture.getBonDeSortie().getDemandeur().getFirstName() + " " + facture.getBonDeSortie().getDemandeur().getLastName());
             fact.setNomClient(facture.getClient().getNomClient());
             fact.setMontantTotal(ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie())
                 .stream().mapToLong(LigneBonDeSortie::getPrixDeVente).sum());
@@ -88,6 +89,7 @@ public class FactureNDtoMapper {
             fact.setIdBonDeSortie(facture.getBonDeSortie().getId());
             fact.setIdClient(facture.getClient().getId());
             fact.setNumero(facture.getNumero());
+            fact.setNomCommercial(facture.getBonDeSortie().getDemandeur().getFirstName() + " " + facture.getBonDeSortie().getDemandeur().getLastName());
             fact.setNomClient(facture.getClient().getNomClient());
             fact.setMontantTotal(ligneBonDeSortieRepository.findAllByBonDeSortie(facture.getBonDeSortie())
                 .stream().mapToLong(LigneBonDeSortie::getPrixDeVente).sum());

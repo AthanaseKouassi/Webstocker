@@ -102,4 +102,12 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
         "WHERE f.statut = 'NON_SOLDE' AND bds.client_id = ?1 " +
         "AND f.date_facture BETWEEN ?2 AND ?3 ", nativeQuery = true)
     List<Facture> findByCommercialParPeriode(Long idClient, String dateDebut, String dateFin);
+
+
+    List<Facture> findByBonDeSortieDemandeur_IdAndDateFactureBetweenOrderByDateFacture(Long demendeurId, LocalDate dateDebut, LocalDate dateFin);
+
+    Facture findByNumero(String numero);
+
+
+
 }

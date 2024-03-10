@@ -5,7 +5,6 @@ import com.webstocker.domain.Prix;
 import com.webstocker.domain.Produit;
 
 /**
- *
  * @author Athanase
  */
 public class EtatStockGlobalAimasWrapper {
@@ -20,6 +19,7 @@ public class EtatStockGlobalAimasWrapper {
     Long quantiteLivre;
     Long quantiteTotalTransfert;
     Long quantiteTotalEnStock;
+    Long arrivage;
     Bailleur bailleur;
     Prix prix;
 
@@ -37,8 +37,16 @@ public class EtatStockGlobalAimasWrapper {
 
     public void setQuantiteTotalTransfert(Long quantiteTotalTransfert) {
         this.quantiteTotalTransfert = quantiteTotalTransfert;
-    }    
-    
+    }
+
+    public Long getArrivage() {
+        return arrivage;
+    }
+
+    public void setArrivage(Long arrivage) {
+        this.arrivage = arrivage;
+    }
+
     public Long getQuantiteLivre() {
         return quantiteLivre;
     }
@@ -46,7 +54,7 @@ public class EtatStockGlobalAimasWrapper {
     public void setQuantiteLivre(Long quantiteLivre) {
         this.quantiteLivre = quantiteLivre;
     }
-   
+
     public Produit getProduit() {
         return produit;
     }
@@ -126,7 +134,6 @@ public class EtatStockGlobalAimasWrapper {
     public void setPrix(Prix prix) {
         this.prix = prix;
     }
-     
-        
-    
+
+
 }

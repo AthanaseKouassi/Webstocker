@@ -5,7 +5,11 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
@@ -13,6 +17,7 @@ import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
+import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +32,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 
@@ -35,15 +39,15 @@ import java.util.Objects;
 @Component
 public class FactureSoldeesNonSoldeesPdf {
 
-    public static String TITRE_RECU = "";
     private static final String PATTERN_DATE = "dd MMMM yyyy";
-
+    public static String TITRE_RECU = "";
     @Autowired
     private ReglementRepository reglementRepository;
     @Autowired
     private FactureRepository factureRepository;
 
     private BigDecimal totalCAs = BigDecimal.ZERO;
+    private BigDecimal totalMoontant = BigDecimal.ZERO;
 
     public void titreRecu(Document doc) {
         Table table = new Table(UnitValue.createPercentArray(new float[]{200f})).useAllAvailableWidth();
@@ -101,27 +105,45 @@ public class FactureSoldeesNonSoldeesPdf {
         return container;
     }
 
-    public void addTableFacture(Document doc, List<Facture> factures) {
-        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20, 20})).useAllAvailableWidth();
-        addHeadTable(table);
-        addTableRow(factures, table);
+    public void addTableFacture(Document doc, List<Facture> factures, String typeFacture) {
+        Table table;
+        if (typeFacture.equals(StatutFacture.NON_SOLDE.toString())) {
+            table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20, 20})).useAllAvailableWidth();
+
+        } else {
+            table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20})).useAllAvailableWidth();
+        }
+
+        addHeadTable(table, typeFacture);
+        addTableRow(factures, table, typeFacture);
         doc.add(table);
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f, 30, 30})).useAllAvailableWidth();
+        Table table2;
+
+        if (typeFacture.equals(StatutFacture.NON_SOLDE.toString())) {
+            table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f, 30, 30})).useAllAvailableWidth();
+
+        } else {
+            table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f, 30})).useAllAvailableWidth();
+        }
+
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
-        addCellTotalHT(table2);
+        addCellTotalHT(table2, typeFacture);
         doc.add(table2);
     }
 
-    private void addHeadTable(Table table) {
+    private void addHeadTable(Table table, String typeFacture) {
         table.addHeaderCell(createHeaderCell("Facture", 60));
         table.addHeaderCell(createHeaderCell("Date", 60));
         table.addHeaderCell(createHeaderCell("Montant total", 15));
         table.addHeaderCell(createHeaderCell("Montant encaissé", 10));
-        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
+        if (typeFacture.equalsIgnoreCase(StatutFacture.NON_SOLDE.toString())) {
+            table.addHeaderCell(createHeaderCell("Reste à payer", 10));
+        }
     }
 
-    private void addTableRow(List<Facture> factures, Table table) {
+    private void addTableRow(List<Facture> factures, Table table, String typeFacture) {
         BigDecimal totalCA = BigDecimal.ZERO;
+        BigDecimal montant = BigDecimal.ZERO;
 
         for (Facture f : factures) {
             if (Objects.nonNull(f.getNumero())) {
@@ -129,21 +151,30 @@ public class FactureSoldeesNonSoldeesPdf {
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()), 60));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                if (typeFacture.equalsIgnoreCase(StatutFacture.NON_SOLDE.toString())) {
+                    table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40)
+                        .setTextAlignment(TextAlignment.RIGHT));
+                }
+                montant = montant.add(BigDecimal.valueOf(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
             }
         }
         totalCAs = totalCA;
+        totalMoontant = montant;
 
     }
 
-    private void addCellTotalHT(Table table) {
+    private void addCellTotalHT(Table table, String typeFacture) {
         table.addCell(createTotauxCell("TOTAL").setPaddingTop(6));
         table.addCell(createTotauxCell("").setPaddingTop(6));
         table.addCell(createTotauxCell("").setPaddingTop(6));
-        table.addCell(createTotauxCell("").setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs))
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalMoontant))
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
+        if (typeFacture.equalsIgnoreCase(StatutFacture.NON_SOLDE.toString())) {
+            table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs))
+                .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
+        }
+
 
     }
 

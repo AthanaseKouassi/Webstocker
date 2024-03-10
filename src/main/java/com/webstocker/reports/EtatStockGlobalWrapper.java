@@ -1,11 +1,9 @@
 package com.webstocker.reports;
 
 import com.webstocker.domain.Bailleur;
-import com.webstocker.domain.Produit;
 import com.webstocker.domain.wrapper.EtatStockGlobalAimasWrapper;
 
 /**
- *
  * @author Athanase
  */
 public class EtatStockGlobalWrapper {
@@ -22,6 +20,8 @@ public class EtatStockGlobalWrapper {
     Long quantiteTotaleTransfert;
     Bailleur bailleur;
     Long quantiteGlobalEnStock;
+    Long arrivage;
+    Long stockInitial;
 
     public EtatStockGlobalWrapper(EtatStockGlobalAimasWrapper etatstock) {
         this.quantiteGlobalEnStock = etatstock.getQuantiteTotalEnStock();
@@ -35,6 +35,24 @@ public class EtatStockGlobalWrapper {
         this.quantiteInitial = etatstock.getQuantiteInitial();
         this.quantiteLivree = etatstock.getQuantiteLivre();
         this.quantiteTotaleTransfert = etatstock.getQuantiteTotalTransfert();
+        this.stockInitial = etatstock.getQuantiteInitial();
+        this.arrivage = etatstock.getArrivage();
+    }
+
+    public Long getArrivage() {
+        return arrivage;
+    }
+
+    public void setArrivage(Long arrivage) {
+        this.arrivage = arrivage;
+    }
+
+    public Long getStockInitial() {
+        return stockInitial;
+    }
+
+    public void setStockInitial(Long stockInitial) {
+        this.stockInitial = stockInitial;
     }
 
     public Long getQuantiteLivree() {

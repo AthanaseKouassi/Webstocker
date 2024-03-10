@@ -147,7 +147,7 @@ public class ChiffreAffaireParModePaiementPdf {
 
             table.addCell(createCellReglements(l.getProduit().getNomProduit(), 60));
             table.addCell(createCellReglements(String.valueOf(l.getQuantite()), 40).setTextAlignment(TextAlignment.RIGHT));
-            table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(new BigDecimal(l.getPrixDeVente())), 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellReglements(NumberFormat.getInstance().format(new BigDecimal(l.getPrixDeVente())), 40).setTextAlignment(TextAlignment.RIGHT));
             totalCA = totalCA.add(new BigDecimal(l.getPrixDeVente()));
         }
         totalCAs = totalCA;
@@ -157,7 +157,7 @@ public class ChiffreAffaireParModePaiementPdf {
     private void addCellTotalHT(Table table) {
         table.addCell(createTotauxCell("TOTAL", 30).setPaddingTop(6));
         table.addCell(createTotauxCell("", 30).setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs), 30)
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs), 30)
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
 //        table.addCell(new Cell(1, 3)

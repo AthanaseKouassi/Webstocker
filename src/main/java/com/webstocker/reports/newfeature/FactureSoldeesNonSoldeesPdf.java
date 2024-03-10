@@ -33,9 +33,9 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class FactureNonSoldeesPdf {
+public class FactureSoldeesNonSoldeesPdf {
 
-    private static final String TITRE_RECU = "FACTURES NON SOLDÉES";
+    public static String TITRE_RECU = "";
     private static final String PATTERN_DATE = "dd MMMM yyyy";
 
     @Autowired
@@ -127,9 +127,9 @@ public class FactureNonSoldeesPdf {
             if (Objects.nonNull(f.getNumero())) {
                 table.addCell(createCellReglements(f.getNumero(), 60));
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()), 60));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
             }
         }
@@ -142,7 +142,7 @@ public class FactureNonSoldeesPdf {
         table.addCell(createTotauxCell("").setPaddingTop(6));
         table.addCell(createTotauxCell("").setPaddingTop(6));
         table.addCell(createTotauxCell("").setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs))
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs))
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
     }
@@ -183,7 +183,7 @@ public class FactureNonSoldeesPdf {
     }
 
     private Cell createCellTitre() {
-        Cell cell = new Cell().add(new Paragraph(FactureNonSoldeesPdf.TITRE_RECU)).setWidth(900).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER);
+        Cell cell = new Cell().add(new Paragraph(FactureSoldeesNonSoldeesPdf.TITRE_RECU)).setWidth(900).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER);
         Style style = new Style().setFontSize(16).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style).setHorizontalAlignment(HorizontalAlignment.CENTER);
         return cell;

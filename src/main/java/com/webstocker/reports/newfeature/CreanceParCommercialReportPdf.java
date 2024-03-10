@@ -131,11 +131,11 @@ public class CreanceParCommercialReportPdf {
 //    }
 
     public void addTableFactures(Document doc, List<Facture> factures) {
-        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
+        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20, 20f})).useAllAvailableWidth();
         addHeadTable(table);
         addTableRow(factures, table);
         doc.add(table);
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f})).useAllAvailableWidth();
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f, 30f})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
 //        addCellTotalHT(table2);
         doc.add(table2);
@@ -147,13 +147,14 @@ public class CreanceParCommercialReportPdf {
 //        table.addHeaderCell(createHeaderCell("N° facture", 10));
 //        table.addHeaderCell(createHeaderCell("Client", 10));
         table.addHeaderCell(createHeaderCell("Produit", 10));
-        table.addHeaderCell(createHeaderCell("Montant encaissé", 15));
-        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
+        table.addHeaderCell(createHeaderCell("Prix de vente (F CFA)", 10));
+        table.addHeaderCell(createHeaderCell("Montant encaissé (F CFA)", 15));
+        table.addHeaderCell(createHeaderCell("Reste à solder (F CFA)", 10));
     }
 
 
     private Cell addCellCollapse(String content, float width) {
-        Cell cell = new Cell(1, 3).add(new Paragraph(content)).setWidth(width);
+        Cell cell = new Cell(1, 4).add(new Paragraph(content)).setWidth(width);
         Style style = new Style().setFontSize(9);
         cell.addStyle(style);
         cell.setPaddingTop(10f);
@@ -199,8 +200,8 @@ public class CreanceParCommercialReportPdf {
 
 //                table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(g.getDateReglement()), 60).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(g.getDateReglement()), 60).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
 //            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalRegle = totalRegle.add(new BigDecimal(g.getMontantReglement()));
 
@@ -221,7 +222,7 @@ public class CreanceParCommercialReportPdf {
     }
 
     private void addTableRow(List<Facture> factures, Table table) {
-        BigDecimal totalCA = BigDecimal.ZERO;
+
 
         totalSolde = BigDecimal.ZERO;
         totalResteSolde = BigDecimal.ZERO;
@@ -230,24 +231,42 @@ public class CreanceParCommercialReportPdf {
         for (Facture f : factures) {
             Map<Produit, List<LigneBonDeSortie>> ligneBonDeSortiesParProduit =  f.getBonDeSortie().getLigneBonDeSorties().stream().collect(Collectors.groupingBy(LigneBonDeSortie::getProduit));
 
-            table.addCell(addCellCollapse(DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()) + " | " + f.getNumero() + "\n" + f.getClient().getNomClient(), 60));
+            table.addCell(addCellCollapse("N° facture: " + f.getNumero() + ",   Date: " + DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()) + ",   Client: " + f.getClient().getNomClient(), 60).setBold());
 
 
-            Long sumReglement = 0L;
+            BigDecimal totalSoldeFact = BigDecimal.ZERO;
+            BigDecimal totalResteSoldeFact = BigDecimal.ZERO;
             for (Map.Entry<Produit, List<LigneBonDeSortie>> entry : ligneBonDeSortiesParProduit.entrySet()) {
                 table.addCell(createCellReglements(entry.getKey().getNomProduit(), 60));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 60).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                totalSoldeFact = totalSoldeFact.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
+                totalResteSoldeFact = totalResteSoldeFact.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
+
+
+
                 totalSolde = totalSolde.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
                 totalResteSolde = totalResteSolde.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
             }
-       }
+
+
+//            addCellTotalHTFact(table, totalSoldeFact, totalResteSoldeFact);
+            table.addCell(createTotauxCell("TOTAL", 60));
+            table.addCell(createTotauxCell("", 60));
+            table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalSoldeFact), 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalResteSoldeFact), 40).setTextAlignment(TextAlignment.RIGHT));
+
+
+        }
 
     }
 
+
+
     public void addCellTotalHT(Table table) {
-        table.addCell(createTotauxCell("TOTAL", 60)).setHeight(20);
+        table.addCell(createTotauxCell("TOTAL GENERAL", 60)).setHeight(20);
+        table.addCell(createTotauxCell("", 60)).setHeight(20);
         table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalSolde), 40)
             .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalResteSolde), 40)
@@ -260,7 +279,7 @@ public class CreanceParCommercialReportPdf {
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
-//        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs))
+//        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs))
 //            .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 //
 //    }

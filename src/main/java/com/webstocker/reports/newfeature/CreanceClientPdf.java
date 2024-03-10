@@ -108,7 +108,7 @@ public class CreanceClientPdf {
     private void addCellTotalHT(Table table) {
         table.addCell(createTotauxCell("TOTAL").setPaddingTop(6));
         table.addCell(createTotauxCell("").setPaddingTop(6));
-        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCreance))
+        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCreance))
             .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 
     }

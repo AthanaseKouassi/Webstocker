@@ -205,6 +205,14 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
+    public Page<Facture> getFactureAllsParPeriode(String dateDebut, String dateFin, Pageable pageable) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_DATE);
+        LocalDate debut = LocalDate.parse(dateDebut, formatter);
+        LocalDate fin = LocalDate.parse(dateFin, formatter);
+        return factureRepository.findByDateFactureBetween(debut, fin, pageable);
+    }
+
+    @Override
     public List<CreanceDto> getFactureCreance(int categorieCreance) {
         List<CreanceDto> creanceDtos = new ArrayList<>();
         List<Facture> factures = getFactures(categorieCreance);

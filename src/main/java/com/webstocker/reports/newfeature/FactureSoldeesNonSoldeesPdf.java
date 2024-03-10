@@ -107,7 +107,7 @@ public class FactureSoldeesNonSoldeesPdf {
 
     public void addTableFacture(Document doc, List<Facture> factures, String typeFacture) {
         Table table;
-        if (typeFacture.equals(StatutFacture.NON_SOLDE.toString())) {
+        if (typeFacture.equalsIgnoreCase(StatutFacture.NON_SOLDE.toString())) {
             table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20, 20})).useAllAvailableWidth();
 
         } else {
@@ -119,7 +119,7 @@ public class FactureSoldeesNonSoldeesPdf {
         doc.add(table);
         Table table2;
 
-        if (typeFacture.equals(StatutFacture.NON_SOLDE.toString())) {
+        if (typeFacture.equalsIgnoreCase(StatutFacture.NON_SOLDE.toString())) {
             table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f, 30f, 30, 30})).useAllAvailableWidth();
 
         } else {

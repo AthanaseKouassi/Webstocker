@@ -123,7 +123,7 @@ public class CreancePdf {
     }
 
     private Cell createCellCreance(String content, float width) {
-        Cell cell = new Cell().add(new Paragraph(content)).setWidth(width);
+        Cell cell = new Cell().add(new Paragraph(content != null ? content : "")).setWidth(width);
         Style style = new Style().setFontSize(9);
         cell.addStyle(style);
         cell.setPaddingTop(10f);

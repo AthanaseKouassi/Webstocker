@@ -11,16 +11,11 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
-import com.webstocker.domain.Produit;
 import com.webstocker.domain.Reglement;
-import com.webstocker.domain.enumeration.TypeVente;
 import com.webstocker.reports.newfeature.AllReportPdf;
-import com.webstocker.reports.newfeature.ChiffreAffaireParModePaiementPdf;
 import com.webstocker.reports.newfeature.CreanceParCommercialReportPdf;
 import com.webstocker.reports.newfeature.FactureSoldeesNonSoldeesPdf;
 import com.webstocker.repository.FactureRepository;
-import com.webstocker.repository.LigneBonDeSortieRepository;
-import com.webstocker.repository.ProduitRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,15 +36,13 @@ public class FacturePdfService {
 
 
     @Inject
-    private FactureRepository factureRepository;
-
-    @Inject
     FactureSoldeesNonSoldeesPdf FactureSoldeesNonSoldeesPdf;
     @Inject
     AllReportPdf allReportPdf;
     @Inject
     CreanceParCommercialReportPdf creanceParCommercialReportPdf;
-
+    @Inject
+    private FactureRepository factureRepository;
 
     public ByteArrayOutputStream generateFactureSoldeesNonSoldeesPdf(String typeFacture, String dateDebut, String dateFin) throws Exception {
 
@@ -78,7 +71,6 @@ public class FacturePdfService {
         }
 
 
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
@@ -98,7 +90,7 @@ public class FacturePdfService {
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
-        FactureSoldeesNonSoldeesPdf.addTableFacture(document, factures);
+        FactureSoldeesNonSoldeesPdf.addTableFacture(document, factures, typeFacture);
         document.add(new Paragraph(" "));
 
         document.close();
@@ -106,13 +98,9 @@ public class FacturePdfService {
     }
 
 
-
     public ByteArrayOutputStream generateFacturePaiementsPdf(Long factureId) throws Exception {
 
-
         Facture facture = factureRepository.findOne(factureId);
-
-
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -146,7 +134,6 @@ public class FacturePdfService {
 
 
         Facture facture = factureRepository.findByNumero(factureNumero);
-
 
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -198,7 +185,6 @@ public class FacturePdfService {
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(10f));
 
-        CreanceParCommercialReportPdf.TITRE_RECU = "CREANCES PAR COMMERCIAL";
 
         creanceParCommercialReportPdf.titreRecu(document);
         document.add(new Paragraph(" "));
@@ -206,9 +192,7 @@ public class FacturePdfService {
 
         Paragraph p = new Paragraph();
         p.add(creanceParCommercialReportPdf.createBorderedText(factures, dateD, dateF));
-//        p.add(chiffreAffaireParModePaiementPdf.createBorderedText2(ligneBonDeSorties));
         document.add(p);
-//        creanceParCommercialReportPdf.infoRecu(document, bonDeSortie);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -224,8 +208,6 @@ public class FacturePdfService {
         document.close();
         return outputStream;
     }
-
-
 
 
 }

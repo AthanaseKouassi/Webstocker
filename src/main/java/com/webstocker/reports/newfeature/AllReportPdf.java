@@ -53,10 +53,9 @@ public class AllReportPdf {
     }
 
     public void infoRecu(Document doc, Facture facture) {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        final String currentDateTime = dateFormat.format(new Date());
+        final String currentDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(facture.getDateFacture());
 
-        String info = "Date reglement :\n" +
+        String info = "Date facture :\n" +
             "Client :\n" +
             "Numero Facture :\n" +
             "Commercial :";
@@ -123,7 +122,7 @@ public class AllReportPdf {
 //        table.addHeaderCell(createHeaderCell("Produit", 60));
         table.addHeaderCell(createHeaderCell("Date encaissement", 10));
         table.addHeaderCell(createHeaderCell("Montant encaissé", 15));
-        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
+        table.addHeaderCell(createHeaderCell("Reste à solder", 10));
     }
 
 
@@ -173,8 +172,8 @@ public class AllReportPdf {
 //                table.addCell(createCellReglements(g.getProduit().getNomProduit(), 60));
 
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(g.getDateReglement()), 60).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
 //            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalRegle = totalRegle.add(new BigDecimal(g.getMontantReglement()));
 
@@ -201,9 +200,9 @@ public class AllReportPdf {
             if (Objects.nonNull(f.getNumero())) {
                 table.addCell(createCellReglements(f.getNumero(), 60));
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()), 60));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
             }
         }
@@ -225,7 +224,7 @@ public class AllReportPdf {
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
 //        table.addCell(createTotauxCell("").setPaddingTop(6));
-//        table.addCell(createTotauxCell(NumberFormat.getCurrencyInstance(new Locale("fr", "CI")).format(totalCAs))
+//        table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalCAs))
 //            .setTextAlignment(TextAlignment.RIGHT).setPaddingTop(6));
 //
 //    }

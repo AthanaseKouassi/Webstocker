@@ -68,6 +68,9 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
 
     Page<Facture> findByStatutFactureAndDateFactureBetween(StatutFacture statutfacture, LocalDate debut, LocalDate fin, Pageable pageable);
 
+
+    Page<Facture> findByDateFactureBetween(LocalDate debut, LocalDate fin, Pageable pageable);
+
     @Modifying
     @Query(value = "UPDATE facture  SET statut = ?1 WHERE id = ?2", nativeQuery = true)
     void updateStatutFacture(String statutFacture, Long idFacture);
@@ -104,7 +107,7 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     List<Facture> findByCommercialParPeriode(Long idClient, String dateDebut, String dateFin);
 
 
-    List<Facture> findByBonDeSortieDemandeur_IdAndDateFactureBetweenOrderByDateFacture(Long demendeurId, LocalDate dateDebut, LocalDate dateFin);
+    List<Facture> findByBonDeSortieDemandeurIdAndDateFactureBetweenOrderByDateFacture(Long demendeurId, LocalDate dateDebut, LocalDate dateFin);
 
     Facture findByNumero(String numero);
 

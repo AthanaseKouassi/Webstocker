@@ -15,8 +15,8 @@ import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequestMapping("/api/report")
-public class FactureNonSoldePdfResource {
-    private final Logger log = LoggerFactory.getLogger(FactureNonSoldePdfResource.class);
+public class FactureSoldeesNonSoldeesPdfResource {
+    private final Logger log = LoggerFactory.getLogger(FactureSoldeesNonSoldeesPdfResource.class);
 
     @Inject
     private FacturePdfService facturePdfService;
@@ -24,9 +24,10 @@ public class FactureNonSoldePdfResource {
     private CreancePdfService creancePdfService;
 
     /* NO USE */
-    @RequestMapping(value = "/facture/liste-factures-non-soldees/{dateDebut}/{dateFin}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> exportPdf(@PathVariable String dateDebut, @PathVariable String dateFin) throws Exception {
-        ByteArrayOutputStream pdfStream = facturePdfService.generateFactureNonSoldeesPdf(dateDebut, dateFin);
+    @RequestMapping(value = "/facture/liste-factures-soldees-non-soldees/{typeFacture}/{dateDebut}/{dateFin}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> exportPdf(@PathVariable String typeFacture, @PathVariable String dateDebut, @PathVariable String dateFin) throws Exception {
+
+        ByteArrayOutputStream pdfStream = facturePdfService.generateFactureSoldeesNonSoldeesPdf(typeFacture, dateDebut, dateFin);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));

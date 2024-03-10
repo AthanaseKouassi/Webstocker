@@ -336,5 +336,20 @@ public class FactureResource {
         return new ResponseEntity<>(pageNDto.getContent(), headers, HttpStatus.OK);
     }
 
-   
+
+    @RequestMapping(value = "facture/factures-all-page",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<FactureNDto>> getFactureAlls(@RequestParam String dateDebut, @RequestParam String dateFin,
+                                                                  Pageable pageable) throws URISyntaxException {
+        Page<Facture> page = factureService.getFactureAllsParPeriode(dateDebut, dateFin, pageable);
+        Page<FactureNDto> pageNDto = factureNDtoMapper.toFactureDTOsPage(page);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNDto, "/api/facture/factures-all-page");
+        headers.set("X-Total-Count", String.valueOf(pageNDto.getTotalElements()));
+        headers.set("X-Total-Page", String.valueOf(pageNDto.getTotalPages()));
+        return new ResponseEntity<>(pageNDto.getContent(), headers, HttpStatus.OK);
+    }
+
+
 }

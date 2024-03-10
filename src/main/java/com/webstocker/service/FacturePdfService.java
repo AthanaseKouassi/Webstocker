@@ -17,7 +17,7 @@ import com.webstocker.domain.enumeration.TypeVente;
 import com.webstocker.reports.newfeature.AllReportPdf;
 import com.webstocker.reports.newfeature.ChiffreAffaireParModePaiementPdf;
 import com.webstocker.reports.newfeature.CreanceParCommercialReportPdf;
-import com.webstocker.reports.newfeature.FactureNonSoldeesPdf;
+import com.webstocker.reports.newfeature.FactureSoldeesNonSoldeesPdf;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.LigneBonDeSortieRepository;
 import com.webstocker.repository.ProduitRepository;
@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,14 +44,14 @@ public class FacturePdfService {
     private FactureRepository factureRepository;
 
     @Inject
-    FactureNonSoldeesPdf factureNonSoldeesPdf;
+    FactureSoldeesNonSoldeesPdf FactureSoldeesNonSoldeesPdf;
     @Inject
     AllReportPdf allReportPdf;
     @Inject
     CreanceParCommercialReportPdf creanceParCommercialReportPdf;
 
 
-    public ByteArrayOutputStream generateFactureNonSoldeesPdf(String dateDebut, String dateFin) throws Exception {
+    public ByteArrayOutputStream generateFactureSoldeesNonSoldeesPdf(String typeFacture, String dateDebut, String dateFin) throws Exception {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateD = LocalDate.parse(dateDebut, formatter);
@@ -61,12 +62,21 @@ public class FacturePdfService {
             dateF
         );
 
-        List<Facture> factures = factureRepos.stream().filter(f -> {
-            return
-                f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(bs -> bs.getQuantite() * bs.getPrixDeVente()).sum()
+
+        List<Facture> factures = new ArrayList<>();
+
+        if (typeFacture.equalsIgnoreCase("NON_SOLDE")) { // NON_SOLDE
+            FactureSoldeesNonSoldeesPdf.TITRE_RECU = "FACTURES NON SOLDÉES";
+            factures = factureRepos.stream().filter(f -> f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()
                 >
-                f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum();
-        }).collect(Collectors.toList());
+                f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()).collect(Collectors.toList());
+        } else { // SOLDE
+            FactureSoldeesNonSoldeesPdf.TITRE_RECU = "FACTURES SOLDÉES";
+            factures = factureRepos.stream().filter(f -> f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()
+                <=
+                f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()).collect(Collectors.toList());
+        }
+
 
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -76,19 +86,19 @@ public class FacturePdfService {
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(10f));
 
-        factureNonSoldeesPdf.titreRecu(document);
+        FactureSoldeesNonSoldeesPdf.titreRecu(document);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
 
         Paragraph p = new Paragraph();
-        p.add(factureNonSoldeesPdf.createBorderedText(dateD, dateF));
+        p.add(FactureSoldeesNonSoldeesPdf.createBorderedText(dateD, dateF));
 //        p.add(chiffreAffaireParModePaiementPdf.createBorderedText2(ligneBonDeSorties));
         document.add(p);
         // recuPdf.infoRecu(document, bonDeSortie);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
-        factureNonSoldeesPdf.addTableFacture(document, factures);
+        FactureSoldeesNonSoldeesPdf.addTableFacture(document, factures);
         document.add(new Paragraph(" "));
 
         document.close();
@@ -174,14 +184,11 @@ public class FacturePdfService {
         LocalDate dateD = LocalDate.parse(dateDebut, formatter);
         LocalDate dateF = LocalDate.parse(dateFin, formatter);
 
-        List<Facture> factureRepos = factureRepository.findByBonDeSortieDemandeur_IdAndDateFactureBetweenOrderByDateFacture(commercialId, dateD, dateF);
+        List<Facture> factureRepos = factureRepository.findByBonDeSortieDemandeurIdAndDateFactureBetweenOrderByDateFacture(commercialId, dateD, dateF);
 
-        List<Facture> factures = factureRepos.stream().filter(f -> {
-            return
-                f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()
-                    >
-                    f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum();
-        }).collect(Collectors.toList());
+        List<Facture> factures = factureRepos.stream().filter(f -> f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()
+            >
+            f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()).collect(Collectors.toList());
 
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -191,7 +198,7 @@ public class FacturePdfService {
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(10f));
 
-        CreanceParCommercialReportPdf.TITRE_RECU = "ETAT DES CREANCES PAR COMMERCIAL";
+        CreanceParCommercialReportPdf.TITRE_RECU = "CREANCES PAR COMMERCIAL";
 
         creanceParCommercialReportPdf.titreRecu(document);
         document.add(new Paragraph(" "));
@@ -207,7 +214,7 @@ public class FacturePdfService {
         document.add(new Paragraph(" "));
         creanceParCommercialReportPdf.addTableFactures(document, factures);
 
-        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30, 30})).useAllAvailableWidth();
+        Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30, 30, 30})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         creanceParCommercialReportPdf.addCellTotalHT(table2);
         document.add(new Paragraph(" "));

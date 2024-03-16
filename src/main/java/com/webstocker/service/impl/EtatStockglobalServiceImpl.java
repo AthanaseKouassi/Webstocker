@@ -54,9 +54,11 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
         Long montantVente = 0L;
         Long quantiteGlobalLivre = 0L;
         Long quantiteGlobaleProduitEnStock = 0L;
-
         Long quantiteArrivageDateFin = 0L;
         Long quantiteTotalEnStock = 0L;
+
+        Long qteStockInitial = 0L;
+
 
         List<EtatStockGlobalAimasWrapper> etatStockGlobalList = new LinkedList<>();
 
@@ -197,7 +199,10 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             etatStockGlobal.setQuantiteLivre(ql);
             quantiteGlobaleProduitEnStock = quantiteArrivageDateFin - (qteFinVendue + qteFinPromotion + qteFinPerte);
 
-            etatStockGlobal.setQuantiteInitial(quantiteGlobaleProduitEnStock);
+            qteStockInitial = quantiteGlobaleProduitEnStock - quantiteArrivageDateFin + (qteFinVendue + qteFinPromotion + qteFinPerte);
+
+
+            etatStockGlobal.setQuantiteInitial(qteStockInitial);
             etatStockGlobal.setQuantiteTotalEnStock(quantiteGlobaleProduitEnStock);
 
             qteAllLivre = 0;

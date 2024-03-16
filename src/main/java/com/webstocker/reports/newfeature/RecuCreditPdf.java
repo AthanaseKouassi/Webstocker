@@ -12,12 +12,15 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
-import com.webstocker.domain.*;
+import com.webstocker.domain.BonDeSortie;
+import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Produit;
+import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
-import com.webstocker.utilitaires.NombreEnChiffre;
+import com.webstocker.utilitaires.OperationString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +44,12 @@ public class RecuCreditPdf {
     private ReglementRepository reglementRepository;
     @Autowired
     private FactureRepository factureRepository;
+    @Autowired
+    private OperationString operationString;
 
     private BigDecimal totalSolde = BigDecimal.ZERO;
     private BigDecimal totalResteSolde = BigDecimal.ZERO;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRENCH);
 
     public void titreRecu(Document doc) {
         Table table = new Table(UnitValue.createPercentArray(new float[]{25, 50f, 25f})).useAllAvailableWidth();
@@ -61,7 +66,7 @@ public class RecuCreditPdf {
     public Paragraph createBorderedText() {
         Paragraph container = new Paragraph();
 
-        String info = "Date reglement :             \n" +
+        String info = "Date facture :             \n" +
             "Client :             \n" +
             "Numero Facture :             \n" +
             "Commercial :             ";
@@ -78,10 +83,11 @@ public class RecuCreditPdf {
         Paragraph container = new Paragraph();
         Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
 
-        String repInfo = facture.getDateFacture() + "\n" +
+        String repInfo = formatter.format(facture.getDateFacture()) + "\n" +
             facture.getClient().getNomClient() + "\n" +
             bonDeSortie.getNumeroFactureNormalise() + "\n" +
-            bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();
+            operationString.capitalize(bonDeSortie.getDemandeur().getLastName()) + " "
+            + operationString.capitalize(bonDeSortie.getDemandeur().getFirstName());
 
         Text two = new Text(repInfo);
         container.setBorder(new SolidBorder(ColorConstants.BLACK, 0f));
@@ -101,8 +107,8 @@ public class RecuCreditPdf {
         Table table2 = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
-        doc.add(table2);
-        doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalSolde.intValue())) + " Francs CFA"));
+        // doc.add(table2);
+        // doc.add(new Paragraph("Montant réglé en lettre : " + StringUtils.capitalize(NombreEnChiffre.getLettre(totalSolde.intValue())) + " Francs CFA"));
     }
 
     private void addHeadTable(Table table) {
@@ -120,6 +126,7 @@ public class RecuCreditPdf {
             .collect(Collectors.groupingBy(Reglement::getProduit));
 
         double montantSolde = 0;
+        double totalReglementProduit = 0;
 
         for (Map.Entry<Produit, List<Reglement>> entry : reglementsParProduit.entrySet()) {
             Produit produit = entry.getKey();
@@ -130,7 +137,9 @@ public class RecuCreditPdf {
 
             double montantTotal = 0;
             int k = 0;
+            double regleTotal = 0;
             for (Reglement reg : reglementsDuProduit) {
+
                 if (k == 0) {
                     montantTotal = reg.getFacture().getBonDeSortie().getLigneBonDeSorties().stream()
                         .filter(ligne -> ligne.getProduit().equals(produit))
@@ -143,6 +152,7 @@ public class RecuCreditPdf {
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(reg.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(montantSolde), 40).setTextAlignment(TextAlignment.RIGHT));
                 totalRegle = totalRegle.add(new BigDecimal(reg.getMontantReglement()));
+                regleTotal = regleTotal + reg.getMontantReglement();
 
                 if (k == reglementsDuProduit.size() - 1) {
                     totalAsolde = totalAsolde.add(BigDecimal.valueOf(montantSolde));
@@ -150,6 +160,8 @@ public class RecuCreditPdf {
                 montantTotal = montantSolde;
                 k++;
             }
+            table.addCell(addCellNomProduit("SOUS-TOTAL " +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t\t\t\t\t\t" + NumberFormat.getInstance().format(regleTotal), 60));
         }
         totalSolde = totalRegle;
         totalResteSolde = totalAsolde;

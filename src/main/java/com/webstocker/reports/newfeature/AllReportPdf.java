@@ -5,11 +5,18 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
-import com.webstocker.domain.*;
+import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Produit;
+import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -31,14 +38,14 @@ import java.util.stream.Collectors;
 @Component
 public class AllReportPdf {
 
-    public static String TITRE_RECU = "";
     private static final String PATTERN_DATE = "dd MMMM yyyy";
-
+    public static String TITRE_RECU = "";
     @Autowired
     private ReglementRepository reglementRepository;
     @Autowired
     private FactureRepository factureRepository;
 
+    private BigDecimal Montantfacture = BigDecimal.ZERO;
     private BigDecimal totalCAs = BigDecimal.ZERO;
 
     private BigDecimal totalSolde = BigDecimal.ZERO;
@@ -53,7 +60,7 @@ public class AllReportPdf {
     }
 
     public void infoRecu(Document doc, Facture facture) {
-        final String currentDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(facture.getDateFacture());
+        final String currentDateTime = DateTimeFormatter.ofPattern(PATTERN_DATE).format(facture.getDateFacture());
 
         String info = "Date facture :\n" +
             "Client :\n" +
@@ -62,7 +69,8 @@ public class AllReportPdf {
         String repInfo = currentDateTime + "\n" +
             facture.getClient().getNomClient() + "\n" +
             facture.getBonDeSortie().getNumeroFactureNormalise() + "\n" +
-            facture.getBonDeSortie().getDemandeur().getLastName() + " " + facture.getBonDeSortie().getDemandeur().getFirstName();
+            facture.getBonDeSortie().getDemandeur().getLastName().toUpperCase() + " " +
+            facture.getBonDeSortie().getDemandeur().getFirstName().toUpperCase();
 
         Table table = new Table(UnitValue.createPercentArray(new float[]{10, 12,})).useAllAvailableWidth();
         table.addCell(createCellInfoRecu(info, 10));
@@ -101,10 +109,17 @@ public class AllReportPdf {
         addHeadTable(table);
         addTableRowFacture(facture, table);
         doc.add(table);
+
         Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30, 30})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
-        doc.add(table2);
+
+        doc.add(new Paragraph(""));
+        doc.add(new Paragraph(""));
+
+        Table table3 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f,})).useAllAvailableWidth();
+        addTableResultat(table3);
+        doc.add(table3);
     }
 
     public void addTableFactures(Document doc, List<Facture> factures) {
@@ -116,6 +131,7 @@ public class AllReportPdf {
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
+
     }
 
     private void addHeadTable(Table table) {
@@ -140,10 +156,13 @@ public class AllReportPdf {
 
         BigDecimal totalRegle = BigDecimal.ZERO;
         BigDecimal totalAsolde = BigDecimal.ZERO;
+        double mont = facture.getBonDeSortie().getLigneBonDeSorties().stream()
+            .mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
 
         Map<Produit, List<Reglement>> reglementsParProduit = facture.getReglements().stream()
             .collect(Collectors.groupingBy(Reglement::getProduit));
         double montantSolde = 0;
+
 
         for (Map.Entry<Produit, List<Reglement>> entry : reglementsParProduit.entrySet()) {
 
@@ -155,8 +174,9 @@ public class AllReportPdf {
 
             double montantTotal = 0;
             int k = 0;
-
+            double regleTotal = 0;
             Long sumReglement = 0L;
+
             for (Reglement g : reglementsDuProduit) {
                 if (k == 0) {
                     montantTotal = facture.getBonDeSortie().getLigneBonDeSorties().stream()
@@ -164,6 +184,7 @@ public class AllReportPdf {
                         .mapToDouble(LigneBonDeSortie::getPrixDeVente)
                         .sum();
                 }
+                totalCA = new BigDecimal(montantTotal);
                 montantSolde = montantTotal - g.getMontantReglement();
 
                 sumReglement += g.getMontantReglement();
@@ -173,9 +194,11 @@ public class AllReportPdf {
 
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(g.getDateReglement()), 60).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream()
+                    .filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
 //            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalRegle = totalRegle.add(new BigDecimal(g.getMontantReglement()));
+                regleTotal = regleTotal + g.getMontantReglement();
 
                 if (k == reglementsDuProduit.size() - 1) {
                     totalAsolde = totalAsolde.add(BigDecimal.valueOf(montantSolde));
@@ -183,11 +206,9 @@ public class AllReportPdf {
                 montantTotal = montantSolde;
                 k++;
             }
-//        totalCAs = totalCA;
-
 
         }
-
+        Montantfacture = new BigDecimal(mont);
         totalSolde = totalRegle;
         totalResteSolde = totalAsolde;
 
@@ -210,6 +231,15 @@ public class AllReportPdf {
 
     }
 
+    private void addTableResultat(Table table) {
+        table.addCell(createTotauxCells("TOTAL FACTURE"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(Montantfacture) + " FCFA"));
+        table.addCell(createTotauxCells("TOTAL ENCAISSE"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(totalSolde) + " FCFA"));
+        table.addCell(createTotauxCells("RESTE A PAYER"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(totalResteSolde) + " FCFA"));
+    }
+
     private void addCellTotalHT(Table table) {
         table.addCell(createTotauxCell("TOTAL", 60)).setHeight(20);
         table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalSolde), 40)
@@ -229,18 +259,32 @@ public class AllReportPdf {
 //
 //    }
 
-//    private Cell createTotauxCell(String content) {
-//        Cell cell = new Cell()
-//            .add(new Paragraph(content))
-//            .setWidth(30)
+    private Cell createTotauxCellValeur(String content) {
+        Cell cell = new Cell()
+            .add(new Paragraph(content))
+            .setWidth(30);
 //            .setBorderRight(Border.NO_BORDER)
 //            .setBorderLeft(Border.NO_BORDER)
 //            .setBorderTop(Border.NO_BORDER);
-//
-//        Style style = new Style().setFontSize(10);
-//        cell.addStyle(style);
-//        return cell;
-//    }
+
+
+        Style style = new Style().setFontSize(10);
+        cell.addStyle(style);
+        return cell;
+    }
+
+    private Cell createTotauxCells(String content) {
+        Cell cell = new Cell(1, 1)
+            .add(new Paragraph(content))
+            .setWidth(30);
+//            .setBorderRight(Border.NO_BORDER)
+//            .setBorderLeft(Border.NO_BORDER)
+//            .setBorderTop(Border.NO_BORDER);
+
+        Style style = new Style().setFontSize(10);
+        cell.addStyle(style);
+        return cell;
+    }
 
 
     private Cell createTotauxCell(String content, float with) {
@@ -287,7 +331,8 @@ public class AllReportPdf {
 
     private Cell createCellInfoRecu(String content, float width) {
         Cell cell = new Cell().add(new Paragraph(content)).setWidth(width);
-        Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
+        Style style = new Style().setFontSize(12);
+//        Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style);
         return cell;
     }

@@ -5,7 +5,11 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
@@ -25,8 +29,10 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,9 +40,8 @@ import java.util.stream.Collectors;
 @Component
 public class CreanceParCommercialReportPdf {
 
-    public static String TITRE_RECU = "";
     private static final String PATTERN_DATE = "dd MMMM yyyy";
-
+    public static String TITRE_RECU = "CREANCES PAR COMMERCIAL";
     @Autowired
     private ReglementRepository reglementRepository;
     @Autowired
@@ -105,7 +110,7 @@ public class CreanceParCommercialReportPdf {
         Paragraph container = new Paragraph();
 
         String info = "Commercial :   " + (!factures.isEmpty() ? (factures.get(0).getBonDeSortie().getDemandeur().getFirstName().toUpperCase() + " " + factures.get(0).getBonDeSortie().getDemandeur().getLastName().toUpperCase()) : "") + "\n" +
-        "Date début :   " + (DateTimeFormatter.ofPattern(PATTERN_DATE).format(dateDebut)) + "\n" +
+            "Date début :   " + (DateTimeFormatter.ofPattern(PATTERN_DATE).format(dateDebut)) + "\n" +
             "Date fin :   " + (DateTimeFormatter.ofPattern(PATTERN_DATE).format(dateFin)) + "\n";
         ;
 
@@ -147,7 +152,7 @@ public class CreanceParCommercialReportPdf {
 //        table.addHeaderCell(createHeaderCell("N° facture", 10));
 //        table.addHeaderCell(createHeaderCell("Client", 10));
         table.addHeaderCell(createHeaderCell("Produit", 10));
-        table.addHeaderCell(createHeaderCell("Prix de vente (F CFA)", 10));
+        table.addHeaderCell(createHeaderCell("Total de la vente (F CFA)", 10));
         table.addHeaderCell(createHeaderCell("Montant encaissé (F CFA)", 15));
         table.addHeaderCell(createHeaderCell("Reste à solder (F CFA)", 10));
     }
@@ -229,7 +234,7 @@ public class CreanceParCommercialReportPdf {
 
 
         for (Facture f : factures) {
-            Map<Produit, List<LigneBonDeSortie>> ligneBonDeSortiesParProduit =  f.getBonDeSortie().getLigneBonDeSorties().stream().collect(Collectors.groupingBy(LigneBonDeSortie::getProduit));
+            Map<Produit, List<LigneBonDeSortie>> ligneBonDeSortiesParProduit = f.getBonDeSortie().getLigneBonDeSorties().stream().collect(Collectors.groupingBy(LigneBonDeSortie::getProduit));
 
             table.addCell(addCellCollapse("N° facture: " + f.getNumero() + ",   Date: " + DateTimeFormatter.ofPattern(PATTERN_DATE).format(f.getDateFacture()) + ",   Client: " + f.getClient().getNomClient(), 60).setBold());
 
@@ -243,7 +248,6 @@ public class CreanceParCommercialReportPdf {
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 totalSoldeFact = totalSoldeFact.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
                 totalResteSoldeFact = totalResteSoldeFact.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
-
 
 
                 totalSolde = totalSolde.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
@@ -261,7 +265,6 @@ public class CreanceParCommercialReportPdf {
         }
 
     }
-
 
 
     public void addCellTotalHT(Table table) {

@@ -68,26 +68,30 @@ public class ListeClientParCommercialPdf {
     }
 
 
-    public void addTableRecu(Document doc, List<Client> lstClients) {
+    public void addTableRecu(Document doc, List<Client> lstClients, String dateDebut, String dateFin) {
 
-        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f})).useAllAvailableWidth();
+        Table table = new Table(UnitValue.createPercentArray(new float[]{25, 20, 20f, 20f})).useAllAvailableWidth();
         addHeadTable(table);
-        addTableRow(lstClients, table);
+        addTableRow(lstClients, table, dateDebut, dateFin);
         doc.add(table);
     }
 
     private void addHeadTable(Table table) {
         table.addHeaderCell(createHeaderCell("Nom ", 60));
         table.addHeaderCell(createHeaderCell("Contact", 15));
-        table.addHeaderCell(createHeaderCell("adresse postale", 10));
+        table.addHeaderCell(createHeaderCell("Adresse postale", 10));
+        table.addHeaderCell(createHeaderCell("Nombre Transaction", 10));
     }
 
-    private void addTableRow(List<Client> lstClients, Table table) {
+    private void addTableRow(List<Client> lstClients, Table table, String dateDebut, String dateFin) {
         Set<Client> uniqueClients = new HashSet<>(lstClients);
         for (Client clt : uniqueClients) {
+            long nombreTransaction = factureRepository.findByClientParPeriode(clt.getId(), dateDebut, dateFin).size();
+            log.info("OUHH nombre transaction :::{}", nombreTransaction);
             table.addCell(createCellTableau(clt.getNomClient(), 60));
             table.addCell(createCellTableau(clt.getTelephoneClient() != null ? clt.getTelephoneClient() : "", 40).setTextAlignment(TextAlignment.RIGHT));
             table.addCell(createCellTableau(clt.getBoitepostale() != null ? clt.getBoitepostale() : "", 40).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCellTableau(String.valueOf(nombreTransaction), 40).setTextAlignment(TextAlignment.RIGHT));
         }
     }
 

@@ -81,7 +81,7 @@ public class CreanceClientPdf {
         table.addHeaderCell(createHeaderCell("Produit", 15));
         table.addHeaderCell(createHeaderCell("Montant produit", 10));
         table.addHeaderCell(createHeaderCell("Montant encaissé", 10));
-        table.addHeaderCell(createHeaderCell("Solde produit", 10));
+        table.addHeaderCell(createHeaderCell("Reste à payer", 10));
     }
 
     private void addTableRow(List<CreanceDto> listCreances, Table table) {

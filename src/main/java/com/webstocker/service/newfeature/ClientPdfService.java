@@ -49,7 +49,7 @@ public class ClientPdfService {
         document.add(p);
         document.add(new Paragraph(" "));
 
-        listeClientParCommercialPdf.addTableRecu(document, listClient);
+        listeClientParCommercialPdf.addTableRecu(document, listClient, dateDebut, dateFin);
 
         document.close();
         return outputStream;

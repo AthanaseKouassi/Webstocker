@@ -5,11 +5,18 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
-import com.webstocker.domain.*;
+import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Produit;
+import com.webstocker.domain.Reglement;
 import com.webstocker.repository.FactureRepository;
 import com.webstocker.repository.ReglementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -31,9 +38,8 @@ import java.util.stream.Collectors;
 @Component
 public class AllReportPdf {
 
-    public static String TITRE_RECU = "";
     private static final String PATTERN_DATE = "dd MMMM yyyy";
-
+    public static String TITRE_RECU = "";
     @Autowired
     private ReglementRepository reglementRepository;
     @Autowired
@@ -53,7 +59,7 @@ public class AllReportPdf {
     }
 
     public void infoRecu(Document doc, Facture facture) {
-        final String currentDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(facture.getDateFacture());
+        final String currentDateTime = DateTimeFormatter.ofPattern(PATTERN_DATE).format(facture.getDateFacture());
 
         String info = "Date facture :\n" +
             "Client :\n" +
@@ -62,7 +68,8 @@ public class AllReportPdf {
         String repInfo = currentDateTime + "\n" +
             facture.getClient().getNomClient() + "\n" +
             facture.getBonDeSortie().getNumeroFactureNormalise() + "\n" +
-            facture.getBonDeSortie().getDemandeur().getLastName() + " " + facture.getBonDeSortie().getDemandeur().getFirstName();
+            facture.getBonDeSortie().getDemandeur().getLastName().toUpperCase() + " " +
+            facture.getBonDeSortie().getDemandeur().getFirstName().toUpperCase();
 
         Table table = new Table(UnitValue.createPercentArray(new float[]{10, 12,})).useAllAvailableWidth();
         table.addCell(createCellInfoRecu(info, 10));
@@ -104,7 +111,7 @@ public class AllReportPdf {
         Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30, 30})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
-        doc.add(table2);
+        //doc.add(table2);
     }
 
     public void addTableFactures(Document doc, List<Facture> factures) {
@@ -155,6 +162,7 @@ public class AllReportPdf {
 
             double montantTotal = 0;
             int k = 0;
+            double regleTotal = 0;
 
             Long sumReglement = 0L;
             for (Reglement g : reglementsDuProduit) {
@@ -176,6 +184,7 @@ public class AllReportPdf {
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
 //            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalRegle = totalRegle.add(new BigDecimal(g.getMontantReglement()));
+                regleTotal = regleTotal + g.getMontantReglement();
 
                 if (k == reglementsDuProduit.size() - 1) {
                     totalAsolde = totalAsolde.add(BigDecimal.valueOf(montantSolde));
@@ -184,8 +193,9 @@ public class AllReportPdf {
                 k++;
             }
 //        totalCAs = totalCA;
-
-
+            table.addCell(addCellNomProduit("SOUS-TOTAL " +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t\t\t\t\t\t" +
+                NumberFormat.getInstance().format(regleTotal), 60));
         }
 
         totalSolde = totalRegle;
@@ -287,7 +297,8 @@ public class AllReportPdf {
 
     private Cell createCellInfoRecu(String content, float width) {
         Cell cell = new Cell().add(new Paragraph(content)).setWidth(width);
-        Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
+        Style style = new Style().setFontSize(12);
+//        Style style = new Style().setFontSize(12).setBold().setFontColor(ColorConstants.BLACK);
         cell.addStyle(style);
         return cell;
     }

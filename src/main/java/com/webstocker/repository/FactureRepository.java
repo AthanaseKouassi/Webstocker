@@ -106,11 +106,13 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
         "AND f.date_facture BETWEEN ?2 AND ?3 ", nativeQuery = true)
     List<Facture> findByCommercialParPeriode(Long idClient, String dateDebut, String dateFin);
 
-
     List<Facture> findByBonDeSortieDemandeurIdAndDateFactureBetweenOrderByDateFacture(Long demendeurId, LocalDate dateDebut, LocalDate dateFin);
 
     Facture findByNumero(String numero);
 
+    @Query(value = " SELECT DISTINCT f.* FROM facture f " +
+        "WHERE f.client_id = ?1 AND f.date_facture BETWEEN ?2 AND ?3 ", nativeQuery = true)
+    List<Facture> findByClientParPeriode(Long idClient, String dateDebut, String dateFin);
 
 
 }

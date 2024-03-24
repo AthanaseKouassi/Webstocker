@@ -39,6 +39,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
         "inner join facture f on f.client_id = c.id \n" +
         "inner join bon_de_sortie bds on bds.id = f.bon_de_sortie_id \n" +
         "where bds.demandeur_id = ?1 and bds.daate_creation between ?2 and ?3", nativeQuery = true)
-    List<Client> getClientParCommercialAndPeriode(Long idUser, String dateDebut, String dateFi);
+    List<Client> getClientParCommercialAndPeriode(Long idUser, String dateDebut, String dateFin);
+
 
 }

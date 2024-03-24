@@ -45,6 +45,7 @@ public class AllReportPdf {
     @Autowired
     private FactureRepository factureRepository;
 
+    private BigDecimal Montantfacture = BigDecimal.ZERO;
     private BigDecimal totalCAs = BigDecimal.ZERO;
 
     private BigDecimal totalSolde = BigDecimal.ZERO;
@@ -108,10 +109,17 @@ public class AllReportPdf {
         addHeadTable(table);
         addTableRowFacture(facture, table);
         doc.add(table);
+
         Table table2 = new Table(UnitValue.createPercentArray(new float[]{30f, 30, 30})).useAllAvailableWidth();
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
-        //doc.add(table2);
+
+        doc.add(new Paragraph(""));
+        doc.add(new Paragraph(""));
+
+        Table table3 = new Table(UnitValue.createPercentArray(new float[]{30f, 30f,})).useAllAvailableWidth();
+        addTableResultat(table3);
+        doc.add(table3);
     }
 
     public void addTableFactures(Document doc, List<Facture> factures) {
@@ -123,6 +131,7 @@ public class AllReportPdf {
         table2.setHorizontalAlignment(HorizontalAlignment.LEFT);
         addCellTotalHT(table2);
         doc.add(table2);
+
     }
 
     private void addHeadTable(Table table) {
@@ -147,10 +156,13 @@ public class AllReportPdf {
 
         BigDecimal totalRegle = BigDecimal.ZERO;
         BigDecimal totalAsolde = BigDecimal.ZERO;
+        double mont = facture.getBonDeSortie().getLigneBonDeSorties().stream()
+            .mapToDouble(LigneBonDeSortie::getPrixDeVente).sum();
 
         Map<Produit, List<Reglement>> reglementsParProduit = facture.getReglements().stream()
             .collect(Collectors.groupingBy(Reglement::getProduit));
         double montantSolde = 0;
+
 
         for (Map.Entry<Produit, List<Reglement>> entry : reglementsParProduit.entrySet()) {
 
@@ -163,8 +175,8 @@ public class AllReportPdf {
             double montantTotal = 0;
             int k = 0;
             double regleTotal = 0;
-
             Long sumReglement = 0L;
+
             for (Reglement g : reglementsDuProduit) {
                 if (k == 0) {
                     montantTotal = facture.getBonDeSortie().getLigneBonDeSorties().stream()
@@ -172,6 +184,7 @@ public class AllReportPdf {
                         .mapToDouble(LigneBonDeSortie::getPrixDeVente)
                         .sum();
                 }
+                totalCA = new BigDecimal(montantTotal);
                 montantSolde = montantTotal - g.getMontantReglement();
 
                 sumReglement += g.getMontantReglement();
@@ -181,7 +194,8 @@ public class AllReportPdf {
 
                 table.addCell(createCellReglements(DateTimeFormatter.ofPattern(PATTERN_DATE).format(g.getDateReglement()), 60).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(g.getMontantReglement()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream().filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(facture.getBonDeSortie().getLigneBonDeSorties().stream()
+                    .filter((l) -> l.getProduit().getId().equals(g.getProduit().getId())).findFirst().get().getPrixDeVente() - sumReglement), 40).setTextAlignment(TextAlignment.RIGHT));
 //            totalCA = totalCA.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()));
                 totalRegle = totalRegle.add(new BigDecimal(g.getMontantReglement()));
                 regleTotal = regleTotal + g.getMontantReglement();
@@ -192,12 +206,9 @@ public class AllReportPdf {
                 montantTotal = montantSolde;
                 k++;
             }
-//        totalCAs = totalCA;
-            table.addCell(addCellNomProduit("SOUS-TOTAL " +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t\t\t\t\t\t" +
-                NumberFormat.getInstance().format(regleTotal), 60));
-        }
 
+        }
+        Montantfacture = new BigDecimal(mont);
         totalSolde = totalRegle;
         totalResteSolde = totalAsolde;
 
@@ -220,6 +231,15 @@ public class AllReportPdf {
 
     }
 
+    private void addTableResultat(Table table) {
+        table.addCell(createTotauxCells("TOTAL FACTURE"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(Montantfacture) + " FCFA"));
+        table.addCell(createTotauxCells("TOTAL ENCAISSE"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(totalSolde) + " FCFA"));
+        table.addCell(createTotauxCells("RESTE A PAYER"));
+        table.addCell(createTotauxCellValeur(NumberFormat.getInstance().format(totalResteSolde) + " FCFA"));
+    }
+
     private void addCellTotalHT(Table table) {
         table.addCell(createTotauxCell("TOTAL", 60)).setHeight(20);
         table.addCell(createTotauxCell(NumberFormat.getInstance().format(totalSolde), 40)
@@ -239,18 +259,32 @@ public class AllReportPdf {
 //
 //    }
 
-//    private Cell createTotauxCell(String content) {
-//        Cell cell = new Cell()
-//            .add(new Paragraph(content))
-//            .setWidth(30)
+    private Cell createTotauxCellValeur(String content) {
+        Cell cell = new Cell()
+            .add(new Paragraph(content))
+            .setWidth(30);
 //            .setBorderRight(Border.NO_BORDER)
 //            .setBorderLeft(Border.NO_BORDER)
 //            .setBorderTop(Border.NO_BORDER);
-//
-//        Style style = new Style().setFontSize(10);
-//        cell.addStyle(style);
-//        return cell;
-//    }
+
+
+        Style style = new Style().setFontSize(10);
+        cell.addStyle(style);
+        return cell;
+    }
+
+    private Cell createTotauxCells(String content) {
+        Cell cell = new Cell(1, 1)
+            .add(new Paragraph(content))
+            .setWidth(30);
+//            .setBorderRight(Border.NO_BORDER)
+//            .setBorderLeft(Border.NO_BORDER)
+//            .setBorderTop(Border.NO_BORDER);
+
+        Style style = new Style().setFontSize(10);
+        cell.addStyle(style);
+        return cell;
+    }
 
 
     private Cell createTotauxCell(String content, float with) {

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -34,6 +35,7 @@ import java.util.List;
 public class RecuPdf {
 
     private static final String TITRE_RECU = "RECU DE PAIEMENT CLIENT ";
+    private static final String PATTERN_DATE = "dd MMMM yyyy";
 
     @Autowired
     private ReglementRepository reglementRepository;
@@ -75,7 +77,7 @@ public class RecuPdf {
         Paragraph container = new Paragraph();
         Facture facture = factureRepository.findByBonDeSortie(bonDeSortie);
 
-        String repInfo = facture.getDateFacture() + "\n" +
+        String repInfo = DateTimeFormatter.ofPattern(PATTERN_DATE).format(facture.getDateFacture()) + "\n" +
             facture.getClient().getNomClient() + "\n" +
             bonDeSortie.getNumeroFactureNormalise() + "\n" +
             bonDeSortie.getDemandeur().getLastName() + " " + bonDeSortie.getDemandeur().getFirstName();

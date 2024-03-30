@@ -228,10 +228,8 @@ public class CreanceParCommercialReportPdf {
 
     private void addTableRow(List<Facture> factures, Table table) {
 
-
         totalSolde = BigDecimal.ZERO;
         totalResteSolde = BigDecimal.ZERO;
-
 
         for (Facture f : factures) {
             Map<Produit, List<LigneBonDeSortie>> ligneBonDeSortiesParProduit = f.getBonDeSortie().getLigneBonDeSorties().stream().collect(Collectors.groupingBy(LigneBonDeSortie::getProduit));
@@ -243,7 +241,9 @@ public class CreanceParCommercialReportPdf {
             BigDecimal totalResteSoldeFact = BigDecimal.ZERO;
             for (Map.Entry<Produit, List<LigneBonDeSortie>> entry : ligneBonDeSortiesParProduit.entrySet()) {
                 table.addCell(createCellReglements(entry.getKey().getNomProduit(), 60));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 60).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream()
+                    .filter(d -> d.getProduit().getId().equals(entry.getKey().getId()))
+                    .map(LigneBonDeSortie::getPrixDeVente).findFirst().orElse(0L)), 60).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
                 totalSoldeFact = totalSoldeFact.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));

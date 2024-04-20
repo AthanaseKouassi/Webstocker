@@ -242,16 +242,27 @@ public class CreanceParCommercialReportPdf {
             BigDecimal totalSoldeFact = BigDecimal.ZERO;
             BigDecimal totalResteSoldeFact = BigDecimal.ZERO;
             for (Map.Entry<Produit, List<LigneBonDeSortie>> entry : ligneBonDeSortiesParProduit.entrySet()) {
+
+                final long prixdevente = f.getBonDeSortie().getLigneBonDeSorties().stream()
+                    .filter(d -> d.getProduit().getId().equals(entry.getKey().getId()))
+                    .map(LigneBonDeSortie::getPrixDeVente).findFirst().orElse(0L);
+
+                final long montantReglement = f.getReglements().stream()
+                    .filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId()))
+                    .mapToLong(Reglement::getMontantReglement).sum();
+
                 table.addCell(createCellReglements(entry.getKey().getNomProduit(), 60));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum()), 60).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(createCellReglements(NumberFormat.getInstance().format(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()), 40).setTextAlignment(TextAlignment.RIGHT));
-                totalSoldeFact = totalSoldeFact.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
-                totalResteSoldeFact = totalResteSoldeFact.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(prixdevente), 60).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(montantReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(createCellReglements(NumberFormat.getInstance().format(prixdevente - montantReglement), 40).setTextAlignment(TextAlignment.RIGHT));
+
+                totalSoldeFact = totalSoldeFact.add(BigDecimal.valueOf(montantReglement));
+
+                totalResteSoldeFact = totalResteSoldeFact.add(BigDecimal.valueOf(prixdevente - montantReglement));
 
 
-                totalSolde = totalSolde.add(BigDecimal.valueOf(f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
-                totalResteSolde = totalResteSolde.add(BigDecimal.valueOf(f.getBonDeSortie().getLigneBonDeSorties().stream().mapToDouble(LigneBonDeSortie::getPrixDeVente).sum() - f.getReglements().stream().filter(reg -> reg.getProduit().getId().equals(entry.getKey().getId())).mapToLong(Reglement::getMontantReglement).sum()));
+                totalSolde = totalSolde.add(BigDecimal.valueOf(montantReglement));
+                totalResteSolde = totalResteSolde.add(BigDecimal.valueOf(prixdevente - montantReglement));
             }
 
 

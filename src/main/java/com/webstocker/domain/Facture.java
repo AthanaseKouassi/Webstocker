@@ -2,11 +2,21 @@ package com.webstocker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webstocker.domain.enumeration.newfeature.StatutFacture;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,7 +29,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "facture")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "facture")
 public class Facture implements Serializable {
 
@@ -45,9 +54,8 @@ public class Facture implements Serializable {
     @ManyToOne
     private Client client;
 
-    @OneToMany(mappedBy = "facture")
+    @OneToMany(mappedBy = "facture", fetch = FetchType.LAZY)
     @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Reglement> reglements = new HashSet<>();
 
     @OneToOne

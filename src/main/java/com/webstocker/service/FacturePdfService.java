@@ -17,6 +17,8 @@ import com.webstocker.reports.newfeature.CreanceParCommercialReportPdf;
 import com.webstocker.reports.newfeature.FactureSoldeesNonSoldeesPdf;
 import com.webstocker.repository.FactureRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class FacturePdfService {
 
+    private final Logger log = LoggerFactory.getLogger(FacturePdfService.class);
 
     @Inject
     FactureSoldeesNonSoldeesPdf FactureSoldeesNonSoldeesPdf;
@@ -50,11 +53,8 @@ public class FacturePdfService {
         LocalDate dateD = LocalDate.parse(dateDebut, formatter);
         LocalDate dateF = LocalDate.parse(dateFin, formatter);
 
-        List<Facture> factureRepos = factureRepository.findByDateFactureBetweenOrderByDateFactureDesc(
-            dateD,
-            dateF
-        );
-
+        List<Facture> factureRepos = factureRepository
+            .findByDateFactureBetweenOrderByDateFactureDesc(dateD, dateF);
 
         List<Facture> factures = new ArrayList<>();
 
@@ -70,7 +70,6 @@ public class FacturePdfService {
                 f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()).collect(Collectors.toList());
         }
 
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
@@ -84,9 +83,7 @@ public class FacturePdfService {
 
         Paragraph p = new Paragraph();
         p.add(FactureSoldeesNonSoldeesPdf.createBorderedText(dateD, dateF));
-//        p.add(chiffreAffaireParModePaiementPdf.createBorderedText2(ligneBonDeSorties));
         document.add(p);
-        // recuPdf.infoRecu(document, bonDeSortie);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -101,7 +98,6 @@ public class FacturePdfService {
     public ByteArrayOutputStream generateFacturePaiementsPdf(Long factureId) throws Exception {
 
         Facture facture = factureRepository.findOne(factureId);
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         AllReportPdf.TITRE_RECU = "DETAIL PAIEMENT FACTURE";
@@ -116,8 +112,6 @@ public class FacturePdfService {
         document.add(new Paragraph(" "));
 
         Paragraph p = new Paragraph();
-//        p.add(allReportPdf.createBorderedText(dateD, dateF));
-//        p.add(chiffreAffaireParModePaiementPdf.createBorderedText2(ligneBonDeSorties));
         document.add(p);
         allReportPdf.infoRecu(document, facture);
         document.add(new Paragraph(" "));
@@ -132,10 +126,7 @@ public class FacturePdfService {
 
     public ByteArrayOutputStream generateFacturePaiementsPdf(String factureNumero) throws Exception {
 
-
         Facture facture = factureRepository.findByNumero(factureNumero);
-
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         AllReportPdf.TITRE_RECU = "DETAIL PAIEMENT FACTURE";
@@ -150,8 +141,6 @@ public class FacturePdfService {
         document.add(new Paragraph(" "));
 
         Paragraph p = new Paragraph();
-//        p.add(allReportPdf.createBorderedText(dateD, dateF));
-//        p.add(chiffreAffaireParModePaiementPdf.createBorderedText2(ligneBonDeSorties));
         document.add(p);
         allReportPdf.infoRecu(document, facture);
         document.add(new Paragraph(" "));
@@ -177,14 +166,12 @@ public class FacturePdfService {
             >
             f.getReglements().stream().mapToLong(Reglement::getMontantReglement).sum()).collect(Collectors.toList());
 
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph(" ").setPadding(10f));
-
 
         creanceParCommercialReportPdf.titreRecu(document);
         document.add(new Paragraph(" "));

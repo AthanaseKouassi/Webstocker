@@ -1,11 +1,19 @@
 package com.webstocker.service.impl;
 
-import com.webstocker.domain.*;
+import com.webstocker.domain.BonDeSortie;
+import com.webstocker.domain.Facture;
+import com.webstocker.domain.LigneBonDeSortie;
+import com.webstocker.domain.Lot;
+import com.webstocker.domain.Magasin;
 import com.webstocker.domain.enumeration.StatusTransfert;
 import com.webstocker.domain.enumeration.TypeSortie;
 import com.webstocker.domain.enumeration.TypeVente;
 import com.webstocker.domain.enumeration.newfeature.StatutFacture;
-import com.webstocker.repository.*;
+import com.webstocker.repository.BonDeSortieRepository;
+import com.webstocker.repository.FactureRepository;
+import com.webstocker.repository.LigneBonDeSortieRepository;
+import com.webstocker.repository.LotRepository;
+import com.webstocker.repository.MagasinRepository;
 import com.webstocker.repository.search.BonDeSortieSearchRepository;
 import com.webstocker.repository.search.FactureSearchRepository;
 import com.webstocker.service.BonDeSortieService;
@@ -261,33 +269,18 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         Facture fact = factureRepository.findByBonDeSortie(result);
 
         if (fact != null) {
-            /*Supprimer d'abord la ligne facture  avant de la reecrire fact.getId() */
-
-            factureRepository.delete(fact.getId());
-            factureSearchRepository.delete(fact.getId());
-
-            if (factureRepository.exists(fact.getId())) {
-                log.info("Cette Facture : id {}  existe deja", fact);
-            } else {
-
-                /*Reecris la ligne de facture supprimée fact.getId()*/
-                Facture facture = new Facture();
-                facture.setBonDeSortie(result);
-                facture.setDateFacture(dateFacture);
-                facture.setClient(result.getClient());
-                log.debug("Request to save Facture : {}", facture);
-                Facture save = factureRepository.save(facture);
-                factureSearchRepository.save(save);
-            }
-        } else {
-            Facture facture = new Facture();
-            facture.setBonDeSortie(result);
-            facture.setDateFacture(dateFacture);
-            facture.setClient(result.getClient());
-            log.debug("Request to save Facture : {}", facture);
-            Facture save = factureRepository.save(facture);
-            factureSearchRepository.save(save);
+            deleteFacture(fact);
         }
+
+        Facture facture = createFactureZero(result, null, dateFacture, 0);
+
+        factureRepository.save(facture);
+        factureSearchRepository.save(facture);
+        if (TypeSortie.PROMOTION.equals(result.getTypeSortie())) {
+            reglementService.reglementFactureZero(facture, facture.getDateFacture().format(
+                DateTimeFormatter.ofPattern(WebstockerConstant.FORMAT_DATE)));
+        }
+
         return result;
     }
 
@@ -295,8 +288,8 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
     public Page<BonDeSortie> transfertEncours(Pageable pageable) {
         return bonDeSortieRepository.findByStatusTranfertOrderByDaateCreation(StatusTransfert.ENCOURS, pageable);
     }
+
     //***************************** NOUVEAUX CODES 2023 : AJOUT NOUVELLES FONCTIONNALITES *********************/
-    //********************** REFACTORISATION ************
 
     private void deleteFacture(Facture facture) {
         factureRepository.delete(facture.getId());
@@ -317,9 +310,28 @@ public class BonDeSortieServiceImpl implements BonDeSortieService {
         }
 
         facture.setClient(result.getClient());
-        facture.setNumero(result.getNumeroFactureNormalise());
+        facture.setNumero(result.getNumeroFactureNormalise().toUpperCase());
         facture.setStatutFacture(StatutFacture.NON_SOLDE);
         log.debug("Facture ID: {} créé ", facture.getId());
+        return facture;
+    }
+
+    private Facture createFactureZero(BonDeSortie result, Long remise, LocalDate dateFacture,
+                                      Integer delaiPaiement) {
+        Facture facture = new Facture();
+        facture.setBonDeSortie(result);
+        facture.setValeurRemise(remise != null ? remise.intValue() : 0);
+        facture.setDateFacture(dateFacture);
+
+        if (TypeVente.CREDIT.equals(result.getTypeVente())) {
+            LocalDate datePaiement = dateFacture.plusDays(delaiPaiement);
+            facture.setDateLimitePaiement(datePaiement);
+        }
+
+        facture.setClient(result.getClient());
+        facture.setNumero(result.getNumeroFactureNormalise().toUpperCase());
+        facture.setStatutFacture(StatutFacture.FACTURE_ZERO);
+
         return facture;
     }
 

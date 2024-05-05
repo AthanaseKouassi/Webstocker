@@ -55,5 +55,7 @@ public interface ReglementService {
 
     void reglementFacture(Facture facture, String dateReglement);
 
+    void reglementFactureZero(Facture facture, String dateReglement);
+
     ReglementFactureDto reglementFactureCredit(Long idFacture, List<Reglement> reglements);
 }

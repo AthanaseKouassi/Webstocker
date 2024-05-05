@@ -4,6 +4,7 @@ import com.webstocker.domain.BonDeSortie;
 import com.webstocker.domain.Facture;
 import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.domain.Reglement;
+import com.webstocker.domain.enumeration.TypeSortie;
 import com.webstocker.domain.enumeration.newfeature.StatutFacture;
 import com.webstocker.repository.BonDeSortieRepository;
 import com.webstocker.repository.FactureRepository;
@@ -57,54 +58,30 @@ public class ReglementServiceImpl implements ReglementService {
     private WebstockerDateFormat webstockerDateFormat;
     @Autowired
     private DetailFactureMapper detailFactureMapper;
-//    @Autowired
-//    private ReglementMapper reglementMapper;
-
 
     public Reglement save(Reglement reglement) {
         log.debug("Request to save Reglement : {}", reglement);
         return reglementRepository.save(reglement);
     }
 
-    /**
-     * Get all the reglements.
-     *
-     * @return the list of entities
-     */
+
     @Transactional(readOnly = true)
     public List<Reglement> findAll() {
         log.debug("Request to get all Reglements");
         return reglementRepository.findAll();
     }
 
-    /**
-     * Get one reglement by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
     @Transactional(readOnly = true)
     public Reglement findOne(Long id) {
         log.debug("Request to get Reglement : {}", id);
         return reglementRepository.findOne(id);
     }
 
-    /**
-     * Delete the  reglement by id.
-     *
-     * @param id the id of the entity
-     */
     public void delete(Long id) {
         log.debug("Request to delete Reglement : {}", id);
         reglementRepository.delete(id);
     }
 
-    /**
-     * Search for the reglement corresponding to the query.
-     *
-     * @param query the query of the search
-     * @return the list of entities
-     */
     @Transactional(readOnly = true)
     public List<Reglement> search(String query) {
         log.debug("Request to search Reglements for query {}", query);
@@ -144,6 +121,14 @@ public class ReglementServiceImpl implements ReglementService {
     }
 
     @Override
+    public void reglementFactureZero(Facture facture, String dateReglement) {
+        BonDeSortie bonDeSortie = bonDeSortieRepository.findOne(facture.getBonDeSortie().getId());
+        if (bonDeSortie != null && TypeSortie.PROMOTION.equals(bonDeSortie.getTypeSortie())) {
+            reglerFactureZero(bonDeSortie, facture, dateReglement);
+        }
+    }
+
+    @Override
     public ReglementFactureDto reglementFactureCredit(Long idFacture, List<Reglement> reglements) {
         ReglementFactureDto reglementFactureDto = new ReglementFactureDto();
         Facture facture = factureRepository.findOne(idFacture);
@@ -167,8 +152,6 @@ public class ReglementServiceImpl implements ReglementService {
                 .filter(m -> Objects.equals(m.getProduit().getId(), lbs.getProduit().getId()))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Aucun élément correspondant trouvé"));
-            log.info("LA SOMME DEJA REGLE POUR LE PRODUIT {} EST :: {}", reg.getProduit().getId(), sumMontDejaRegle);
-            log.info("LE MONTANT REGLE POUR LE PRODUIT {} EST :: {}", reg.getProduit().getId(), reg.getMontantReglement());
 
             double totalRegle = sumMontDejaRegle + (reg.getMontantReglement() != null ? reg.getMontantReglement() : 0L);
             if (totalRegle <= Double.valueOf(lbs.getPrixDeVente()) && reg.getMontantReglement() != null) {
@@ -180,8 +163,6 @@ public class ReglementServiceImpl implements ReglementService {
 
                 listReglementsEffectue.add(reglement);
                 listbool.add(totalRegle == Double.valueOf(lbs.getPrixDeVente()));
-                log.info("TOTAL REGLE POUR {}  est :: {}", reg.getProduit().getId(), totalRegle);
-                log.info("MONTANT DE LA VENTE POUR {} est :: {}", reg.getProduit().getId(), Double.valueOf(lbs.getPrixDeVente()));
             }
         }
 
@@ -216,7 +197,27 @@ public class ReglementServiceImpl implements ReglementService {
             reglement.setMontantReglement(lbs.getPrixDeVente());
 
             reglementRepository.save(reglement);
+
+            if (StatutFacture.FACTURE_ZERO.equals(facture.getStatutFacture())) {
+                factureRepository.updateStatutFacture(StatutFacture.FACTURE_ZERO.toString(), facture.getId());
+            }
             factureRepository.updateStatutFacture(StatutFacture.SOLDE.toString(), facture.getId());
+        }
+    }
+
+    private void reglerFactureZero(BonDeSortie bonDeSortie, Facture facture, String dateReglement) {
+
+        List<LigneBonDeSortie> ligneBonDeSorties = ligneBonDeSortieRepository.findAllByBonDeSortie(bonDeSortie);
+        for (LigneBonDeSortie lbs : ligneBonDeSorties) {
+            Reglement reglement = new Reglement();
+            reglement.setProduit(lbs.getProduit());
+            reglement.setFacture(facture);
+            reglement.setDateReglement(webstockerDateFormat.convertirStingToLocalDate(dateReglement));
+            reglement.setMontantReglement(lbs.getPrixDeVente());
+
+            reglementRepository.save(reglement);
+            factureRepository.updateStatutFacture(StatutFacture.FACTURE_ZERO.toString(), facture.getId());
+
         }
     }
 

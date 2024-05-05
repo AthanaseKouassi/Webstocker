@@ -2,39 +2,30 @@ package com.webstocker.reports;
 
 import com.webstocker.domain.LigneBonDeSortie;
 import com.webstocker.utilitaires.NombreEnChiffre;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.LinkedList;
-import java.util.List;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.base.expression.AbstractSimpleExpression;
-import static net.sf.dynamicreports.report.builder.DynamicReports.cmp;
-import static net.sf.dynamicreports.report.builder.DynamicReports.col;
-import static net.sf.dynamicreports.report.builder.DynamicReports.field;
-import static net.sf.dynamicreports.report.builder.DynamicReports.grid;
-import static net.sf.dynamicreports.report.builder.DynamicReports.report;
-import static net.sf.dynamicreports.report.builder.DynamicReports.sbt;
-import static net.sf.dynamicreports.report.builder.DynamicReports.stl;
-import static net.sf.dynamicreports.report.builder.DynamicReports.type;
-import static net.sf.dynamicreports.report.builder.DynamicReports.variable;
 import net.sf.dynamicreports.report.builder.VariableBuilder;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
 import net.sf.dynamicreports.report.builder.component.ComponentBuilder;
-import static net.sf.dynamicreports.report.builder.component.Components.horizontalList;
 import net.sf.dynamicreports.report.builder.component.HorizontalListBuilder;
 import net.sf.dynamicreports.report.builder.component.RectangleBuilder;
 import net.sf.dynamicreports.report.builder.component.SubreportBuilder;
 import net.sf.dynamicreports.report.builder.subtotal.AggregationSubtotalBuilder;
 import net.sf.dynamicreports.report.builder.subtotal.CustomSubtotalBuilder;
-import net.sf.dynamicreports.report.constant.Calculation;
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment;
 import net.sf.dynamicreports.report.definition.ReportParameters;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
+
+import static net.sf.dynamicreports.report.builder.DynamicReports.*;
+import static net.sf.dynamicreports.report.builder.component.Components.horizontalList;
+
 /**
- *
  * @author Athanase
  */
 public class FacturesReport {
@@ -56,22 +47,21 @@ public class FacturesReport {
 
     public JasperReportBuilder build() {
         SubreportBuilder subreport = cmp.subreport(new SubreportExpression())
-                .setDataSource(new SubreportDataSourceExpression(reportData));
+            .setDataSource(new SubreportDataSourceExpression(reportData));
         JasperReportBuilder reportBuilder = report();
 
         try {
             reportBuilder
-                    .title(Templates.createTitleComponent("   \n\n"),
-                            // bordereauInfoComponent(), bordereauInfoClientDemandeurComponent())
-                            cmp.horizontalList().setStyle(stl.style(10)).setGap(50).add(
-                            cmp.hListCell(createClientComponent("  Informations client", reportData)).heightFixedOnTop(),
-                            cmp.hListCell(createMagasinComponent("  Informations facture", reportData)).heightFixedOnTop()),
-                            cmp.verticalGap(10))
-                    .detail(
-                            subreport,
-                            cmp.verticalGap(20))
-                    .pageFooter(Templates.footerComponent)
-                    .setDataSource(createDataSource());
+                .title(Templates.createTitleComponent("   \n\n"),
+                    cmp.horizontalList().setStyle(stl.style(10)).setGap(50).add(
+                        cmp.hListCell(createClientComponent("  Informations client", reportData)).heightFixedOnTop(),
+                        cmp.hListCell(createMagasinComponent("  Informations facture", reportData)).heightFixedOnTop()),
+                    cmp.verticalGap(10))
+                .detail(
+                    subreport,
+                    cmp.verticalGap(20))
+                .pageFooter(Templates.footerComponent)
+                .setDataSource(createDataSource());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,63 +72,84 @@ public class FacturesReport {
         return new JREmptyDataSource(1);
     }
 
+    private List<FactureWrapper> generateReportData(List<LigneBonDeSortie> ligneBonDeSortie) {
+
+        List<FactureWrapper> wrapperList = new LinkedList<>();
+        for (LigneBonDeSortie lbs : ligneBonDeSortie) {
+            wrapperList.add(new FactureWrapper(lbs));
+        }
+        return wrapperList;
+    }
+
+    private ComponentBuilder<?, ?> createClientComponent(String label, List<FactureWrapper> facturewrapper) {
+        RectangleBuilder rectangle = cmp.roundRectangle();
+        HorizontalListBuilder list = cmp.horizontalList();
+        try {
+            addCustomerAttribute(list, " Client", facturewrapper.get(0).getNomClient());
+            addCustomerAttribute(list, " Localité", facturewrapper.get(0).getLocaliteClient());
+            addCustomerAttribute(list, " Téléphone", facturewrapper.get(0).getTelephoneClient());
+            addCustomerAttribute(list, " Adresse postale", facturewrapper.get(0).getBpClient());
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return cmp.verticalList(cmp.text(label).setStyle(Templates.boldStyle), list).setBackgroundComponent(rectangle);
+    }
+
+    private void addCustomerAttribute(HorizontalListBuilder list, String label, String value) {
+        if (value != null) {
+            list.add(cmp.text(label + " :").setFixedColumns(12).setStyle(Templates.boldStyle), cmp.text(value)).newRow();
+        }
+    }
+
+    private ComponentBuilder<?, ?> createMagasinComponent(String label, List<FactureWrapper> facturewrapper) {
+        RectangleBuilder rectangle = cmp.roundRectangle();
+        HorizontalListBuilder list = cmp.horizontalList();
+        addCustomerAttribute(list, " Date facture", facturewrapper.get(0).getDateFacture());
+        addCustomerAttribute(list, " N° facture", facturewrapper.get(0).getNumeroFactureNormalise().toUpperCase());
+        addCustomerAttribute(list, " N° bon de sortie", facturewrapper.get(0).getNumeroBondeSortie());
+        addCustomerAttribute(list, " Magasin", facturewrapper.get(0).getMagasin());
+        addCustomerAttribute(list, " Type de vente", facturewrapper.get(0).getTypeVente());
+        addCustomerAttribute(list, " Date de paiement", facturewrapper.get(0).getDateLimite());
+
+        return cmp.verticalList(cmp.text(label).setStyle(Templates.boldStyle), list).setBackgroundComponent(rectangle);
+    }
+
     private class SubreportExpression extends AbstractSimpleExpression<JasperReportBuilder> {
 
         private static final long serialVersionUID = 1L;
 
         @Override
         public JasperReportBuilder evaluate(ReportParameters reportParameters) {
-            Object object = new Object();
-            int masterRowNumber = reportParameters.getReportRowNumber();
+
             JasperReportBuilder report = report();
             report.setTemplate(Templates.reportTemplate);
 
             TextColumnBuilder<String> descriptionColumn = col.column("Designation", "nomProduit", type.stringType())
-                    .setFixedWidth(160);
+                .setFixedWidth(160);
             TextColumnBuilder<String> numeroLotColumn = col.column("Numéro Lot", "numeroLot", type.stringType())
-                    .setFixedWidth(80);
+                .setFixedWidth(80);
             TextColumnBuilder<Long> quantityColumn = col.column("Quantité", "quantiteFacture", type.longType())
-                    .setFixedWidth(100);
+                .setFixedWidth(100);
             TextColumnBuilder<Long> montDeVenteColumn = col.column("Prix de Vente", "montantVente", type.longType())
-                    .setFixedWidth(75);
-//            TextColumnBuilder<BigDecimal> priceColumn = col.column("Prix Unitaire H.T", "prixvente", type.bigDecimalType())
-//                    .setFixedWidth(75); 
-
-//            TextColumnBuilder<Integer> remCol = col.column("Remise", "remise", type.integerType());
-
-//            TextColumnBuilder<BigDecimal> montantColumn = (priceColumn.multiply(quantityColumn)).subtract(remCol)
-//            TextColumnBuilder<BigDecimal> montantColumn = (priceColumn.multiply(quantityColumn))
+                .setFixedWidth(75);
             TextColumnBuilder<BigDecimal> montantColumn = (montDeVenteColumn.multiply(1))
-                    .setTitle("Montant (FCFA)");
+                .setTitle("Montant (FCFA)");
 
-//            montantHT = montantColumn.subtract(remCol).setTitle("Montant (FCFA)");
-//            remiseMontant = sbt.min("remise", Integer.class, priceColumn).setLabel("Remise ");
-
-//            remiseSum = variable("remise", Integer.class, Calculation.SUM);
-
-//            totalSum = sbt.sum(montantHT).setLabel("Total");
             totalSum = sbt.sum(montantColumn).setLabel("Total");
 
             String sd;
             report.setColumnStyle(stl.style().setBorder(stl.pen1Point()).setPadding(5));
             report.columns(
-//                    descriptionColumn, numeroLotColumn, quantityColumn, priceColumn, montantColumn)
                     descriptionColumn, numeroLotColumn, quantityColumn, montDeVenteColumn, montantColumn)
-//                    .columnGrid(descriptionColumn, numeroLotColumn, quantityColumn, priceColumn, montantColumn)
-                    .columnGrid(descriptionColumn, numeroLotColumn, quantityColumn, montDeVenteColumn, montantColumn)
-//                    .subtotalsAtSummary(remiseMontant, totalSum)
-                    .subtotalsAtSummary( totalSum)
-//                    .summary(horizontalList().add(cmp.verticalGap(20),
-//                            cmp.text("             "),
-//                            cmp.text("Total à payer").setHorizontalTextAlignment(HorizontalTextAlignment.RIGHT),
-//                            cmp.text(new SommeApresRemise()).setHorizontalTextAlignment(HorizontalTextAlignment.RIGHT)
-//                            .setStyle(stl.style().setFontSize(12).bold())))
-                    .summary(horizontalList().add(cmp.verticalGap(28),
-                            cmp.text(new SommeAPayer())),
-                            cmp.text("    "),
-                            cmp.text("    "),
-                            cmp.text("                                                                                    RMC/DE")
-                            .setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
+                .columnGrid(descriptionColumn, numeroLotColumn, quantityColumn, montDeVenteColumn, montantColumn)
+
+                .subtotalsAtSummary(totalSum)
+                .summary(horizontalList().add(cmp.verticalGap(28),
+                        cmp.text(new SommeAPayer())),
+                    cmp.text("    "),
+                    cmp.text("    "),
+                    cmp.text("                                                                                    RMC/DE")
+                        .setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
             return report;
         }
     }
@@ -149,17 +160,12 @@ public class FacturesReport {
 
         @Override
         public String evaluate(ReportParameters reportParameters) {
-            String valeur =null;
-//            Integer remiseSumValue = reportParameters.getValue(remiseMontant);
+            String valeur = null;
             BigDecimal totalSumValue = reportParameters.getValue(totalSum);
-    
-
-//            String str = Templates.currencyType.valueToString(totalSumValue.subtract(new BigDecimal(remiseSumValue).setScale(0, BigDecimal.ROUND_DOWN)), reportParameters.getLocale());
             String str = Templates.currencyType.valueToString(totalSumValue, reportParameters.getLocale());
-//            return totalSumValue.subtract(new BigDecimal(remiseSumValue).setScale(0, BigDecimal.ROUND_DOWN));
             if (str.contains("$")) {
                 valeur = str.replace("$ ", "");
-            }else{
+            } else {
                 valeur = str;
             }
             return valeur;
@@ -179,13 +185,9 @@ public class FacturesReport {
             String stringNombre = null;
             String valeurString = null;
             char let;
-          
-            BigDecimal sommeTotale = reportParameters.getValue(totalSum);
 
-//            som²  meTotale = sommeTotale.subtract(new BigDecimal(remiseSumValue).setScale(0, BigDecimal.ROUND_DOWN));
-//            BigDecimal sommeTotale = reportParameters.getValue(totalSum);
+            BigDecimal sommeTotale = reportParameters.getValue(totalSum);
             String str = Templates.currencyType.valueToString(sommeTotale, reportParameters.getLocale());
-//            String str = Templates.currencyType.valueToString(sommeTotale.setScale(0, BigDecimal.ROUND_DOWN), reportParameters.getLocale());
 
             try {
                 if (str.contains("$")) {
@@ -237,15 +239,6 @@ public class FacturesReport {
         }
     }
 
-    private List<FactureWrapper> generateReportData(List<LigneBonDeSortie> ligneBonDeSortie) {
-
-        List<FactureWrapper> wrapperList = new LinkedList<>();
-        for (LigneBonDeSortie lbs : ligneBonDeSortie) {
-            wrapperList.add(new FactureWrapper(lbs));
-        }
-        return wrapperList;
-    }
-
     private class Column {
 
         private String title;
@@ -258,38 +251,5 @@ public class FacturesReport {
             this.dataType = dataType;
         }
     }
-
-    private ComponentBuilder<?, ?> createClientComponent(String label, List<FactureWrapper> facturewrapper) {
-        RectangleBuilder rectangle = cmp.roundRectangle();
-        HorizontalListBuilder list = cmp.horizontalList();//.setBaseStyle(stl.style().setTopBorder(stl.pen1Point()).setLeftPadding(10));
-      try{
-        addCustomerAttribute(list, " Client", facturewrapper.get(0).getNomClient());
-        addCustomerAttribute(list, " Localité", facturewrapper.get(0).getLocaliteClient());
-        addCustomerAttribute(list, " Téléphone", facturewrapper.get(0).getTelephoneClient());
-        addCustomerAttribute(list, " Adresse postale", facturewrapper.get(0).getBpClient()); 
-      }catch (IndexOutOfBoundsException e){
-          e.printStackTrace();
-      }
-        return cmp.verticalList(cmp.text(label).setStyle(Templates.boldStyle), list).setBackgroundComponent(rectangle);
-    }
-
-    private void addCustomerAttribute(HorizontalListBuilder list, String label, String value) {
-        if (value != null) {
-            list.add(cmp.text(label + " :").setFixedColumns(12).setStyle(Templates.boldStyle), cmp.text(value)).newRow();
-        }
-    }
-
-    private ComponentBuilder<?, ?> createMagasinComponent(String label, List<FactureWrapper> facturewrapper) {
-        RectangleBuilder rectangle = cmp.roundRectangle();
-        HorizontalListBuilder list = cmp.horizontalList();//.setBaseStyle(stl.style().setTopBorder(stl.pen1Point()).setLeftPadding(10));
-        addCustomerAttribute(list, " Date facture", facturewrapper.get(0).getDateFacture());
-        addCustomerAttribute(list, " N° facture", facturewrapper.get(0).getNumeroFactureNormalise());
-        addCustomerAttribute(list, " N° bon de sortie", facturewrapper.get(0).getNumeroBondeSortie());
-        addCustomerAttribute(list, " Magasin", facturewrapper.get(0).getMagasin());
-        addCustomerAttribute(list, " Type de vente", facturewrapper.get(0).getTypeVente());
-        addCustomerAttribute(list, " Date de paiement", facturewrapper.get(0).getDateLimite());
-
-        return cmp.verticalList(cmp.text(label).setStyle(Templates.boldStyle), list).setBackgroundComponent(rectangle);
-    } 
 
 }

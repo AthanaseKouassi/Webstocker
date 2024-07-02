@@ -22,7 +22,12 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
-import static net.sf.dynamicreports.report.builder.DynamicReports.*;
+import static net.sf.dynamicreports.report.builder.DynamicReports.cmp;
+import static net.sf.dynamicreports.report.builder.DynamicReports.col;
+import static net.sf.dynamicreports.report.builder.DynamicReports.report;
+import static net.sf.dynamicreports.report.builder.DynamicReports.sbt;
+import static net.sf.dynamicreports.report.builder.DynamicReports.stl;
+import static net.sf.dynamicreports.report.builder.DynamicReports.type;
 import static net.sf.dynamicreports.report.builder.component.Components.horizontalList;
 
 /**
@@ -120,7 +125,6 @@ public class FacturesReport {
 
         @Override
         public JasperReportBuilder evaluate(ReportParameters reportParameters) {
-
             JasperReportBuilder report = report();
             report.setTemplate(Templates.reportTemplate);
 

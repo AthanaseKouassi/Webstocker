@@ -1,6 +1,5 @@
 package com.webstocker.service.impl;
 
-import com.webstocker.service.InventaireService;
 import com.webstocker.domain.Inventaire;
 import com.webstocker.domain.Magasin;
 import com.webstocker.domain.Produit;
@@ -8,22 +7,20 @@ import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.MagasinRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.repository.search.InventaireSearchRepository;
+import com.webstocker.service.InventaireService;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Inventaire.
@@ -31,18 +28,18 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @Service
 @Transactional
 public class InventaireServiceImpl implements InventaireService {
-    
+
     private final Logger log = LoggerFactory.getLogger(InventaireServiceImpl.class);
 
     @Inject
     private InventaireRepository inventaireRepository;
 
     @Inject
-    private InventaireSearchRepository inventaireSearchRepository; 
+    private InventaireSearchRepository inventaireSearchRepository;
 
     @Inject
     private MagasinRepository magasinRepository;
-    
+
     @Inject
     private ProduitRepository produitRepository;
 
@@ -56,7 +53,6 @@ public class InventaireServiceImpl implements InventaireService {
     public Inventaire save(Inventaire inventaire) {
         log.debug("Request to save Inventaire : {}", inventaire);
         Inventaire result = inventaireRepository.save(inventaire);
-//        inventaireSearchRepository.save(result);
         return result;
     }
 
@@ -97,7 +93,6 @@ public class InventaireServiceImpl implements InventaireService {
     public void delete(Long id) {
         log.debug("Request to delete Inventaire : {}", id);
         inventaireRepository.delete(id);
-//        inventaireSearchRepository.delete(id);
     }
 
     /**
@@ -125,8 +120,8 @@ public class InventaireServiceImpl implements InventaireService {
      * rechercher l'inventaire d'un mois d'un magasin
      *
      * @param nomMagasin
-     * @param dateDebut
-     * @param dateFin
+     * @param 'dateDebut'
+     * @param 'dateFin'
      * @return
      */
     @Override
@@ -144,7 +139,7 @@ public class InventaireServiceImpl implements InventaireService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate debut = LocalDate.parse(dateDebutPeriode, formatter);
         LocalDate fin = LocalDate.parse(dateFinPeriode, formatter);
-        
+
 
         Page<Inventaire> result = inventaireRepository.findByMagasinAndDateInventaireBetween(magasin, debut, fin, pageable);
 
@@ -155,18 +150,18 @@ public class InventaireServiceImpl implements InventaireService {
 //    public Inventaire retrouverUnInventaireParProduitEtMagasin(String nomProduit, String nomMagasin, String dateDuMois) {
 
 //       String dateRecherche = null;
-//       
+//
 //       //Classe retournant la première et la dernière date du mois de la date données en paramètre : dateInventaire
 //        PremierEtDernierJourDuMois madateInventaire = new PremierEtDernierJourDuMois();
 //        dateRecherche = madateInventaire.getDateDebutDuMois(dateDuMois);
 //
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate laDate = LocalDate.parse(dateRecherche, formatter);        
-//        
+//        LocalDate laDate = LocalDate.parse(dateRecherche, formatter);
+//
 //        laDate.getMonthValue();
-//        
-//       
-//       
+//
+//
+//
 //       return null;
 //    }
 
@@ -174,7 +169,7 @@ public class InventaireServiceImpl implements InventaireService {
     public Inventaire retrouverUnInventaireParProduitEtMagasin(String nomProduit, String nomMagasin) {
         Magasin magasin = magasinRepository.findByNomMagasin(nomMagasin);
         Produit produit = produitRepository.findByNomProduit(nomProduit);
-        
+
         Inventaire inventaire = inventaireRepository.findByProduitAndMagasin(produit, magasin);
         return inventaire;
     }

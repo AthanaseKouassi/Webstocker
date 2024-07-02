@@ -4,7 +4,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -39,6 +45,37 @@ public class Inventaire implements Serializable {
     @ManyToOne
     private Magasin magasin;
 
+    @Column(name = "stock_magasin_central")
+    private Long stockMagasinCentral;
+
+    @Column(name = "stock_antenne")
+    private Long stockAntenne;
+
+    @Column(name = "stock_agent")
+    private Long stockAgent;
+
+    @Column(name = "arrivage")
+    private Long arrivage;
+
+    @Column(name = "stock_theo_debut")
+    private Long stockTheoDebut;
+
+    @Column(name = "vente")
+    private Long vente;
+
+    @Column(name = "promo")
+    private Long promo;
+
+    @Column(name = "perte_abime")
+    private Long perteAbime;
+
+    @Column(name = "bailleur_id")
+    private Bailleur bailleur;
+
+    @Column(name = "commentaire")
+    private String commentaire;
+
+
     public Long getId() {
         return id;
     }
@@ -51,17 +88,21 @@ public class Inventaire implements Serializable {
         return dateInventaire;
     }
 
+    public void setDateInventaire(LocalDate dateInventaire) {
+        this.dateInventaire = dateInventaire;
+    }
+
     public Inventaire dateInventaire(LocalDate dateInventaire) {
         this.dateInventaire = dateInventaire;
         return this;
     }
 
-    public void setDateInventaire(LocalDate dateInventaire) {
-        this.dateInventaire = dateInventaire;
-    }
-
     public Long getStockFinalTheorique() {
         return stockFinalTheorique;
+    }
+
+    public void setStockFinalTheorique(Long stockFinalTheorique) {
+        this.stockFinalTheorique = stockFinalTheorique;
     }
 
     public Inventaire stockFinalTheorique(Long stockFinalTheorique) {
@@ -69,12 +110,12 @@ public class Inventaire implements Serializable {
         return this;
     }
 
-    public void setStockFinalTheorique(Long stockFinalTheorique) {
-        this.stockFinalTheorique = stockFinalTheorique;
-    }
-
     public Long getStockReel() {
         return stockReel;
+    }
+
+    public void setStockReel(Long stockReel) {
+        this.stockReel = stockReel;
     }
 
     public Inventaire stockReel(Long stockReel) {
@@ -82,12 +123,12 @@ public class Inventaire implements Serializable {
         return this;
     }
 
-    public void setStockReel(Long stockReel) {
-        this.stockReel = stockReel;
-    }
-
     public Produit getProduit() {
         return produit;
+    }
+
+    public void setProduit(Produit produit) {
+        this.produit = produit;
     }
 
     public Inventaire produit(Produit produit) {
@@ -95,12 +136,12 @@ public class Inventaire implements Serializable {
         return this;
     }
 
-    public void setProduit(Produit produit) {
-        this.produit = produit;
-    }
-
     public Magasin getMagasin() {
         return magasin;
+    }
+
+    public void setMagasin(Magasin magasin) {
+        this.magasin = magasin;
     }
 
     public Inventaire magasin(Magasin magasin) {
@@ -108,8 +149,84 @@ public class Inventaire implements Serializable {
         return this;
     }
 
-    public void setMagasin(Magasin magasin) {
-        this.magasin = magasin;
+    public Long getStockMagasinCentral() {
+        return stockMagasinCentral;
+    }
+
+    public void setStockMagasinCentral(Long stockMagasinCentral) {
+        this.stockMagasinCentral = stockMagasinCentral;
+    }
+
+    public Long getStockAntenne() {
+        return stockAntenne;
+    }
+
+    public void setStockAntenne(Long stockAntenne) {
+        this.stockAntenne = stockAntenne;
+    }
+
+    public Long getStockAgent() {
+        return stockAgent;
+    }
+
+    public void setStockAgent(Long stockAgent) {
+        this.stockAgent = stockAgent;
+    }
+
+    public Long getArrivage() {
+        return arrivage;
+    }
+
+    public void setArrivage(Long arrivage) {
+        this.arrivage = arrivage;
+    }
+
+    public Long getStockTheoDebut() {
+        return stockTheoDebut;
+    }
+
+    public void setStockTheoDebut(Long stockTheoDebut) {
+        this.stockTheoDebut = stockTheoDebut;
+    }
+
+    public Long getVente() {
+        return vente;
+    }
+
+    public void setVente(Long vente) {
+        this.vente = vente;
+    }
+
+    public Long getPromo() {
+        return promo;
+    }
+
+    public void setPromo(Long promo) {
+        this.promo = promo;
+    }
+
+    public Long getPerteAbime() {
+        return perteAbime;
+    }
+
+    public void setPerteAbime(Long perteAbime) {
+        this.perteAbime = perteAbime;
+    }
+
+    public Bailleur getBailleur() {
+        return bailleur;
+    }
+
+    public void setBailleur(Bailleur bailleur) {
+        this.bailleur = bailleur;
+    }
+
+    public String getCommentaire() {
+        return commentaire;
+    }
+
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
     }
 
     @Override
@@ -136,9 +253,21 @@ public class Inventaire implements Serializable {
     public String toString() {
         return "Inventaire{" +
             "id=" + id +
-            ", dateInventaire='" + dateInventaire + "'" +
-            ", stockFinalTheorique='" + stockFinalTheorique + "'" +
-            ", stockReel='" + stockReel + "'" +
+            ", dateInventaire=" + dateInventaire +
+            ", stockFinalTheorique=" + stockFinalTheorique +
+            ", stockReel=" + stockReel +
+            ", produit=" + produit +
+            ", magasin=" + magasin +
+            ", stockMagasinCentral=" + stockMagasinCentral +
+            ", stockAntenne=" + stockAntenne +
+            ", stockAgent=" + stockAgent +
+            ", arrivage=" + arrivage +
+            ", stockTheoDebut=" + stockTheoDebut +
+            ", vente=" + vente +
+            ", promo=" + promo +
+            ", perteAbime=" + perteAbime +
+            ", bailleur=" + bailleur +
+            ", commentaire='" + commentaire + '\'' +
             '}';
     }
 }

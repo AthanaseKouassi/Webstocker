@@ -76,7 +76,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
         //Tous les transferts de produit avant la date de la fin du mois
         List<LigneBonDeSortie> lignebsTransfertAvantdate = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBefore(fin);
 
-        //Liste des produits sortie  de date dateDebutStock à date fin
+        //Liste des produits sortie de date dateDebutStock à date fin
         List<LigneBonDeSortie> sorteDebutaFin = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, fin);
 
 

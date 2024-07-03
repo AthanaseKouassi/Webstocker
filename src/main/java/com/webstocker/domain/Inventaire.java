@@ -69,7 +69,7 @@ public class Inventaire implements Serializable {
     @Column(name = "perte_abime")
     private Long perteAbime;
 
-    @Column(name = "bailleur_id")
+    @ManyToOne
     private Bailleur bailleur;
 
     @Column(name = "commentaire")

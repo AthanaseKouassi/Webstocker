@@ -6,13 +6,16 @@
 package com.webstocker.service;
 
 import com.webstocker.domain.wrapper.EtatStockGlobalAimasWrapper;
+
+import java.time.LocalDate;
 import java.util.List;
 
 /**
- *
  * @author Athanase
  */
 public interface EtatStockGlobalService {
-    
+
     List<EtatStockGlobalAimasWrapper> etatStockGlobal(String dateDebut, String dateFin);
+
+    List<EtatStockGlobalAimasWrapper> etatStockGlobalNew(LocalDate dateDebut, LocalDate dateFin);
 }

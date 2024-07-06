@@ -15,17 +15,17 @@ import com.webstocker.repository.MagasinRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.service.EtatDeTousLesProduitsDunMagasinService;
 import com.webstocker.utilitaires.PremierEtDernierJourDuMois;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import javax.inject.Inject;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author Athanase
  */
 @Service
@@ -43,7 +43,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
     @Inject
     LignelivraisonRepository lignelivraisonRepository;
-    
+
     @Inject
     InventaireRepository inventaireRepository;
 
@@ -60,13 +60,13 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
         Long quantiteTotalEnStock = 0L, quantiteGlobaleLivre = 0L, quantiteGlobaleSortie = 0L;
         Long reste = 0L;
 
-        
+
         Long qteTransfertRecuDebut = 0L;
         Long qteVenteDebut = 0L;
         Long qteTransfertDebut = 0L;
         Long qtePromoDebut = 0L;
         Long qtePerteDebut = 0L;
-        
+
         Long qteArrivage = 0L;
         Long qteStockInitial = 0L;
         Long qteFinTransfertRecu = 0L;
@@ -74,9 +74,9 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
         Long qteFinTransfert = 0L;
         Long qteFinPromotion = 0L;
         Long qteFinPerte = 0L;
-        
-        
-        Long TESTINITIAL =0L;
+
+
+        Long TESTINITIAL = 0L;
         Long quantiteDebutTransfert = 0L;
         Long quantiteDebutTransfertRecu = 0L;
         Long quantiteDebutVente = 0L;
@@ -94,26 +94,26 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
         List<EtatDeTousLesProduitsDunMagasinWrapper> listeStockParMagasin = new LinkedList<>();
 
-        // Toute livraison total d'un produit au magasin central
+        // Toute livraison totale d'un produit au magasin central
         List<Lignelivraison> toutesLivraison = null;
-        // Toute les sortie d'un produit 
+        // Toutes les sorties d'un produit
         List<LigneBonDeSortie> toutesSortie = null;
 
-        //Liste des produits sortie  de date dateDebutStock à date debut 
+        //Liste des produits sortie de date dateDebutStock à date debut
         List<LigneBonDeSortie> listeSortieDebut = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, debut);
 
-        //Liste des produits sortie  de date dateDebutStock à date fin 
+        //Liste des produits sortie de date dateDebutStock à date fin
         List<LigneBonDeSortie> sorteDebutaFin = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, fin);
 
-        
-        // Liste des produits livré au magasin central de date dateDebutStock à date debut
+
+        // Liste des produits livrés au magasin central de date dateDebutStock à date debut
         List<Lignelivraison> listeProduitLivreDebut = lignelivraisonRepository.findByLivraisonDateLivraisonBetween(dateDebutStock, debut);
 
-        //Liste des produits sortie  de date debut à date fin
+        //Liste des produits sortie de date debut à date fin
         List<LigneBonDeSortie> listeSortieParPeriode = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(debut, fin);
         Iterator<LigneBonDeSortie> itSortieMagasin = listeSortieParPeriode.iterator();
 
-        // Liste des produits livré au magasin central de date debut à date fin
+        // Liste des produits livrés au magasin central de date debut à date fin
         List<Lignelivraison> listeProduitLivre = lignelivraisonRepository.findByLivraisonDateLivraisonBetween(debut, fin);
 
         // liste de tous les produits
@@ -132,7 +132,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 etatDeTousLesProduits.setProduit(produit);
                 etatDeTousLesProduits.setMagasin(magasin);
 
-                // Toutes les livraison d'un produit au magasin Central
+                // Toutes les livraisons d'un produit au magasin Central
                 toutesLivraison = lignelivraisonRepository.findAllByLivraisonCommandeProduit(produit);
                 for (Lignelivraison tl : toutesLivraison) {
                     quantiteGlobaleLivre += tl.getQuantiteLotLivre();
@@ -143,77 +143,77 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie lbs : toutesSortie) {
                     quantiteGlobaleSortie += lbs.getQuantite();
                 }
-                
-                //Tous les arrivages au magasin central du produit dans la periode de date dateDebutStock à date debut 
-                List <Lignelivraison> listLivraisonProduitPeriodedateDebutStock = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, dateDebutStock, debut);
-       
+
+                //Tous les arrivages au magasin central du produit dans la periode de date dateDebutStock à date debut
+                List<Lignelivraison> listLivraisonProduitPeriodedateDebutStock = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, dateDebutStock, debut);
+
                 //Recuperer les arrivages d'un produit de la periode dateDebutStock et date debut
-                for(Lignelivraison arrivagePdateDebut: listLivraisonProduitPeriodedateDebutStock){
+                for (Lignelivraison arrivagePdateDebut : listLivraisonProduitPeriodedateDebutStock) {
                     qteArrivageAvant += arrivagePdateDebut.getQuantiteLotLivre();
                 }
-                
+
                 //Toutes les livraisons au magasin central du produit dans la periode de DateDebutStock a date fin
-                List <Lignelivraison> listLivraisonProduitDateDebutStockADateFin = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, dateDebutStock, fin);
-                        
+                List<Lignelivraison> listLivraisonProduitDateDebutStockADateFin = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, dateDebutStock, fin);
+
                 //Recuperer les arrivages d'un produit de la periode dateDebutStock et date fin
-                for(Lignelivraison qteArrivageDateFin: listLivraisonProduitDateDebutStockADateFin){
+                for (Lignelivraison qteArrivageDateFin : listLivraisonProduitDateDebutStockADateFin) {
                     quantiteArrivageDateFin += qteArrivageDateFin.getQuantiteLotLivre();
                 }
-                
+
                 //Tous les arrivages au magasin central du produit dans la periode de date debut et fin
-                List <Lignelivraison> listLivraisonProduitPeriode = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, debut, fin);
-                       
+                List<Lignelivraison> listLivraisonProduitPeriode = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(produit, debut, fin);
+
                 //Recuperer les arrivages d'un produit d'une periode de date debut et date fin
-                for(Lignelivraison arrivageProduit:listLivraisonProduitPeriode){                  
-                    qteArrivage += arrivageProduit.getQuantiteLotLivre();                        
+                for (Lignelivraison arrivageProduit : listLivraisonProduitPeriode) {
+                    qteArrivage += arrivageProduit.getQuantiteLotLivre();
                 }
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date debut dans les differents magasin autre que le magasin central 
+                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date debut dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if (ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())
-                                && ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert()== null || ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && ligneSortieMoisDernier.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert() == null || ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && ligneSortieMoisDernier.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             quantiteDebutTransfertRecu += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date fin dans les differents magasin autre que le magasin central 
+
+                //Les quantités reçues par transfert depuis le debut du stock :'2016-12-01' à date fin dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if (sortieQteStock.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())
-                                && sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (sortieQteStock.getBonDeSortie().getStatusTranfert()== null || sortieQteStock.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && sortieQteStock.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (sortieQteStock.getBonDeSortie().getStatusTranfert() == null || sortieQteStock.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && sortieQteStock.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             qteFinTransfertRecu += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' dans les differents magasin autre que le magasin central 
+
+                //Les quantités reçues par transfert depuis le debut du stock :'2016-12-01' dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie sortiePromoDebut : listeSortieDebut) {
                     if (sortiePromoDebut.getBonDeSortie().getMagasin() != null) {
                         if (sortiePromoDebut.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())
-                                && sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (sortiePromoDebut.getBonDeSortie().getStatusTranfert()== null || sortiePromoDebut.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && sortiePromoDebut.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (sortiePromoDebut.getBonDeSortie().getStatusTranfert() == null || sortiePromoDebut.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && sortiePromoDebut.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             qteTransfertRecuDebut += sortiePromoDebut.getQuantite();
                         }
                     }
                 }
 
-                //Les quantités reçue par transfert dans les differents magasin autre que le magasin central
+                //Les quantités reçues par transfert dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie ligneTransfert : listeSortieParPeriode) {
                     if (ligneTransfert.getBonDeSortie().getMagasin() != null) {
                         if (ligneTransfert.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())
-                                && ligneTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (ligneTransfert.getBonDeSortie().getStatusTranfert()== null || ligneTransfert.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && ligneTransfert.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && ligneTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (ligneTransfert.getBonDeSortie().getStatusTranfert() == null || ligneTransfert.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && ligneTransfert.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             QuantiteProduitTranfereRecuMagasin += ligneTransfert.getQuantite();
                         }
                     }
@@ -222,35 +222,35 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité vendue par magasin depuis le debut '01-12-2016' à la date debut 
+                //Quantité vendue par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             quantiteDebutVente += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
+
                 //Quantité vendue par magasin depuis le debut '01-12-2016' à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             qteFinVente += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité vendue par magasin depuis le debut '01-12-2016'
                 for (LigneBonDeSortie sortieVenteDebut : listeSortieDebut) {
                     if (sortieVenteDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortieVenteDebut.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieVenteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieVenteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (sortieVenteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieVenteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             qteVenteDebut += sortieVenteDebut.getQuantite();
                         }
                     }
@@ -260,46 +260,46 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieVente : listeSortieParPeriode) {
                     if (ligneSortieVente.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieVente.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieVente.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieVente.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (ligneSortieVente.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieVente.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             quantiteVendue += ligneSortieVente.getQuantite();
                         }
                     }
                 }
                 etatDeTousLesProduits.setQuantiteVendue(quantiteVendue);
-                
+
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité sortie en promo par magasin depuis le debut '01-12-2016' à la date debut 
+                //Quantité sortie en promo par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
-                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
+                    if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             quantiteDebutPromotion += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
+
                 //Quantité sortie en promo par magasin depuis le 01-12-2016 à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             qteFinPromotion += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité sortie en promo par magasin depuis le 01-12-2016
                 for (LigneBonDeSortie sortiePromoDebut : listeSortieDebut) {
                     if (sortiePromoDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortiePromoDebut.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortiePromoDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (sortiePromoDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             qtePromoDebut += sortiePromoDebut.getQuantite();
                         }
                     }
@@ -309,45 +309,45 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieTransfert : listeSortieParPeriode) {
                     if (ligneSortieTransfert.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieTransfert.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             quantitePromo += ligneSortieTransfert.getQuantite();
                         }
                     }
                 }
                 etatDeTousLesProduits.setQuantitePromo(quantitePromo);
 
-                 //=============================================================================/
+                //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité perdue par magasin depuis le debut '01-12-2016' à la date debut 
+                //Quantité perdue par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
-                   if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
+                    if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             quantiteDebutPerte += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
-                 //Quantité perdue par magasin depuis 01-12-2016 à la date fin
+
+                //Quantité perdue par magasin depuis 01-12-2016 à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             qteFinPerte += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité perdue par magasin depuis 01-12-2016
                 for (LigneBonDeSortie sortiePerteDebut : listeSortieDebut) {
                     if (sortiePerteDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortiePerteDebut.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortiePerteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortiePerteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (sortiePerteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortiePerteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             qtePerteDebut += sortiePerteDebut.getQuantite();
                         }
                     }
@@ -357,22 +357,22 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie lignePerte : listeSortieParPeriode) {
                     if (lignePerte.getBonDeSortie().getMagasin() != null) {
                         if ((lignePerte.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (lignePerte.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (lignePerte.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (lignePerte.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (lignePerte.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             quantitePerte += lignePerte.getQuantite();
                         }
                     }
                 }
                 etatDeTousLesProduits.setQuantitePerte(quantitePerte);
-                
+
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité de produit transferée du magasin d'origine depuis le 01-12-2016 à la date debut 
+                //Quantité de produit transferée du magasin d'origine depuis le 01-12-2016 à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             quantiteDebutTransfert += ligneSortieMoisDernier.getQuantite();
                         }
                     }
@@ -383,19 +383,19 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             qteFinTransfert += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 // Quantité de transferée du magasin d'origine depuis le 01-12-2016
                 for (LigneBonDeSortie sortieTransfertDebut : listeSortieDebut) {
                     if (sortieTransfertDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortieTransfertDebut.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (sortieTransfertDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieTransfertDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (sortieTransfertDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieTransfertDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             qteTransfertDebut += sortieTransfertDebut.getQuantite();
                         }
                     }
@@ -405,8 +405,8 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieTransfert : listeSortieParPeriode) {
                     if (ligneSortieTransfert.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieTransfert.getLot().getProduit().getNomProduit().equals(produit.getNomProduit()))
-                                && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             quantiteTransfere += ligneSortieTransfert.getQuantite();
                         }
                     }
@@ -414,29 +414,29 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 etatDeTousLesProduits.setQuantiteTransfert(quantiteTransfere);
 
                 if (magasin.getNomMagasin().equals("MAGASIN CENTRAL")) {
-                    
+
                     quantiteTotalEnStock = (quantiteArrivageDateFin - qteFinTransfert) + qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte);
-        
-                    qteStockInitial = quantiteTotalEnStock - qteArrivage + quantiteVendue + quantitePromo + quantiteTransfere + quantitePerte - QuantiteProduitTranfereRecuMagasin;             
+
+                    qteStockInitial = quantiteTotalEnStock - qteArrivage + quantiteVendue + quantitePromo + quantiteTransfere + quantitePerte - QuantiteProduitTranfereRecuMagasin;
 
 //                    qteStockInitial = qteArrivageAvant + quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutTransfert + quantiteDebutPerte);
-                    System.out.println("LE STOCK INITIAL DU MAGASIN CENTRAL "+qteStockInitial);
-                    
+                    System.out.println("LE STOCK INITIAL DU MAGASIN CENTRAL " + qteStockInitial);
+
                 } else {
                     qteArrivage = 0L;
-                    quantiteTotalEnStock = qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte) - qteFinTransfert;                   
-//                    qteStockInitial = quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutPerte) - quantiteDebutTransfert;                        
+                    quantiteTotalEnStock = qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte) - qteFinTransfert;
+//                    qteStockInitial = quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutPerte) - quantiteDebutTransfert;
                     qteStockInitial = quantiteTotalEnStock - QuantiteProduitTranfereRecuMagasin + (quantiteVendue + quantitePromo + quantitePerte + quantiteTransfere);
 
-                    System.out.println("LE STOCK INITIAL POUR LES AUTRES MAGASINS "+ qteStockInitial);
+                    System.out.println("LE STOCK INITIAL POUR LES AUTRES MAGASINS " + qteStockInitial);
                 }
-                
-                System.out.println("ARRIVAGE AU MAGASIN " +qteArrivage);
-                 etatDeTousLesProduits.setArrivage(qteArrivage); 
+
+                System.out.println("ARRIVAGE AU MAGASIN " + qteArrivage);
+                etatDeTousLesProduits.setArrivage(qteArrivage);
                 etatDeTousLesProduits.setStockInitial(qteStockInitial);
                 etatDeTousLesProduits.setQuantiteTotalEnStock(quantiteTotalEnStock);
-                
-  
+
+
                 // reinitialisation des variable à 01
                 QuantiteProduitTranfereRecuMagasin = 0L;
                 quantiteGlobaleLivre = 0L;
@@ -451,7 +451,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 qteVenteDebut = 0L;
                 qtePromoDebut = 0L;
                 qtePerteDebut = 0L;
-                
+
                 qteArrivage = 0L;
                 qteStockInitial = 0L;
                 qteFinTransfertRecu = 0L;
@@ -459,7 +459,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 qteFinTransfert = 0L;
                 qteFinPromotion = 0L;
                 qteFinPerte = 0L;
-                
+
                 TESTINITIAL = 0L;
                 quantiteDebutTransfert = 0L;
                 quantiteDebutTransfertRecu = 0L;
@@ -480,13 +480,14 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
     /**
      * Etat de la situation du magasin par mois
+     *
      * @param magasin
      * @param dateDumois
-     * @return 
+     * @return
      */
     @Override
     public List<EtatDeTousLesProduitsDunMagasinWrapper> etatSituationStockMagasin(Magasin magasin, String dateDumois) {
-        
+
         String produit1 = null;
         String produit2 = null;
         String dateCommenecement = "2016-12-01";
@@ -502,16 +503,16 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
         Long qteTransfertDebut = 0L;
         Long qtePromoDebut = 0L;
         Long qtePerteDebut = 0L;
-        
-        Long qteStockInitial =0L;
+
+        Long qteStockInitial = 0L;
         Long qteArrivage = 0L;
         Long qteFinTransfertRecu = 0L;
         Long qteFinVente = 0L;
         Long qteFinTransfert = 0L;
         Long qteFinPromotion = 0L;
         Long qteFinPerte = 0L;
-        
-        Long TESTINITIAL =0L;
+
+        Long TESTINITIAL = 0L;
         Long quantiteDebutTransfert = 0L;
         Long quantiteDebutTransfertRecu = 0L;
         Long quantiteDebutVente = 0L;
@@ -522,7 +523,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
         String dateDebutPeriode = null;
         String dateFinPeriode = null;
-        
+
         Long ecart = 0L;
         Long quantiteStock = 0L;
 
@@ -541,16 +542,16 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
         // Toute livraison total d'un produit au magasin central
         List<Lignelivraison> toutesLivraison = null;
-        // Toute les sortie d'un produit 
+        // Toute les sortie d'un produit
         List<LigneBonDeSortie> toutesSortie = null;
 
-        //Liste des produits sortie  de date dateDebutStock à date debut 
+        //Liste des produits sortie  de date dateDebutStock à date debut
         List<LigneBonDeSortie> listeSortieDebut = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, debut);
 
-        //Liste des produits sortie  de date dateDebutStock à date fin 
+        //Liste des produits sortie  de date dateDebutStock à date fin
         List<LigneBonDeSortie> sorteDebutaFin = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, fin);
 
-        
+
         // Liste des produits livré au magasin central de date dateDebutStock à date debut
         List<Lignelivraison> listeProduitLivreDebut = lignelivraisonRepository.findByLivraisonDateLivraisonBetween(dateDebutStock, debut);
 
@@ -562,8 +563,8 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
         List<Lignelivraison> listeProduitLivre = lignelivraisonRepository.findByLivraisonDateLivraisonBetween(debut, fin);
 
         List<Inventaire> inventaireDuMois = inventaireRepository.findByMagasinAndDateInventaireBetween(magasin, debut, fin);
-        Iterator<Inventaire>itInvent = inventaireDuMois.iterator();
-        
+        Iterator<Inventaire> itInvent = inventaireDuMois.iterator();
+
         // liste de tous les produits
         List<Produit> listProduits = produitRepository.findAll();
         Iterator<Produit> itProduits = listProduits.iterator();
@@ -590,69 +591,69 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 }
 
                 //Toutes les livraisons au magasin central du produit dans la periode de DateDebutStock a date fin
-                List <Lignelivraison> listLivraisonProduitDateDebutStockADateFin = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), dateDebutStock, fin);
-        
-                 //Recuperer les arrivages d'un produit de la periode dateDebutStock et date fin
-                for(Lignelivraison qteArrivageDateFin: listLivraisonProduitDateDebutStockADateFin){
+                List<Lignelivraison> listLivraisonProduitDateDebutStockADateFin = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), dateDebutStock, fin);
+
+                //Recuperer les arrivages d'un produit de la periode dateDebutStock et date fin
+                for (Lignelivraison qteArrivageDateFin : listLivraisonProduitDateDebutStockADateFin) {
                     quantiteArrivageDateFin += qteArrivageDateFin.getQuantiteLotLivre();
                 }
-                
-                //Tous les arrivages au magasin central du produit dans la periode de date dateDebutStock à date debut 
-                List <Lignelivraison> listLivraisonProduitPeriodedateDebutStock = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), dateDebutStock, debut);
-       
+
+                //Tous les arrivages au magasin central du produit dans la periode de date dateDebutStock à date debut
+                List<Lignelivraison> listLivraisonProduitPeriodedateDebutStock = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), dateDebutStock, debut);
+
                 //Recuperer les arrivages d'un produit de la periode dateDebutStock et date debut
-                for(Lignelivraison arrivagePdateDebut: listLivraisonProduitPeriodedateDebutStock){
+                for (Lignelivraison arrivagePdateDebut : listLivraisonProduitPeriodedateDebutStock) {
                     qteArrivageAvant += arrivagePdateDebut.getQuantiteLotLivre();
                 }
-                
+
                 // Toutes les sorties de produits de AIMAS
                 toutesSortie = ligneBonDeSortieRepository.findAllByProduit(inventaire.getProduit());
                 for (LigneBonDeSortie lbs : toutesSortie) {
                     quantiteGlobaleSortie += lbs.getQuantite();
                 }
-                
+
                 //Tous les arrivages au magasin central du produit dans la periode de date debut et fin
-                List <Lignelivraison> listLivraisonProduitPeriode = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), debut, fin);
-       
-                  //Recuperer les arrivages d'un produit d'une periode de date debut et date fin
-                for(Lignelivraison arrivageProduit:listLivraisonProduitPeriode){                  
-                    qteArrivage += arrivageProduit.getQuantiteLotLivre();                        
+                List<Lignelivraison> listLivraisonProduitPeriode = lignelivraisonRepository.findByLivraisonCommandeProduitAndLivraisonDateLivraisonBetween(inventaire.getProduit(), debut, fin);
+
+                //Recuperer les arrivages d'un produit d'une periode de date debut et date fin
+                for (Lignelivraison arrivageProduit : listLivraisonProduitPeriode) {
+                    qteArrivage += arrivageProduit.getQuantiteLotLivre();
                 }
 
-                 //=============================================================================/
+                //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité de produit transferée du magasin d'origine depuis le 01-12-2016 à la date debut 
+                //Quantité de produit transferée du magasin d'origine depuis le 01-12-2016 à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             quantiteDebutTransfert += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
-                
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date fin dans les differents magasin autre que le magasin central 
+
+
+                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date fin dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if (sortieQteStock.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit())
-                                && sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (sortieQteStock.getBonDeSortie().getStatusTranfert()== null || sortieQteStock.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && sortieQteStock.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (sortieQteStock.getBonDeSortie().getStatusTranfert() == null || sortieQteStock.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && sortieQteStock.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             qteFinTransfertRecu += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' dans les differents magasin autre que le magasin central 
+
+                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie sortiePromoDebut : listeSortieDebut) {
                     if (sortiePromoDebut.getBonDeSortie().getMagasin() != null) {
                         if (sortiePromoDebut.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit())
-                                && sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (sortiePromoDebut.getBonDeSortie().getStatusTranfert()== null || sortiePromoDebut.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && sortiePromoDebut.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (sortiePromoDebut.getBonDeSortie().getStatusTranfert() == null || sortiePromoDebut.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && sortiePromoDebut.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             qteTransfertRecuDebut += sortiePromoDebut.getQuantite();
                         }
                     }
@@ -660,26 +661,26 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date debut dans les differents magasin autre que le magasin central 
+                //Les quantités reçue par transfert depuis le debut du stock :'2016-12-01' à date debut dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if (ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit())
-                                && ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert()== null || ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && ligneSortieMoisDernier.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert() == null || ligneSortieMoisDernier.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && ligneSortieMoisDernier.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             quantiteDebutTransfertRecu += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
+
                 //Les quantités reçue par transfert dans les differents magasin autre que le magasin central
                 for (LigneBonDeSortie ligneTransfert : listeSortieParPeriode) {
                     if (ligneTransfert.getBonDeSortie().getMagasin() != null) {
                         if (ligneTransfert.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit())
-                                && ligneTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
-                                && (ligneTransfert.getBonDeSortie().getStatusTranfert()== null || ligneTransfert.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
-                                && ligneTransfert.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
+                            && ligneTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
+                            && (ligneTransfert.getBonDeSortie().getStatusTranfert() == null || ligneTransfert.getBonDeSortie().getStatusTranfert().equals(StatusTransfert.RECU))
+                            && ligneTransfert.getBonDeSortie().getDestination().getNomMagasin().equals(magasin.getNomMagasin())) {
                             QuantiteProduitTranfereRecuMagasin += ligneTransfert.getQuantite();
                         }
                     }
@@ -688,35 +689,35 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                ///Quantité vendue par magasin depuis le debut '01-12-2016' à la date debut 
+                ///Quantité vendue par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             quantiteDebutVente += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
-                 //Quantité vendue par magasin depuis le debut '01-12-2016' à la date fin
+
+                //Quantité vendue par magasin depuis le debut '01-12-2016' à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             qteFinVente += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité vendue par magasin depuis le debut '01-12-2016'
                 for (LigneBonDeSortie sortieVenteDebut : listeSortieDebut) {
                     if (sortieVenteDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortieVenteDebut.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieVenteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieVenteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (sortieVenteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieVenteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             qteVenteDebut += sortieVenteDebut.getQuantite();
                         }
                     }
@@ -726,45 +727,45 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieVente : listeSortieParPeriode) {
                     if (ligneSortieVente.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieVente.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieVente.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieVente.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
+                            && (ligneSortieVente.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieVente.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE))) {
                             quantiteVendue += ligneSortieVente.getQuantite();
                         }
                     }
                 }
                 etatDeTousLesProduits.setQuantiteVendue(quantiteVendue);
 
-                 //=============================================================================/
-               //Pour le calcul du stock initial
-               ///Quantité sortie en promo par magasin depuis le debut '01-12-2016' à la date debut 
+                //=============================================================================/
+                //Pour le calcul du stock initial
+                ///Quantité sortie en promo par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
-                     if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
+                    if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             quantiteDebutPromotion += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
+
                 //Quantité sortie en promo par magasin depuis le 01-12-2016 à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             qteFinPromotion += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité sortie en promo par magasin depuis le 01-12-2016
                 for (LigneBonDeSortie sortiePromoDebut : listeSortieDebut) {
                     if (sortiePromoDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortiePromoDebut.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortiePromoDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (sortiePromoDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortiePromoDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             qtePromoDebut += sortiePromoDebut.getQuantite();
                         }
                     }
@@ -774,8 +775,8 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieTransfert : listeSortieParPeriode) {
                     if (ligneSortieTransfert.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieTransfert.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
+                            && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION))) {
                             quantitePromo += ligneSortieTransfert.getQuantite();
                         }
                     }
@@ -784,35 +785,35 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
 
                 //=============================================================================/
                 //Pour le calcul du stock initial
-                //Quantité perdue par magasin depuis le debut '01-12-2016' à la date debut 
+                //Quantité perdue par magasin depuis le debut '01-12-2016' à la date debut
                 for (LigneBonDeSortie ligneSortieMoisDernier : listeSortieDebut) {
-                   if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
+                    if (ligneSortieMoisDernier.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieMoisDernier.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (ligneSortieMoisDernier.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieMoisDernier.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             quantiteDebutPerte += ligneSortieMoisDernier.getQuantite();
                         }
                     }
                 }
                 //=============================================================================/
-                
+
                 //Quantité perdue par magasin depuis 01-12-2016 à la date fin
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             qteFinPerte += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 //Quantité perdue par magasin depuis 01-12-2016
                 for (LigneBonDeSortie sortiePerteDebut : listeSortieDebut) {
                     if (sortiePerteDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortiePerteDebut.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortiePerteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortiePerteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (sortiePerteDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortiePerteDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             qtePerteDebut += sortiePerteDebut.getQuantite();
                         }
                     }
@@ -822,8 +823,8 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie lignePerte : listeSortieParPeriode) {
                     if (lignePerte.getBonDeSortie().getMagasin() != null) {
                         if ((lignePerte.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (lignePerte.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (lignePerte.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
+                            && (lignePerte.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (lignePerte.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE))) {
                             quantitePerte += lignePerte.getQuantite();
                         }
                     }
@@ -834,19 +835,19 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie sortieQteStock : sorteDebutaFin) {
                     if (sortieQteStock.getBonDeSortie().getMagasin() != null) {
                         if ((sortieQteStock.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (sortieQteStock.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieQteStock.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             qteFinTransfert += sortieQteStock.getQuantite();
                         }
                     }
                 }
-                
+
                 // Quantité de transferée du magasin d'origine depuis le 01-12-2016
                 for (LigneBonDeSortie sortieTransfertDebut : listeSortieDebut) {
                     if (sortieTransfertDebut.getBonDeSortie().getMagasin() != null) {
                         if ((sortieTransfertDebut.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (sortieTransfertDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (sortieTransfertDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (sortieTransfertDebut.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (sortieTransfertDebut.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             qteTransfertDebut += sortieTransfertDebut.getQuantite();
                         }
                     }
@@ -856,8 +857,8 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 for (LigneBonDeSortie ligneSortieTransfert : listeSortieParPeriode) {
                     if (ligneSortieTransfert.getBonDeSortie().getMagasin() != null) {
                         if ((ligneSortieTransfert.getLot().getProduit().getNomProduit().equals(inventaire.getProduit().getNomProduit()))
-                                && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
-                                && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
+                            && (ligneSortieTransfert.getBonDeSortie().getMagasin().getNomMagasin().equals(magasin.getNomMagasin()))
+                            && (ligneSortieTransfert.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT))) {
                             quantiteTransfere += ligneSortieTransfert.getQuantite();
                         }
                     }
@@ -867,21 +868,21 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 if (magasin.getNomMagasin().equals("MAGASIN CENTRAL")) {
 
                     quantiteTotalEnStock = (quantiteArrivageDateFin - qteFinTransfert) + qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte);
-          
-//                    qteStockInitial = qteArrivageAvant + quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutTransfert + quantiteDebutPerte);
-                    qteStockInitial = quantiteTotalEnStock - qteArrivage + quantiteVendue + quantitePromo + quantiteTransfere + quantitePerte - QuantiteProduitTranfereRecuMagasin;             
 
-                System.out.println("LE STOCK INITIAL EST "+qteStockInitial);
+//                    qteStockInitial = qteArrivageAvant + quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutTransfert + quantiteDebutPerte);
+                    qteStockInitial = quantiteTotalEnStock - qteArrivage + quantiteVendue + quantitePromo + quantiteTransfere + quantitePerte - QuantiteProduitTranfereRecuMagasin;
+
+                    System.out.println("LE STOCK INITIAL EST " + qteStockInitial);
                 } else {
-                    qteArrivage = 0L;                    
-                    quantiteTotalEnStock = qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte) - qteFinTransfert;                    
+                    qteArrivage = 0L;
+                    quantiteTotalEnStock = qteFinTransfertRecu - (qteFinVente + qteFinPromotion + qteFinPerte) - qteFinTransfert;
                     qteStockInitial = quantiteDebutTransfertRecu - (quantiteDebutVente + quantiteDebutPromotion + quantiteDebutPerte) - quantiteDebutTransfert;
                 }
-                
-                System.out.println("ESSSSAAIII !!!! DE L'ARRIVAGE " +qteArrivage);
-                etatDeTousLesProduits.setStockInitial(qteStockInitial); 
+
+                System.out.println("ESSSSAAIII !!!! DE L'ARRIVAGE " + qteArrivage);
+                etatDeTousLesProduits.setStockInitial(qteStockInitial);
                 etatDeTousLesProduits.setQuantiteTotalEnStock(quantiteTotalEnStock);
-                
+
                 ecart = quantiteTotalEnStock - inventaire.getStockReel();
                 etatDeTousLesProduits.setEcart(ecart);
 
@@ -901,14 +902,14 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 qtePromoDebut = 0L;
                 qtePerteDebut = 0L;
                 qteArrivage = 0L;
-                qteStockInitial =0L;
-                
+                qteStockInitial = 0L;
+
                 qteFinTransfertRecu = 0L;
                 qteFinVente = 0L;
                 qteFinTransfert = 0L;
                 qteFinPromotion = 0L;
                 qteFinPerte = 0L;
-                
+
                 quantiteDebutTransfert = 0L;
                 quantiteDebutTransfertRecu = 0L;
                 quantiteDebutVente = 0L;
@@ -916,7 +917,7 @@ public class EtatDeTousLesProduitsDunMagasinServiceImpl implements EtatDeTousLes
                 quantiteDebutPerte = 0L;
                 quantiteArrivageDateFin = 0L;
                 qteArrivageAvant = 0L;
-                
+
                 // ajouter un objet de la classe EtatDeTousLesProduitsDunMAgasinWrapper à l'objet LinkedList
                 listeStockParMagasin.add(etatDeTousLesProduits);
 

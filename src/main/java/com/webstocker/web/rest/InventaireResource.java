@@ -3,6 +3,7 @@ package com.webstocker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Inventaire;
 import com.webstocker.service.EtatDeTousLesProduitsDunMagasinService;
+import com.webstocker.service.EtatStockGlobalService;
 import com.webstocker.service.InventaireService;
 import com.webstocker.web.rest.util.HeaderUtil;
 import com.webstocker.web.rest.util.PaginationUtil;
@@ -43,6 +44,9 @@ public class InventaireResource {
 
     @Inject
     private EtatDeTousLesProduitsDunMagasinService etatDeTousLesProduitsDunMagasinService;
+
+    @Inject
+    private EtatStockGlobalService etatStockGlobalService;
 
 
     @RequestMapping(value = "/inventaires",
@@ -160,6 +164,7 @@ public class InventaireResource {
         if (!inventaires.hasContent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
 
         return ResponseEntity.ok(inventaires);
     }

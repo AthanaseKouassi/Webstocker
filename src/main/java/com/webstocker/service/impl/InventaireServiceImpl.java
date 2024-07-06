@@ -7,6 +7,7 @@ import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.MagasinRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.repository.search.InventaireSearchRepository;
+import com.webstocker.service.EtatStockGlobalService;
 import com.webstocker.service.InventaireService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,24 +46,16 @@ public class InventaireServiceImpl implements InventaireService {
     @Inject
     private ProduitRepository produitRepository;
 
-    /**
-     * Save a inventaire.
-     *
-     * @param inventaire the entity to save
-     * @return the persisted entity
-     */
+    @Inject
+    private EtatStockGlobalService etatStockGlobalService;
+
+
     @Override
     public Inventaire save(Inventaire inventaire) {
         log.debug("Request to save Inventaire : {}", inventaire);
         return inventaireRepository.save(inventaire);
     }
 
-    /**
-     * Get all the inventaires.
-     *
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
     @Override
     @Transactional(readOnly = true)
     public Page<Inventaire> findAll(Pageable pageable) {
@@ -70,12 +63,7 @@ public class InventaireServiceImpl implements InventaireService {
         return inventaireRepository.findAll(pageable);
     }
 
-    /**
-     * Get one inventaire by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
+
     @Override
     @Transactional(readOnly = true)
     public Inventaire findOne(Long id) {
@@ -83,23 +71,12 @@ public class InventaireServiceImpl implements InventaireService {
         return inventaireRepository.findOne(id);
     }
 
-    /**
-     * Delete the inventaire by id.
-     *
-     * @param id the id of the entity
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Inventaire : {}", id);
         inventaireRepository.delete(id);
     }
 
-    /**
-     * Search for the inventaire corresponding to the query.
-     *
-     * @param query the query of the search
-     * @return the list of entities
-     */
     @Override
     @Transactional(readOnly = true)
     public Page<Inventaire> search(String query, Pageable pageable) {
@@ -138,6 +115,7 @@ public class InventaireServiceImpl implements InventaireService {
         LocalDate startOfMonth = dateDuMoisLocal.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate endOfMonth = dateDuMoisLocal.with(TemporalAdjusters.lastDayOfMonth());
 
+
         return inventaireRepository.findByDateInventaireBetween(startOfMonth, endOfMonth, pageable);
 
     }
@@ -161,7 +139,7 @@ public class InventaireServiceImpl implements InventaireService {
 
         // Si l'inventaire n'existe pas encore pour ce mois, le sauvegarder
         return inventaireRepository.save(inventaire);
-        
+
     }
 
 }

@@ -7,6 +7,7 @@ import com.webstocker.domain.wrapper.EtatStockGlobalAimasWrapper;
 import com.webstocker.repository.LigneBonDeSortieRepository;
 import com.webstocker.repository.LignelivraisonRepository;
 import com.webstocker.repository.ProduitRepository;
+import com.webstocker.service.EtatStockGlobalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,14 @@ import java.util.List;
 public class CalendrierApprovisionnementService {
 
     @Inject
-    LigneBonDeSortieRepository ligneBonDeSortieRepository;
+    private LigneBonDeSortieRepository ligneBonDeSortieRepository;
     @Inject
-    ProduitRepository produitRepository;
+    private ProduitRepository produitRepository;
     @Inject
-    LignelivraisonRepository lignelivraisonRepository;
+    private LignelivraisonRepository lignelivraisonRepository;
+
+    @Inject
+    private EtatStockGlobalService etatStockGlobalService;
 
     public List<EtatStockGlobalAimasWrapper> etatRecapitulatifVenteEtPromo(String dateDebut, String dateFin, Produit produit,
                                                                            Long stockReelMagasin, Long stockReelAntenne, Long stockReelCommerciaux) {

@@ -112,7 +112,7 @@ public class InventaireWrapperServiceImpl implements InventaireWrapperService {
             inventaire.setVente(etatGlobal.getQuantiteVendue());
             inventaire.setPromo(etatGlobal.getQuantitePromotion());
             inventaire.setPerteAbime(etatGlobal.getQuantitePerte());
-
+            inventaire.setNomBailleur(etatGlobal.getBailleur().getNomBailleur());
         }
 
         return inventaire;

@@ -28,6 +28,8 @@ public interface InventaireRepository extends JpaRepository<Inventaire, Long> {
 
     Page<Inventaire> findByDateInventaireBetween(LocalDate dateDebut, LocalDate dateFin, Pageable pageable);
 
+    List<Inventaire> findByDateInventaireBetween(LocalDate dateDebut, LocalDate dateFin);
+
     @Query("SELECT i FROM Inventaire i WHERE YEAR(i.dateInventaire) = :year " +
         "AND MONTH(i.dateInventaire) = :month AND i.produit = :produit")
     Optional<Inventaire> findByMonth(@Param("year") int year, @Param("month") int month, @Param("produit") Produit produit);

@@ -2,9 +2,8 @@ package com.webstocker.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Inventaire;
-import com.webstocker.service.EtatDeTousLesProduitsDunMagasinService;
-import com.webstocker.service.EtatStockGlobalService;
 import com.webstocker.service.InventaireService;
+import com.webstocker.service.newfeature.GenerationCalendrierApproService;
 import com.webstocker.web.rest.util.HeaderUtil;
 import com.webstocker.web.rest.util.PaginationUtil;
 import io.swagger.annotations.ApiParam;
@@ -25,8 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,10 +48,7 @@ public class InventaireResource {
     private InventaireService inventaireService;
 
     @Inject
-    private EtatDeTousLesProduitsDunMagasinService etatDeTousLesProduitsDunMagasinService;
-
-    @Inject
-    private EtatStockGlobalService etatStockGlobalService;
+    private GenerationCalendrierApproService generationCalendrierApproService;
 
 
     @RequestMapping(value = "/inventaires",
@@ -156,17 +158,45 @@ public class InventaireResource {
     @Timed
     public ResponseEntity<Page<Inventaire>> getInventaire(@PathVariable String dateDuMois,
                                                           @RequestParam(name = "page", defaultValue = "0") int page,
-                                                          @RequestParam(name = "size", defaultValue = "3") int size) throws URISyntaxException {
+                                                          @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("Inventaire du mois {}", dateDuMois);
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Inventaire> inventaires = inventaireService.getDateInventaireBetween(dateDuMois, pageRequest);
 
-        if (!inventaires.hasContent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
+        if (!inventaires.hasContent()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return ResponseEntity.ok(inventaires);
+    }
+
+    @RequestMapping(value = "/inventaires/calendrier-approvisionnement/{dateInventaire}",
+        method = RequestMethod.GET)
+    @Timed
+    public void getCalendrierAppro(@PathVariable String dateInventaire, HttpServletResponse response) throws IOException {
+//        generationCalendrierApproService.genereFichierExcel(dateInventaire);
+//        response.setStatus(HttpStatus.OK.value());
+
+
+        // Générer le fichier Excel
+        ByteArrayOutputStream outputStream = generationCalendrierApproService.genereFichierExcel(dateInventaire);
+        final String fileName = "inventaire_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".xlsx";
+
+
+        // Configurer la réponse HTTP pour le téléchargement de fichier
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        response.setStatus(HttpStatus.OK.value());
+
+        // Envoyer le fichier dans la réponse
+//        try (outputStream) {
+//            response.getOutputStream().write(outputStream.toByteArray());
+//            response.getOutputStream().flush();
+//        }
+
+        try (OutputStream out = response.getOutputStream()) {
+            outputStream.writeTo(out);
+            out.flush();
+        }
+
     }
 
 

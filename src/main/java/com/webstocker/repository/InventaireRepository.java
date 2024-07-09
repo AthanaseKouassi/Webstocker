@@ -34,4 +34,9 @@ public interface InventaireRepository extends JpaRepository<Inventaire, Long> {
         "AND MONTH(i.dateInventaire) = :month AND i.produit = :produit")
     Optional<Inventaire> findByMonth(@Param("year") int year, @Param("month") int month, @Param("produit") Produit produit);
 
+    @Query("SELECT i FROM Inventaire i WHERE YEAR(i.dateInventaire) = :year ")
+    List<Inventaire> findByInventaireByYear(@Param("year") int year);
+
+    @Query("SELECT i FROM Inventaire i WHERE YEAR(i.dateInventaire) = :year AND i.produit = :produit ORDER BY i.dateInventaire ASC")
+    List<Inventaire> findByInventaireByYearAndProduit(@Param("year") int year, @Param("produit") Produit produit);
 }

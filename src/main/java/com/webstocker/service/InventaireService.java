@@ -4,6 +4,8 @@ import com.webstocker.domain.Inventaire;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * Service Interface for managing Inventaire.
  */
@@ -56,5 +58,7 @@ public interface InventaireService {
     Page<Inventaire> getDateInventaireBetween(String dateDuMois, Pageable pageable);
 
     Inventaire create(Inventaire inventaire);
+
+    List<Inventaire> getInventairesByYear(String dateInventaire);
 
 }

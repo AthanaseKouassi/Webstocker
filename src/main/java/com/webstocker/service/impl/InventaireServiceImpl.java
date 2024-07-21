@@ -9,6 +9,7 @@ import com.webstocker.repository.ProduitRepository;
 import com.webstocker.repository.search.InventaireSearchRepository;
 import com.webstocker.service.EtatStockGlobalService;
 import com.webstocker.service.InventaireService;
+import com.webstocker.utilitaires.Constantes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -140,6 +142,14 @@ public class InventaireServiceImpl implements InventaireService {
         // Si l'inventaire n'existe pas encore pour ce mois, le sauvegarder
         return inventaireRepository.save(inventaire);
 
+    }
+
+    @Override
+    public List<Inventaire> getInventairesByYear(String dateInventaire) {
+        final DateTimeFormatter format = DateTimeFormatter.ofPattern(Constantes.PATTERN_DATE);
+        final LocalDate localDate = LocalDate.parse(dateInventaire, format);
+        int year = localDate.getYear();
+        return inventaireRepository.findByInventaireByYear(year);
     }
 
 }

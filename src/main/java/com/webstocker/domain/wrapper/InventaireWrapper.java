@@ -18,6 +18,7 @@ public class InventaireWrapper {
     private Long vente;
     private Long promo;
     private Long perteAbime;
+    private String nomBailleur;
 
     public String getNomMagasin() {
         return nomMagasin;
@@ -97,5 +98,13 @@ public class InventaireWrapper {
 
     public void setPerteAbime(Long perteAbime) {
         this.perteAbime = perteAbime;
+    }
+
+    public String getNomBailleur() {
+        return nomBailleur;
+    }
+
+    public void setNomBailleur(String nomBailleur) {
+        this.nomBailleur = nomBailleur;
     }
 }

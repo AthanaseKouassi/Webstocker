@@ -6,11 +6,10 @@
 package com.webstocker.utilitaires;
 
 /**
- *
  * @author andrekouame
  */
 public class Constantes {
+    public static final String PATTERN_DATE = "yyyy-MM-dd";
     public static Integer THIRTYDAYS = 30;
-    
     public static Integer NINETYDAYS = 90;
 }

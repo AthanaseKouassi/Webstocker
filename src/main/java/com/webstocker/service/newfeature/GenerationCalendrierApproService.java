@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -16,10 +17,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -28,9 +28,9 @@ import java.util.Map;
 @Slf4j
 @Service
 public class GenerationCalendrierApproService {
-    private static final String FILE_PATH = "D:/projet-dev/Fichier_aimas";
+
     private static final String PATTERN_MOIS = "MMMM";
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
     @Inject
     private Utils utils;
     @Inject
@@ -108,17 +108,92 @@ public class GenerationCalendrierApproService {
 
     }
 
+    // Ajouter la ligne total à la fin du tableau
+    private void addRowTotal(Sheet sheet, CellStyle borderedCellStyle, List<Inventaire> lstInventaire) {
+        final long sommeQteTheorique = lstInventaire.stream().mapToLong(Inventaire::getStockTheoDebut).sum();
+        final long sommeArrivage = lstInventaire.stream().mapToLong(Inventaire::getArrivage).sum();
+        final long sommeVente = lstInventaire.stream().mapToLong(Inventaire::getVente).sum();
+        final long sommePromo = lstInventaire.stream().mapToLong(Inventaire::getPromo).sum();
+        final long sommePerte = lstInventaire.stream().mapToLong(Inventaire::getPerteAbime).sum();
+        final long sommeStockReelMagasin = lstInventaire.stream().mapToLong(Inventaire::getStockMagasinCentral).sum();
+        final long sommeAntenne = lstInventaire.stream().mapToLong(Inventaire::getStockAntenne).sum();
+        final long sommeAgent = lstInventaire.stream().mapToLong(Inventaire::getStockAgent).sum();
+
+        final long sommeAjustement = (sommeQteTheorique + sommeArrivage) - (sommeVente - sommePromo - sommePerte)
+            - (sommeStockReelMagasin + sommeAntenne + sommeAgent);
+        final long sommeStockTotalreelFinal = sommeStockReelMagasin + sommeAntenne + sommeAgent;
+
+        final int row = 4 + lstInventaire.size();
+
+        Row totalRow = sheet.createRow(row);
+
+        Cell cell = totalRow.createCell(1);
+        cell.setCellValue("Total Année");
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(2);
+        cell.setCellValue(sommeQteTheorique);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(3);
+        cell.setCellValue(sommeArrivage);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(4);
+        cell.setCellValue(sommeVente);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(5);
+        cell.setCellValue(sommePromo);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(6);
+        cell.setCellValue(sommePerte);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(7);
+        cell.setCellValue(sommeAjustement);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(8);
+        cell.setCellValue(sommeStockReelMagasin);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(9);
+        cell.setCellValue(sommeAntenne);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(10);
+        cell.setCellValue(sommeAgent);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(11);
+        cell.setCellValue(sommeStockTotalreelFinal);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(12);
+        cell.setCellValue(0);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(13);
+        cell.setCellValue(0);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(14);
+        cell.setCellValue(0);
+        cell.setCellStyle(borderedCellStyle);
+        cell = totalRow.createCell(15);
+        cell.setCellValue("");
+        cell.setCellStyle(borderedCellStyle);
+
+    }
+
     private void createHeaderRow(Sheet sheet, CellStyle borderedCellStyle, String nomProduit, Inventaire inventaire) {
+
+        final CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        final Font font = sheet.getWorkbook().createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 12);
+        cellStyle.setFont(font);
+
         Row titleRow = sheet.createRow(1);
         Cell celltitle = titleRow.createCell(1);
         celltitle.setCellValue("Annexe 2 :Calendrier d'approvisionnement et inventaire de " + nomProduit.toUpperCase());
+        celltitle.setCellStyle(cellStyle);
 
         Row headerRow = sheet.createRow(3);
         headerRow.setHeightInPoints(30); // Définir la hauteur de la ligne
         final int year = inventaire.getDateInventaire().getYear();
 
         Cell cell = headerRow.createCell(1);
-        cell.setCellValue("Mois " + year);
+        cell.setCellValue("Année " + year);
         cell.setCellStyle(borderedCellStyle);
         cell = headerRow.createCell(2);
         cell.setCellValue("Stock début Mois");
@@ -195,13 +270,19 @@ public class GenerationCalendrierApproService {
         return borderedCellStyle;
     }
 
+    private CellStyle getFrontCellStyle(Workbook workbook) {
+        final CellStyle cellStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 16);
+        cellStyle.setFont(font);
+        return cellStyle;
+    }
 
-    public ByteArrayOutputStream genereFichierExcel(String dateInventaire) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook()) {
 
-            final LocalDateTime now = LocalDateTime.now();
-            final String fileName = "inventaire_" + now.format(formatter) + ".xlsx";
-            final String fileSeparator = FileSystems.getDefault().getSeparator();
+    public void generateExcelFile(String dateInventaire, HttpServletResponse response) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook();
+             ServletOutputStream outputStream = response.getOutputStream()) {
 
             final Map<Produit, List<Inventaire>> mapInventaireProduit = inventaireNewService.getAllInventaireParProduit(dateInventaire);
             final CellStyle borderedCellStyle = getCellStyle(workbook);
@@ -233,29 +314,14 @@ public class GenerationCalendrierApproService {
                     }
                     sheet.autoSizeColumn(0);
                     addInventaireToSheet(sheet, inventaire, moyenne, borderedCellStyle);
+                    if (inventaire.getDateInventaire().getMonthValue() == 6) {
+                        addRowTotal(sheet, borderedCellStyle, inventaires);
+                    }
                 }
+
             }
-            // FileOutputStream fileOut = new FileOutputStream(FILE_PATH + fileSeparator + fileName);
-            //workbook.write(fileOut);
-//
-//            File outputFile = new File(FILE_PATH + fileSeparator + fileName);
-//            try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
-//                workbook.write(fileOut);
-//            }
-//            return outputFile;
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
-            return outputStream;
-
-
-//        } finally {
-//            workbook.close();
         }
-
-
-        // }
-        //return null;
     }
 
 

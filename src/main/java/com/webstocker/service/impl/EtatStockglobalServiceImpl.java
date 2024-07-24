@@ -9,6 +9,7 @@ import com.webstocker.repository.LigneBonDeSortieRepository;
 import com.webstocker.repository.LignelivraisonRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.service.EtatStockGlobalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.List;
 /**
  * @author Athanase
  */
+@Slf4j
 @Service
 @Transactional
 public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
@@ -280,7 +282,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
         List<LigneBonDeSortie> lignebsTransfertAvantdate = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBefore(endDate);
 
         //Liste des produits sortie de date dateDebutStock à date fin
-        List<LigneBonDeSortie> sorteDebutaFin = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, endDate);
+        List<LigneBonDeSortie> lstSorteDebutaFins = ligneBonDeSortieRepository.findByBonDeSortieDaateCreationBetween(dateDebutStock, endDate);
 
 
         List<Produit> listProduits = produitRepository.findAll();
@@ -322,7 +324,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             etatStockGlobal.setQuantiteTotalTransfert(qtTf);
 
             //Les ventes realisées depuis la date dateDebutStock à la date fin
-            for (LigneBonDeSortie ligneDebutaFin : sorteDebutaFin) {
+            for (LigneBonDeSortie ligneDebutaFin : lstSorteDebutaFins) {
                 if (ligneDebutaFin.getBonDeSortie().getTypeSortie().equals(TypeSortie.VENTE)
                     && ligneDebutaFin.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())) {
                     qteFinVendue += ligneDebutaFin.getQuantite();
@@ -343,7 +345,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             etatStockGlobal.setValeurVente(vlv);
 
             //les promotions realisées depuis la date dateDebutStock à la date fin
-            for (LigneBonDeSortie ligneDebutaFin : sorteDebutaFin) {
+            for (LigneBonDeSortie ligneDebutaFin : lstSorteDebutaFins) {
                 if (ligneDebutaFin.getBonDeSortie().getTypeSortie().equals(TypeSortie.PROMOTION)
                     && ligneDebutaFin.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())) {
                     qteFinPromotion += ligneDebutaFin.getQuantite();
@@ -360,7 +362,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             etatStockGlobal.setQuantitePromotion(qp);
 
             //les transferts realisés depuis la date dateDebutStock à la date fin
-            for (LigneBonDeSortie ligneDebutaFin : sorteDebutaFin) {
+            for (LigneBonDeSortie ligneDebutaFin : lstSorteDebutaFins) {
                 if (ligneDebutaFin.getBonDeSortie().getTypeSortie().equals(TypeSortie.TRANSFERT)
                     && ligneDebutaFin.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())) {
                     qteFinTransfert += ligneDebutaFin.getQuantite();
@@ -377,7 +379,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             etatStockGlobal.setQuantiteTransfert(qt);
 
             //les pertes realisées depuis la date dateDebutStock à la date fin
-            for (LigneBonDeSortie ligneDebutaFin : sorteDebutaFin) {
+            for (LigneBonDeSortie ligneDebutaFin : lstSorteDebutaFins) {
                 if (ligneDebutaFin.getBonDeSortie().getTypeSortie().equals(TypeSortie.PERTE)
                     && ligneDebutaFin.getLot().getProduit().getNomProduit().equals(produit.getNomProduit())) {
                     qteFinPerte += ligneDebutaFin.getQuantite();
@@ -401,6 +403,7 @@ public class EtatStockglobalServiceImpl implements EtatStockGlobalService {
             }
             etatStockGlobal.setQuantiteLivre(ql);
             quantiteGlobaleProduitEnStock = quantiteArrivageDateFin - (qteFinVendue + qteFinPromotion + qteFinPerte);
+            log.info("LA QUANTITE GLOBAL EN STOCK ::{}", quantiteGlobaleProduitEnStock);
 
             qteStockInitial = quantiteGlobaleProduitEnStock - quantiteArrivageDateFin + (qteFinVendue + qteFinPromotion + qteFinPerte);
 

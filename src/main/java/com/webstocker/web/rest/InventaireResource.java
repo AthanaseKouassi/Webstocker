@@ -3,7 +3,7 @@ package com.webstocker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Inventaire;
 import com.webstocker.service.InventaireService;
-import com.webstocker.service.newfeature.GenerationCalendrierApproService;
+import com.webstocker.service.newfeature.InventaireNewService;
 import com.webstocker.web.rest.util.HeaderUtil;
 import com.webstocker.web.rest.util.PaginationUtil;
 import io.swagger.annotations.ApiParam;
@@ -42,7 +42,7 @@ public class InventaireResource {
     private InventaireService inventaireService;
 
     @Inject
-    private GenerationCalendrierApproService generationCalendrierApproService;
+    private InventaireNewService inventaireNewService;
 
 
     @RequestMapping(value = "/inventaires",
@@ -96,6 +96,11 @@ public class InventaireResource {
     public ResponseEntity<Inventaire> getInventaire(@PathVariable Long id) {
         log.debug("REST request to get Inventaire : {}", id);
         Inventaire inventaire = inventaireService.findOne(id);
+        final long ajustement = (inventaire.getStockTheoDebut() + inventaire.getArrivage())
+            - inventaire.getVente() - inventaire.getPromo() - inventaire.getPerteAbime()
+            - (inventaire.getStockAgent() + inventaire.getStockMagasinCentral() + inventaire.getStockAgent());
+        inventaire.setAjustement(ajustement);
+
         return Optional.ofNullable(inventaire)
             .map(result -> new ResponseEntity<>(
                 result,
@@ -130,7 +135,8 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public Page<Inventaire> getTousLesInventaires(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "3") int size) throws URISyntaxException {
+    public Page<Inventaire> getTousLesInventaires(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                  @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("REST request to all inventaires to page {} and size {}", page, size);
         return inventaireService.findAll(new PageRequest(page, size));
     }
@@ -140,8 +146,10 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public Page<Inventaire> getTrouverInventaire(@RequestParam(required = true) String nomMagasin, @RequestParam(required = true) String dateDuMois,
-                                                 @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "3") int size) throws URISyntaxException {
+    public Page<Inventaire> getTrouverInventaire(@RequestParam(required = true) String nomMagasin,
+                                                 @RequestParam(required = true) String dateDuMois,
+                                                 @RequestParam(name = "page", defaultValue = "0") int page,
+                                                 @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("REST request to all inventaires ");
         return inventaireService.findByMagasinAndDateInventaireBetween(nomMagasin, dateDuMois, new PageRequest(page, size));
     }
@@ -162,5 +170,16 @@ public class InventaireResource {
         return ResponseEntity.ok(inventaires);
     }
 
+    @RequestMapping(value = "/inventaire/{idproduit}/quantite-theorique-en-stock",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Inventaire> getQuantiteTheoriqueProduit(@PathVariable long idproduit,
+                                                                  @RequestParam(required = true) String dateInventaire) {
+        log.debug("Request date de l'inventaire :: {}", dateInventaire);
+        final Inventaire inventaire = inventaireNewService.getInventaireByProduitAndDate(idproduit, dateInventaire);
+
+        return ResponseEntity.ok(inventaire);
+    }
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -74,6 +75,9 @@ public class Inventaire implements Serializable {
 
     @Column(name = "commentaire")
     private String commentaire;
+
+    @Transient
+    private Long ajustement;
 
 
     public Long getId() {
@@ -227,6 +231,14 @@ public class Inventaire implements Serializable {
 
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
+    }
+
+    public Long getAjustement() {
+        return ajustement;
+    }
+
+    public void setAjustement(Long ajustement) {
+        this.ajustement = ajustement;
     }
 
     @Override

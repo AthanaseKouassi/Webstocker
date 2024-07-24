@@ -105,6 +105,7 @@ public class InventaireWrapperServiceImpl implements InventaireWrapperService {
             .findFirst();
 
         if (result.isPresent()) {
+
             final EtatStockGlobalAimasWrapper etatGlobal = result.get();
             inventaire.setNomProduit(etatGlobal.getProduit().getNomProduit());
             inventaire.setQuantiteTheorique(etatGlobal.getQuantiteTotalEnStock());
@@ -112,7 +113,7 @@ public class InventaireWrapperServiceImpl implements InventaireWrapperService {
             inventaire.setVente(etatGlobal.getQuantiteVendue());
             inventaire.setPromo(etatGlobal.getQuantitePromotion());
             inventaire.setPerteAbime(etatGlobal.getQuantitePerte());
-            inventaire.setNomBailleur(etatGlobal.getBailleur().getNomBailleur());
+
         }
 
         return inventaire;

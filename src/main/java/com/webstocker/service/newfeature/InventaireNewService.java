@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Transactional
@@ -55,7 +56,6 @@ public class InventaireNewService {
 
             mapList.put(monthText, listInventaireMensuels);
         }
-
         return mapList;
     }
 
@@ -77,5 +77,46 @@ public class InventaireNewService {
         return mapInventaire;
     }
 
+    public Inventaire getInventaireByProduitAndDate(Long idProduit, String dateInventaire) {
+        final Produit produit = produitRepository.findOne(idProduit);
+        Inventaire inventaire = new Inventaire();
+
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        final LocalDate dateInventaireLocal = LocalDate.parse(dateInventaire, formatter);
+
+        final LocalDate startOfMonth = dateInventaireLocal.with(TemporalAdjusters.firstDayOfMonth());
+        final LocalDate endOfMonth = dateInventaireLocal.with(TemporalAdjusters.lastDayOfMonth());
+
+        final List<Inventaire> lstInventaire = inventaireRepository.findByDateInventaireBetween(startOfMonth, endOfMonth);
+        lstInventaire.forEach(f -> log.info("QUANTITE THEORIQUE ::{} --", f.getStockTheoDebut()));
+
+        Optional<Inventaire> result = lstInventaire.stream()
+            .filter(i -> i.getProduit().equals(produit))
+            .findFirst();
+
+        if (result.isPresent()) {
+            final long ajustement = (result.get().getStockTheoDebut() + result.get().getArrivage())
+                - result.get().getVente() - result.get().getPromo() - result.get().getPerteAbime()
+                - (result.get().getStockMagasinCentral() + result.get().getStockAgent() + result.get().getStockAntenne());
+
+            log.info("LE RESULTAT ::{}", result.get().getBailleur().getNomBailleur());
+
+            inventaire.setProduit(result.get().getProduit());
+            inventaire.setDateInventaire(result.get().getDateInventaire());
+            inventaire.setStockTheoDebut(result.get().getStockTheoDebut());
+            inventaire.setArrivage(result.get().getArrivage());
+            inventaire.setBailleur(result.get().getBailleur());
+            inventaire.setPerteAbime(result.get().getPerteAbime());
+            inventaire.setStockAgent(result.get().getStockAgent());
+            inventaire.setId(result.get().getId());
+            inventaire.setStockAntenne(result.get().getStockAntenne());
+            inventaire.setVente(result.get().getVente());
+            inventaire.setPromo(result.get().getPromo());
+            inventaire.setAjustement(ajustement);
+            inventaire.setStockMagasinCentral(result.get().getStockMagasinCentral());
+        }
+
+        return inventaire;
+    }
 
 }

@@ -130,7 +130,8 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public Page<Inventaire> getTousLesInventaires(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "3") int size) throws URISyntaxException {
+    public Page<Inventaire> getTousLesInventaires(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                  @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("REST request to all inventaires to page {} and size {}", page, size);
         return inventaireService.findAll(new PageRequest(page, size));
     }
@@ -140,8 +141,10 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public Page<Inventaire> getTrouverInventaire(@RequestParam(required = true) String nomMagasin, @RequestParam(required = true) String dateDuMois,
-                                                 @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "3") int size) throws URISyntaxException {
+    public Page<Inventaire> getTrouverInventaire(@RequestParam(required = true) String nomMagasin,
+                                                 @RequestParam(required = true) String dateDuMois,
+                                                 @RequestParam(name = "page", defaultValue = "0") int page,
+                                                 @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("REST request to all inventaires ");
         return inventaireService.findByMagasinAndDateInventaireBetween(nomMagasin, dateDuMois, new PageRequest(page, size));
     }

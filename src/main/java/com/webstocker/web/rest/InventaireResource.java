@@ -182,4 +182,23 @@ public class InventaireResource {
         return ResponseEntity.ok(inventaire);
     }
 
+    @RequestMapping(value = "/_search/inventaire/{dateInventaire}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Inventaire>> getAllInventaireParMois(@PathVariable String dateInventaire) {
+        final List<Inventaire> lstInventaires = inventaireNewService.getInventaireByMonth(dateInventaire);
+        return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
+    }
+
+    @RequestMapping(value = "/_search/{year}/inventaire/{idProduit}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Inventaire>> getAllInventaireParYearAndProduit(@PathVariable int year, @PathVariable Long idProduit) {
+        final List<Inventaire> lstInventaires = inventaireNewService.getInventaireparAnneeAndProduit(year, idProduit);
+        return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
+    }
+
+
 }

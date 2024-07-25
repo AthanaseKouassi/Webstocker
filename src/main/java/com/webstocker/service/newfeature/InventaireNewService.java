@@ -8,6 +8,7 @@ import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.utilitaires.Constantes;
 import com.webstocker.utilitaires.Utils;
+import com.webstocker.web.rest.dto.newfeature.InventaireDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import java.util.Optional;
 public class InventaireNewService {
 
     private static final String PATTERN_MOIS = "MMMM yyyy";
+
     @Inject
     private InventaireRepository inventaireRepository;
     @Inject
@@ -137,5 +139,34 @@ public class InventaireNewService {
         final Produit produit = produitRepository.findOne(idProduit);
 
         return inventaireRepository.findByInventaireByYearAndProduit(year, produit);
+    }
+
+    public InventaireDto getInventaireById(Long idInventaire) {
+
+        final Inventaire inventaire = inventaireRepository.findOne(idInventaire);
+        final long ajustement = (inventaire.getStockTheoDebut() + inventaire.getArrivage())
+            - inventaire.getVente() - inventaire.getPromo() - inventaire.getPerteAbime()
+            - (inventaire.getStockAgent() + inventaire.getStockMagasinCentral() + inventaire.getStockAgent());
+
+        InventaireDto inventaireDto = new InventaireDto();
+        inventaireDto.setId(inventaire.getId());
+        inventaireDto.setArrivage(inventaire.getArrivage());
+        inventaireDto.setMagasin(inventaire.getMagasin());
+        inventaireDto.setDateInventaire(inventaire.getDateInventaire());
+        inventaireDto.setCommentaire(inventaire.getCommentaire());
+        inventaireDto.setBailleur(inventaire.getBailleur());
+        inventaireDto.setProduit(inventaire.getProduit());
+        inventaireDto.setPromo(inventaire.getPromo());
+        inventaireDto.setVente(inventaire.getVente());
+        inventaireDto.setPerteAbime(inventaire.getPerteAbime());
+        inventaireDto.setStockAgent(inventaire.getStockAgent());
+        inventaireDto.setStockMagasinCentral(inventaire.getStockMagasinCentral());
+        inventaireDto.setStockAntenne(inventaire.getStockAntenne());
+        inventaireDto.setStockTheoDebut(inventaire.getStockTheoDebut());
+        inventaireDto.setStockReel(inventaire.getStockReel());
+        inventaireDto.setStockFinalTheorique(inventaire.getStockFinalTheorique());
+        inventaireDto.setAjustement(ajustement);
+
+        return inventaireDto;
     }
 }

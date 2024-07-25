@@ -56,6 +56,7 @@ public class InventaireNewService {
 
             mapList.put(monthText, listInventaireMensuels);
         }
+
         return mapList;
     }
 
@@ -83,12 +84,10 @@ public class InventaireNewService {
 
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         final LocalDate dateInventaireLocal = LocalDate.parse(dateInventaire, formatter);
-
         final LocalDate startOfMonth = dateInventaireLocal.with(TemporalAdjusters.firstDayOfMonth());
         final LocalDate endOfMonth = dateInventaireLocal.with(TemporalAdjusters.lastDayOfMonth());
 
         final List<Inventaire> lstInventaire = inventaireRepository.findByDateInventaireBetween(startOfMonth, endOfMonth);
-        lstInventaire.forEach(f -> log.info("QUANTITE THEORIQUE ::{} --", f.getStockTheoDebut()));
 
         Optional<Inventaire> result = lstInventaire.stream()
             .filter(i -> i.getProduit().equals(produit))
@@ -98,8 +97,6 @@ public class InventaireNewService {
             final long ajustement = (result.get().getStockTheoDebut() + result.get().getArrivage())
                 - result.get().getVente() - result.get().getPromo() - result.get().getPerteAbime()
                 - (result.get().getStockMagasinCentral() + result.get().getStockAgent() + result.get().getStockAntenne());
-
-            log.info("LE RESULTAT ::{}", result.get().getBailleur().getNomBailleur());
 
             inventaire.setProduit(result.get().getProduit());
             inventaire.setDateInventaire(result.get().getDateInventaire());

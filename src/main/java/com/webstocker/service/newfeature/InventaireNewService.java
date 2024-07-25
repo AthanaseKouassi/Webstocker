@@ -35,6 +35,10 @@ public class InventaireNewService {
 
     public List<Inventaire> getInventaireByMonth(String dateInventaire) {
 
+        if (dateInventaire.isEmpty()) {
+            throw new RuntimeException("La date : " + dateInventaire + " n'est pas une date d'inventaire.");
+        }
+
         final LocalDate startOfMonth = utils.getStartOfMonth(dateInventaire);
         final LocalDate endOfMonth = utils.getEndOfMonth(dateInventaire);
         log.info("Date début du mois: {} et date fin du mois: {}", startOfMonth, endOfMonth);

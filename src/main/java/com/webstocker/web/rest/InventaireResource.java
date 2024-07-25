@@ -182,4 +182,18 @@ public class InventaireResource {
         return ResponseEntity.ok(inventaire);
     }
 
+    @RequestMapping(value = "/_search/inventaire/{dateInventaire}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Inventaire>> getAllInventaireParMois(@PathVariable String dateInventaire) {
+        try {
+            final List<Inventaire> lstInventaires = inventaireNewService.getInventaireByMonth(dateInventaire);
+            return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
+        } catch (Exception e) {
+            throw new RuntimeException("Une erreur interne est survenue");
+        }
+    }
+
+
 }

@@ -191,5 +191,14 @@ public class InventaireResource {
         return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
     }
 
+    @RequestMapping(value = "/_search/{year}/inventaire/{idProduit}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Inventaire>> getAllInventaireParYearAndProduit(@PathVariable int year, @PathVariable Long idProduit) throws RuntimeException {
+        final List<Inventaire> lstInventaires = inventaireNewService.getInventaireparAnneeAndProduit(year, idProduit);
+        return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
+    }
+
 
 }

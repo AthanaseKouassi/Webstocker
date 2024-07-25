@@ -2,6 +2,7 @@ package com.webstocker.service.newfeature;
 
 import com.webstocker.domain.Inventaire;
 import com.webstocker.domain.Produit;
+import com.webstocker.exception.IllegalArgumentException;
 import com.webstocker.exception.InvalideDateFormatException;
 import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.ProduitRepository;
@@ -126,4 +127,15 @@ public class InventaireNewService {
         return inventaire;
     }
 
+    public List<Inventaire> getInventaireparAnneeAndProduit(int year, Long idProduit) {
+        if (year <= 0) {
+            throw new IllegalArgumentException("L'année ne peut être inférieure ou égale zéro ");
+        }
+        if (idProduit == null) {
+            throw new IllegalArgumentException("Id produit ne peut être null");
+        }
+        final Produit produit = produitRepository.findOne(idProduit);
+
+        return inventaireRepository.findByInventaireByYearAndProduit(year, produit);
+    }
 }

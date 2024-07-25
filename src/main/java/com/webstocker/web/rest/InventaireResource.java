@@ -186,7 +186,7 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Inventaire>> getAllInventaireParMois(@PathVariable String dateInventaire) throws RuntimeException {
+    public ResponseEntity<List<Inventaire>> getAllInventaireParMois(@PathVariable String dateInventaire) {
         final List<Inventaire> lstInventaires = inventaireNewService.getInventaireByMonth(dateInventaire);
         return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
     }
@@ -195,7 +195,7 @@ public class InventaireResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<Inventaire>> getAllInventaireParYearAndProduit(@PathVariable int year, @PathVariable Long idProduit) throws RuntimeException {
+    public ResponseEntity<List<Inventaire>> getAllInventaireParYearAndProduit(@PathVariable int year, @PathVariable Long idProduit) {
         final List<Inventaire> lstInventaires = inventaireNewService.getInventaireparAnneeAndProduit(year, idProduit);
         return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
     }

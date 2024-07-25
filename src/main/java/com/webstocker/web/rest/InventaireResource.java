@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Inventaire;
 import com.webstocker.service.InventaireService;
 import com.webstocker.service.newfeature.InventaireNewService;
+import com.webstocker.web.rest.dto.newfeature.InventaireDto;
 import com.webstocker.web.rest.util.HeaderUtil;
 import com.webstocker.web.rest.util.PaginationUtil;
 import io.swagger.annotations.ApiParam;
@@ -43,6 +44,9 @@ public class InventaireResource {
 
     @Inject
     private InventaireNewService inventaireNewService;
+
+//    @Inject
+//    private InventaireMapper inventaireMapper;
 
 
     @RequestMapping(value = "/inventaires",
@@ -96,12 +100,8 @@ public class InventaireResource {
     public ResponseEntity<Inventaire> getInventaire(@PathVariable Long id) {
         log.debug("REST request to get Inventaire : {}", id);
         Inventaire inventaire = inventaireService.findOne(id);
-        final long ajustement = (inventaire.getStockTheoDebut() + inventaire.getArrivage())
-            - inventaire.getVente() - inventaire.getPromo() - inventaire.getPerteAbime()
-            - (inventaire.getStockAgent() + inventaire.getStockMagasinCentral() + inventaire.getStockAgent());
-        inventaire.setAjustement(ajustement);
 
-        return Optional.ofNullable(inventaire)
+        return Optional.of(inventaire)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
@@ -200,5 +200,19 @@ public class InventaireResource {
         return ResponseEntity.status(HttpStatus.OK).body(lstInventaires);
     }
 
+    @RequestMapping(value = "/inventaires/{idInventaire}/ajustement",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<InventaireDto> getInventaireDto(@PathVariable Long idInventaire) {
+
+        final InventaireDto inventaire = inventaireNewService.getInventaireById(idInventaire);
+
+        return Optional.of(inventaire)
+            .map(result -> new ResponseEntity<>(
+                result,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
 }

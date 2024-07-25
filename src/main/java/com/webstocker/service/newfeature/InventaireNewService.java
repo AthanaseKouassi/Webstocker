@@ -2,6 +2,7 @@ package com.webstocker.service.newfeature;
 
 import com.webstocker.domain.Inventaire;
 import com.webstocker.domain.Produit;
+import com.webstocker.exception.InvalideDateFormatException;
 import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.ProduitRepository;
 import com.webstocker.utilitaires.Constantes;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +38,18 @@ public class InventaireNewService {
     public List<Inventaire> getInventaireByMonth(String dateInventaire) {
 
         if (dateInventaire.isEmpty()) {
-            throw new RuntimeException("La date : " + dateInventaire + " n'est pas une date d'inventaire.");
+            throw new IllegalArgumentException("La date d'inventaire ne peut pas être nulle ou vide");
+        }
+        try {
+            final LocalDate startOfMonth = utils.getStartOfMonth(dateInventaire);
+            final LocalDate endOfMonth = utils.getEndOfMonth(dateInventaire);
+            log.info("Date début du mois: {} et date fin du mois: {}", startOfMonth, endOfMonth);
+
+            return inventaireRepository.findByDateInventaireBetween(startOfMonth, endOfMonth);
+        } catch (DateTimeParseException e) {
+            throw new InvalideDateFormatException("Le format de la date est invalide : " + dateInventaire, e);
         }
 
-        final LocalDate startOfMonth = utils.getStartOfMonth(dateInventaire);
-        final LocalDate endOfMonth = utils.getEndOfMonth(dateInventaire);
-        log.info("Date début du mois: {} et date fin du mois: {}", startOfMonth, endOfMonth);
-
-        return inventaireRepository.findByDateInventaireBetween(startOfMonth, endOfMonth);
     }
 
     public Map<String, List<Inventaire>> allInventairesfirstMonthToActuallyOfYear(String dateInventaire) {

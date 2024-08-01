@@ -45,9 +45,6 @@ public class InventaireResource {
     @Inject
     private InventaireNewService inventaireNewService;
 
-//    @Inject
-//    private InventaireMapper inventaireMapper;
-
 
     @RequestMapping(value = "/inventaires",
         method = RequestMethod.POST,
@@ -63,22 +60,29 @@ public class InventaireResource {
         return ResponseEntity.created(new URI("/api/inventaires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+
     }
 
     @RequestMapping(value = "/inventaires",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Inventaire> updateInventaire(@RequestBody Inventaire inventaire) throws URISyntaxException {
+    public ResponseEntity<?> updateInventaire(@RequestBody Inventaire inventaire) throws URISyntaxException {
         log.debug("REST request to update Inventaire : {}", inventaire);
         if (inventaire.getId() == null) {
-            return createInventaire(inventaire);
+            try {
+                return createInventaire(inventaire);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            }
+
         }
         Inventaire result = inventaireService.save(inventaire);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, inventaire.getId().toString()))
             .body(result);
     }
+
 
     @RequestMapping(value = "/inventaires",
         method = RequestMethod.GET,

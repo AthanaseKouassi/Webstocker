@@ -252,7 +252,7 @@ public class GenerationCalendrierApproService {
         sheet.setColumnWidth(9, 3000); // Stock Antenne
         sheet.setColumnWidth(10, 4000); // Stock Délégués & commerciaux
         sheet.setColumnWidth(11, 4000);  // Stock total final
-        sheet.setColumnWidth(12, 4000);  // Distribution moyenne mensuelle
+        sheet.setColumnWidth(12, 5000);  // Distribution moyenne mensuelle
         sheet.setColumnWidth(13, 3000); // Couverture stock
         sheet.setColumnWidth(14, 3000); // Bailleur
         sheet.setColumnWidth(15, 6000);  // Observations

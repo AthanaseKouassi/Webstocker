@@ -73,7 +73,7 @@ public class InventaireResource {
             try {
                 return createInventaire(inventaire);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("\"error\":" + e.getMessage());
             }
 
         }

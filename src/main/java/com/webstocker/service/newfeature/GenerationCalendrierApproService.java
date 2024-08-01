@@ -314,7 +314,7 @@ public class GenerationCalendrierApproService {
                     }
                     sheet.autoSizeColumn(0);
                     addInventaireToSheet(sheet, inventaire, moyenne, borderedCellStyle);
-                    if (inventaire.getDateInventaire().getMonthValue() == 6) {
+                    if (inventaire.getDateInventaire().getMonthValue() == 12) {
                         addRowTotal(sheet, borderedCellStyle, inventaires);
                     }
                 }

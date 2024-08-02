@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -73,7 +75,9 @@ public class InventaireResource {
             try {
                 return createInventaire(inventaire);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("\"error\":" + e.getMessage());
+                Map<String, String> m = new HashMap<>();
+                m.put("error", e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(m);
             }
 
         }

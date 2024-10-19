@@ -230,6 +230,24 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
+    public List<CreanceDto> getFactureCreanceParProduit(int categorieCreance, Long idProduit) {
+        List<CreanceDto> creanceDtos = new ArrayList<>();
+        List<Facture> factures = getFactures(categorieCreance);
+
+        for (Facture f : factures) {
+            for (LigneBonDeSortie lbs : f.getBonDeSortie().getLigneBonDeSorties()) {
+                long montantRegle = f.getReglements().stream().filter(r -> r.getProduit().equals(lbs.getProduit())
+                        && idProduit.equals(r.getProduit().getId()))
+                    .mapToLong(Reglement::getMontantReglement).sum();
+                if (montantRegle < lbs.getPrixDeVente()) {
+                    creanceDtos.add(creanceDtoMapper.mapToCreanceDto(f, lbs, f.getBonDeSortie().getDemandeur(), categorieCreance));
+                }
+            }
+        }
+        return creanceDtos;
+    }
+
+    @Override
     public List<CreanceDto> getCreanceParClientAndPeriode(Long idClient, String dateDebut, String dateFin) {
         List<CreanceDto> creanceDtos = new ArrayList<>();
         List<Facture> listFactures = factureRepository.findByCommercialParPeriode(idClient, dateDebut, dateFin);

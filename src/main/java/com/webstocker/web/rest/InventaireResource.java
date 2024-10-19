@@ -5,6 +5,7 @@ import com.webstocker.domain.Inventaire;
 import com.webstocker.service.InventaireService;
 import com.webstocker.service.newfeature.InventaireNewService;
 import com.webstocker.web.rest.dto.newfeature.InventaireDto;
+import com.webstocker.web.rest.dto.newfeature.InventairePagineDto;
 import com.webstocker.web.rest.util.HeaderUtil;
 import com.webstocker.web.rest.util.PaginationUtil;
 import io.swagger.annotations.ApiParam;
@@ -146,6 +147,7 @@ public class InventaireResource {
     public Page<Inventaire> getTousLesInventaires(@RequestParam(name = "page", defaultValue = "0") int page,
                                                   @RequestParam(name = "size", defaultValue = "3") int size) {
         log.debug("REST request to all inventaires to page {} and size {}", page, size);
+        log.info("OUHHH");
         return inventaireService.findAll(new PageRequest(page, size));
     }
 
@@ -215,12 +217,39 @@ public class InventaireResource {
     public ResponseEntity<InventaireDto> getInventaireDto(@PathVariable Long idInventaire) {
 
         final InventaireDto inventaire = inventaireNewService.getInventaireById(idInventaire);
-
+        log.info("OUHHHH:: {}", inventaire.toString());
         return Optional.of(inventaire)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "/page/_inventaires",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<InventairePagineDto> getInventairesPagine(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "3") int size) {
+
+        InventairePagineDto inventairePagineDto = inventaireNewService.getInventaireByPage(new PageRequest(page, size));
+        if (inventairePagineDto.getInventaires().isEmpty()) {
+            return ResponseEntity.status(204).body(inventairePagineDto);
+        }
+        log.info("Inventaire :: {}", inventairePagineDto.getInventaires());
+        log.info("Total element Inventaire :: {}", inventairePagineDto.getTotalElements());
+        log.info("Total Page :: {}", inventairePagineDto.getTotalPages());
+        log.info("Nombre élément par page :: {}", inventairePagineDto.getPageSize());
+        return ResponseEntity.ok(inventairePagineDto);
+    }
+
+    @RequestMapping(value = "/_page/inventaires",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Inventaire>> getListInventaires(@RequestParam(name = "year", defaultValue = "0") int year) {
+        return ResponseEntity.ok(inventaireNewService.getInventaireByYear(year));
     }
 
 }

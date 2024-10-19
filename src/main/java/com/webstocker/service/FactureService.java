@@ -72,6 +72,8 @@ public interface FactureService {
 
     List<CreanceDto> getFactureCreance(int categorieCreance);
 
+    List<CreanceDto> getFactureCreanceParProduit(int categorieCreance, Long idProduit);
+
     Page<Facture> getFactureNonSoldeParPeriode(String dateDebut, String dateFin, Pageable pageable);
 
     Page<Facture> getFactureAllsParPeriode(String dateDebut, String dateFin, Pageable pageable);

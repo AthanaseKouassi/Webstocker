@@ -25,7 +25,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -317,8 +322,16 @@ public class FactureResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<CreanceDto> getCreanceCatégorie(@PathVariable int categorie) {
+    public List<CreanceDto> getCreanceCategorie(@PathVariable int categorie) {
         return factureService.getFactureCreance(categorie);
+    }
+
+    @RequestMapping(value = "/facture/{categorie}/categorie-creance/{idProduit}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<CreanceDto> getCreanceCategorieAndProduct(@PathVariable int categorie, @PathVariable Long idProduit) {
+        return factureService.getFactureCreanceParProduit(categorie, idProduit);
     }
 
 
@@ -342,7 +355,7 @@ public class FactureResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<FactureNDto>> getFactureAlls(@RequestParam String dateDebut, @RequestParam String dateFin,
-                                                                  Pageable pageable) throws URISyntaxException {
+                                                            Pageable pageable) throws URISyntaxException {
         Page<Facture> page = factureService.getFactureAllsParPeriode(dateDebut, dateFin, pageable);
         Page<FactureNDto> pageNDto = factureNDtoMapper.toFactureDTOsPage(page);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(pageNDto, "/api/facture/factures-all-page");

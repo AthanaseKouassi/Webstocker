@@ -9,7 +9,10 @@ import com.webstocker.repository.ProduitRepository;
 import com.webstocker.utilitaires.Constantes;
 import com.webstocker.utilitaires.Utils;
 import com.webstocker.web.rest.dto.newfeature.InventaireDto;
+import com.webstocker.web.rest.dto.newfeature.InventairePagineDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ public class InventaireNewService {
     private Utils utils;
     @Inject
     private ProduitRepository produitRepository;
+
 
     public List<Inventaire> getInventaireByMonth(String dateInventaire) {
 
@@ -84,6 +88,7 @@ public class InventaireNewService {
 
         for (Produit produit : lstProduit) {
             final List<Inventaire> inventaires = inventaireRepository.findByInventaireByYearAndProduit(year, produit);
+
             if (!inventaires.isEmpty()) {
                 mapInventaire.put(produit, inventaires);
             }
@@ -130,14 +135,10 @@ public class InventaireNewService {
     }
 
     public List<Inventaire> getInventaireparAnneeAndProduit(int year, Long idProduit) {
-        if (year <= 0) {
-            throw new IllegalArgumentException("L'année ne peut être inférieure ou égale zéro ");
-        }
-        if (idProduit == null) {
-            throw new IllegalArgumentException("Id produit ne peut être null");
+        if (year <= 0 || idProduit == null) {
+            throw new IllegalArgumentException("Argument Invalide");
         }
         final Produit produit = produitRepository.findOne(idProduit);
-
         return inventaireRepository.findByInventaireByYearAndProduit(year, produit);
     }
 
@@ -148,6 +149,36 @@ public class InventaireNewService {
             - inventaire.getVente() - inventaire.getPromo() - inventaire.getPerteAbime()
             - (inventaire.getStockAgent() + inventaire.getStockMagasinCentral() + inventaire.getStockAgent());
 
+        InventaireDto inventaireDto = getInventaireDto(inventaire);
+        inventaireDto.setAjustement(ajustement);
+
+        return inventaireDto;
+    }
+
+    public InventairePagineDto getInventaireByPage(Pageable pageable) {
+
+        final Page<Inventaire> inventairePage = inventaireRepository.findAll(pageable);
+        InventairePagineDto inventairePagineDto = new InventairePagineDto();
+
+        inventairePagineDto.setInventaires(inventairePage.getContent());  // Les objets paginés
+        inventairePagineDto.setTotalElements(inventairePage.getTotalElements());  // Nombre total d'éléments
+        inventairePagineDto.setTotalPages(inventairePage.getTotalPages());  // Nombre total de pages
+        inventairePagineDto.setCurrentPage(inventairePage.getNumber());  // Page actuelle
+        inventairePagineDto.setPageSize(inventairePage.getSize());  // Taille de la page
+
+        return inventairePagineDto;
+    }
+
+    public List<Inventaire> getInventaireByYear(int year) {
+        final LocalDate now = LocalDate.now();
+        final int currentYear = now.getYear();
+        if (year > 0) {
+            return inventaireRepository.findByInventaireByYear(year);
+        }
+        return inventaireRepository.findByInventaireByYear(currentYear);
+    }
+
+    private InventaireDto getInventaireDto(Inventaire inventaire) {
         InventaireDto inventaireDto = new InventaireDto();
         inventaireDto.setId(inventaire.getId());
         inventaireDto.setArrivage(inventaire.getArrivage());
@@ -165,8 +196,6 @@ public class InventaireNewService {
         inventaireDto.setStockTheoDebut(inventaire.getStockTheoDebut());
         inventaireDto.setStockReel(inventaire.getStockReel());
         inventaireDto.setStockFinalTheorique(inventaire.getStockFinalTheorique());
-        inventaireDto.setAjustement(ajustement);
-
         return inventaireDto;
     }
 }

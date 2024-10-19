@@ -294,7 +294,7 @@ public class GenerationCalendrierApproService {
                 final Map<Integer, Long> mapMoyennetrimestre = utils.calculerMoyennesTrimestrielles(inventaires);
                 mapMoyennetrimestre.forEach((key, value) -> log.info("Trimestre ::{} -- LA Moyenne ::{}", key, value));
                 Long moyenne = 0L;
-
+                int k = inventaires.size();
                 for (Inventaire inventaire : inventaires) {
 
                     if (utils.lastMonthQuarter(inventaire.getDateInventaire())) {
@@ -314,11 +314,11 @@ public class GenerationCalendrierApproService {
                     }
                     sheet.autoSizeColumn(0);
                     addInventaireToSheet(sheet, inventaire, moyenne, borderedCellStyle);
-                    if (inventaire.getDateInventaire().getMonthValue() == 12) {
+                    if (k == 1) {
                         addRowTotal(sheet, borderedCellStyle, inventaires);
                     }
+                    k--;
                 }
-
             }
             workbook.write(outputStream);
         }

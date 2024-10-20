@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -126,8 +127,9 @@ public class FactureReportResource {
 
 
     @RequestMapping(value = "/report/categorie-creance/{categorie}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> exportCategoriePdf(@PathVariable int categorie) throws Exception {
-        ByteArrayOutputStream pdfStream = creancePdfService.generatePdf(categorie);
+    public ResponseEntity<byte[]> exportCategoriePdf(@PathVariable int categorie,
+                                                     @RequestParam(name = "idProduit", defaultValue = "0") Long idProduit) throws Exception {
+        ByteArrayOutputStream pdfStream = creancePdfService.generatePdf(categorie, idProduit);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/pdf"));

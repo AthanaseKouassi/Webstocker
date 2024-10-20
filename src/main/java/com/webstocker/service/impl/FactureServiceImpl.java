@@ -239,7 +239,7 @@ public class FactureServiceImpl implements FactureService {
                 long montantRegle = f.getReglements().stream().filter(r -> r.getProduit().equals(lbs.getProduit())
                         && idProduit.equals(r.getProduit().getId()))
                     .mapToLong(Reglement::getMontantReglement).sum();
-                if (montantRegle < lbs.getPrixDeVente()) {
+                if (montantRegle < lbs.getPrixDeVente() && lbs.getProduit().getId().equals(idProduit)) {
                     creanceDtos.add(creanceDtoMapper.mapToCreanceDto(f, lbs, f.getBonDeSortie().getDemandeur(), categorieCreance));
                 }
             }

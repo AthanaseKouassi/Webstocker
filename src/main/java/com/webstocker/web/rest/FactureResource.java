@@ -322,16 +322,12 @@ public class FactureResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<CreanceDto> getCreanceCategorie(@PathVariable int categorie) {
-        return factureService.getFactureCreance(categorie);
-    }
-
-    @RequestMapping(value = "/facture/{categorie}/categorie-creance/{idProduit}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<CreanceDto> getCreanceCategorieAndProduct(@PathVariable int categorie, @PathVariable Long idProduit) {
-        return factureService.getFactureCreanceParProduit(categorie, idProduit);
+    public ResponseEntity<List<CreanceDto>> getAllCreanceByProduit(@PathVariable int categorie,
+                                                                   @RequestParam(name = "idProduit", defaultValue = "0") Long idProduit) {
+        if (idProduit == 0) {
+            return ResponseEntity.ok(factureService.getFactureCreance(categorie));
+        }
+        return ResponseEntity.ok(factureService.getFactureCreanceParProduit(categorie, idProduit));
     }
 
 

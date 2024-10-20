@@ -41,7 +41,7 @@ public class CreancePdf {
         doc.add(table);
     }
 
-    public Paragraph createBorderedText(int numcategorie) {
+    public Paragraph createBorderedText(int numcategorie, String nomProduit) {
         Paragraph container = new Paragraph();
         String infoCategorie = " catégorie " + numcategorie;
         String info = "";
@@ -52,10 +52,17 @@ public class CreancePdf {
         } else if (numcategorie == 3) {
             info = infoCategorie + " : créances supérieures à 45 jours";
         }
-        String info2 = "Catégorie créance :" + info;
+        String info2 = "Créance " + info;
+        String prduitInfo = "";
 
         Text one = new Text(info2);
         container.add(one);
+
+        if (nomProduit != null && !nomProduit.isEmpty()) {
+            prduitInfo = "\nProduit: " + nomProduit.toUpperCase();
+            Text two = new Text(prduitInfo);
+            container.add(two);
+        }
 
         return container;
     }

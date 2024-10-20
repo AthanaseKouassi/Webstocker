@@ -5,8 +5,10 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.webstocker.domain.Produit;
 import com.webstocker.reports.newfeature.CreanceClientPdf;
 import com.webstocker.reports.newfeature.CreancePdf;
+import com.webstocker.repository.ProduitRepository;
 import com.webstocker.service.FactureService;
 import com.webstocker.web.rest.dto.newfeature.CreanceDto;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,11 +34,19 @@ public class CreancePdfService {
     private CreancePdf creancePdf;
     @Inject
     private FactureService factureService;
+    @Inject
+    private ProduitRepository produitRepository;
 
-    public ByteArrayOutputStream generatePdf(int numeroCategorie) throws Exception {
-
-        List<CreanceDto> creanceDtos = factureService.getFactureCreance(numeroCategorie);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public ByteArrayOutputStream generatePdf(int numeroCategorie, Long idProduit) throws Exception {
+        List<CreanceDto> creanceDtos = new ArrayList<>();
+        Produit produit = new Produit();
+        if (idProduit == 0) {
+            creanceDtos = factureService.getFactureCreance(numeroCategorie);
+        } else {
+            produit = produitRepository.findOne(idProduit);
+            creanceDtos = factureService.getFactureCreanceParProduit(numeroCategorie, idProduit);
+        }
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
@@ -47,7 +58,7 @@ public class CreancePdfService {
         document.add(new Paragraph(" "));
 
         Paragraph p = new Paragraph();
-        p.add(creancePdf.createBorderedText(numeroCategorie));
+        p.add(creancePdf.createBorderedText(numeroCategorie, produit.getNomProduit()));
         document.add(p);
         document.add(new Paragraph(" "));
         creancePdf.addTableRecu(document, creanceDtos);

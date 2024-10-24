@@ -3,6 +3,7 @@ package com.webstocker.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.webstocker.domain.Inventaire;
 import com.webstocker.service.InventaireService;
+import com.webstocker.service.ProduitService;
 import com.webstocker.service.newfeature.InventaireNewService;
 import com.webstocker.web.rest.dto.newfeature.InventaireDto;
 import com.webstocker.web.rest.dto.newfeature.InventairePagineDto;
@@ -44,7 +45,8 @@ public class InventaireResource {
     private final Logger log = LoggerFactory.getLogger(InventaireResource.class);
     @Inject
     private InventaireService inventaireService;
-
+    @Inject
+    private ProduitService produitService;
     @Inject
     private InventaireNewService inventaireNewService;
 
@@ -217,7 +219,6 @@ public class InventaireResource {
     public ResponseEntity<InventaireDto> getInventaireDto(@PathVariable Long idInventaire) {
 
         final InventaireDto inventaire = inventaireNewService.getInventaireById(idInventaire);
-        log.info("OUHHHH:: {}", inventaire.toString());
         return Optional.of(inventaire)
             .map(result -> new ResponseEntity<>(
                 result,
@@ -251,5 +252,6 @@ public class InventaireResource {
     public ResponseEntity<List<Inventaire>> getListInventaires(@RequestParam(name = "year", defaultValue = "0") int year) {
         return ResponseEntity.ok(inventaireNewService.getInventaireByYear(year));
     }
+
 
 }

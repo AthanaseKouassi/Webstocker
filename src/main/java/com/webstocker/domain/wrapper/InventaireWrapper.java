@@ -19,6 +19,9 @@ public class InventaireWrapper {
     private Long promo;
     private Long perteAbime;
     private String nomBailleur;
+    private Long stockReelMagCentral;
+    private Long stockReelAntenne;
+    private Long stockReelAgent;
 
     public String getNomMagasin() {
         return nomMagasin;
@@ -106,5 +109,29 @@ public class InventaireWrapper {
 
     public void setNomBailleur(String nomBailleur) {
         this.nomBailleur = nomBailleur;
+    }
+
+    public Long getStockReelMagCentral() {
+        return stockReelMagCentral;
+    }
+
+    public void setStockReelMagCentral(Long stockReelMagCentral) {
+        this.stockReelMagCentral = stockReelMagCentral;
+    }
+
+    public Long getStockReelAntenne() {
+        return stockReelAntenne;
+    }
+
+    public void setStockReelAntenne(Long stockReelAntenne) {
+        this.stockReelAntenne = stockReelAntenne;
+    }
+
+    public Long getStockReelAgent() {
+        return stockReelAgent;
+    }
+
+    public void setStockReelAgent(Long stockReelAgent) {
+        this.stockReelAgent = stockReelAgent;
     }
 }

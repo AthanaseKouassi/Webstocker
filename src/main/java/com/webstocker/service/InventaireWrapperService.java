@@ -14,4 +14,6 @@ public interface InventaireWrapperService {
     InventaireWrapper situationDunProduitMagasin(String nomProduit, String nomMagasin, String dateInventaire);
 
     InventaireWrapper getEtatProduit(String nomProduit, String dateInventaire);
+
+
 }

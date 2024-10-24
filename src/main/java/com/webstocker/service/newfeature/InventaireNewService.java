@@ -2,10 +2,12 @@ package com.webstocker.service.newfeature;
 
 import com.webstocker.domain.Inventaire;
 import com.webstocker.domain.Produit;
+import com.webstocker.domain.wrapper.EtatStockGlobalAimasWrapper;
 import com.webstocker.exception.IllegalArgumentException;
 import com.webstocker.exception.InvalideDateFormatException;
 import com.webstocker.repository.InventaireRepository;
 import com.webstocker.repository.ProduitRepository;
+import com.webstocker.service.EtatStockGlobalService;
 import com.webstocker.utilitaires.Constantes;
 import com.webstocker.utilitaires.Utils;
 import com.webstocker.web.rest.dto.newfeature.InventaireDto;
@@ -40,6 +42,8 @@ public class InventaireNewService {
     private Utils utils;
     @Inject
     private ProduitRepository produitRepository;
+    @Inject
+    private EtatStockGlobalService etatStockGlobalService;
 
 
     public List<Inventaire> getInventaireByMonth(String dateInventaire) {
@@ -198,4 +202,37 @@ public class InventaireNewService {
         inventaireDto.setStockFinalTheorique(inventaire.getStockFinalTheorique());
         return inventaireDto;
     }
+
+
+    public InventaireDto getEtatProduit(String nomProduit, String dateInventaire) {
+        InventaireDto inventaire = new InventaireDto();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateInventaireLocal = LocalDate.parse(dateInventaire, formatter);
+
+        LocalDate startOfMonth = dateInventaireLocal.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = dateInventaireLocal.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<EtatStockGlobalAimasWrapper> listStockGlobalProduit = etatStockGlobalService.etatStockGlobalNew(startOfMonth, endOfMonth);
+
+        Optional<EtatStockGlobalAimasWrapper> result = listStockGlobalProduit.stream()
+            .filter(stock -> nomProduit.equals(stock.getProduit().getNomProduit()))
+            .findFirst();
+
+        if (result.isPresent()) {
+
+            final EtatStockGlobalAimasWrapper etatGlobal = result.get();
+            inventaire.setProduit(etatGlobal.getProduit());
+            inventaire.setStockFinalTheorique(etatGlobal.getQuantiteTotalEnStock());
+            inventaire.setStockTheoDebut(etatGlobal.getQuantiteTotalEnStock());
+            inventaire.setArrivage(etatGlobal.getArrivage());
+            inventaire.setVente(etatGlobal.getQuantiteVendue());
+            inventaire.setPromo(etatGlobal.getQuantitePromotion());
+            inventaire.setPerteAbime(etatGlobal.getQuantitePerte());
+
+        }
+
+        return inventaire;
+    }
+
 }
